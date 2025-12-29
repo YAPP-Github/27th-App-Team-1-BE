@@ -1,0 +1,16 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
+rootProject.name = 'NDGL'
+
+/**
+ * Repository 중앙 관리
+ * - 모든 모듈이 여기 선언된 repository만 사용
+ * - FAIL_ON_PROJECT_REPOS: 각 모듈의 build.gradle에 repositories 선언 시 빌드 실패
+ * - 멀티 모듈 확장 시 include 'module-name' 추가 필요
+ */
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        mavenCentral()
+    }
+}
