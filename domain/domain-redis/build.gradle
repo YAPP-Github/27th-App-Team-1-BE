@@ -1,0 +1,25 @@
+/**
+ * Domain Redis 모듈
+ * - Redis DTO, Repository
+ * - 캐싱, 임시 저장
+ */
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    // 내부 모듈 의존성
+    implementation project(':support')
+    implementation project(':common')
+
+    // Spring Data Redis
+//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}

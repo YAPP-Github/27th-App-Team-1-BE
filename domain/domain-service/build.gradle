@@ -1,0 +1,27 @@
+/**
+ * Domain Service 모듈
+ * - 핵심: 영속성 전략 결정 (어디에 저장할지 라우팅)
+ * - Redis/MySQL/S3 중 선택, 복합 저장 처리
+ * - 예: 임시 데이터 → Redis, 영구 데이터 → MySQL, 파일 → S3
+ */
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    // 내부 모듈 의존성
+    implementation project(':domain:domain-rdb')
+    implementation project(':domain:domain-redis')
+    implementation project(':common')
+
+    // Spring Boot Starter
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}

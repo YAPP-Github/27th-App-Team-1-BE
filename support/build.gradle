@@ -1,0 +1,21 @@
+/**
+ * Support 모듈
+ * - 헬스체크, 모니터링, 로깅, 메트릭 등
+ * - 횡단 관심사
+ */
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    // 내부 모듈 의존성
+    implementation project(':common')
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}

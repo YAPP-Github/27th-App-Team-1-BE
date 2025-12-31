@@ -14,3 +14,12 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
+// 모듈 정의
+include 'application'
+include 'domain:domain-service'
+include 'domain:domain-rdb'
+include 'domain:domain-redis'
+include 'clients'
+include 'support'
+include 'common'
