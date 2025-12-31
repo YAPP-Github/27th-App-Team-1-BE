@@ -14,6 +14,8 @@ jar {
 dependencies {
     // 내부 모듈 의존성
     implementation project(':domain:domain-service')
+    implementation project(':domain:domain-rdb')
+    implementation project(':domain:domain-redis')
     implementation project(':clients')
     implementation project(':support')
     implementation project(':common')
