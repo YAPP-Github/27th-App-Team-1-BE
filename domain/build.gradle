@@ -1,0 +1,11 @@
+/**
+ * Domain 부모 모듈
+ * - domain-service, domain-rdb, domain-redis를 포함하는 부모 모듈
+ */
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

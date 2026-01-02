@@ -1,0 +1,33 @@
+/**
+ * Application 모듈
+ * - REST Controller, Service (비즈니스 로직), Swagger
+ * - 저장소 구현 몰라도 됨 (domain-service만 호출)
+ */
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+}
+
+dependencies {
+    // 내부 모듈 의존성
+    implementation project(':domain:domain-service')
+    implementation project(':domain:domain-rdb')
+    implementation project(':domain:domain-redis')
+    implementation project(':clients')
+    implementation project(':support')
+    implementation project(':common')
+
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}

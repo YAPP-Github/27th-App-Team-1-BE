@@ -1,0 +1,21 @@
+/**
+ * Common 모듈
+ * - Utils, 공통 상수, 공통 예외 등
+ * - 다른 모듈에 의존하지 않음
+ */
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    // Spring Boot Starter
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}

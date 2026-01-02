@@ -1,37 +1,47 @@
+/**
+ * 루트 프로젝트 빌드 설정
+ * - 멀티 모듈 구조 (monorepo, 단일 배포 단위)
+ */
 plugins {
     id 'java'
-    id 'org.springframework.boot' version "${springBootVersion}"
-    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'org.springframework.boot' version "${springBootVersion}" apply false
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}" apply false
 }
 
-group = "${projectGroup}"
-version = "${applicationVersion}"
+// 모든 모듈의 공통 메타데이터
+allprojects {
+    group = "${projectGroup}"
+    version = "${applicationVersion}"
+}
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of("${javaVersion}")
+// 모든 서브 모듈의 공통 설정
+subprojects {
+    // 모든 모듈에 플러그인 적용
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    // Java 설정
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of("${javaVersion}")
+        }
+    }
+
+    // Lombok 설정
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    // 테스트 설정
+    tasks.named('test') {
+        useJUnitPlatform()
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-/**
- * 멀티 모듈로 확장시 dependency는 하위 모듈에 설정할 예정
- */
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
+// 루트 프로젝트 자체는 빌드하지 않음
+tasks.named('jar') {
+    enabled = false
 }
