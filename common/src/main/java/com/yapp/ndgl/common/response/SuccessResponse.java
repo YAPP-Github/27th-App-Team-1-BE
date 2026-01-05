@@ -16,19 +16,20 @@ public class SuccessResponse<T> {
 	private T data;
 
 	@Builder
-	public SuccessResponse(T data) {
+	private SuccessResponse(final T data) {
 		this.data = data;
+		// this.error = error;
 	}
 
-	public static <T> SuccessResponse<Map<String, T>> noContent() {
+	public static <T> SuccessResponse<Map<String, T>> success(final String key, final T data) {
 		return SuccessResponse.<Map<String, T>>builder()
-			.data(Map.of())
+			.data(Map.of(key, data))
 			.build();
 	}
 
-	public static <T> SuccessResponse<Map<String, T>> of(String key, T data) {
-		return SuccessResponse.<Map<String, T>>builder()
-			.data(Map.of(key, data))
+	public static SuccessResponse<Map<String, Object>> noContent() {
+		return SuccessResponse.<Map<String, Object>>builder()
+			.data(Map.of())
 			.build();
 	}
 }
