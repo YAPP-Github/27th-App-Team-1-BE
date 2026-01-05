@@ -6,15 +6,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SuccessResponse<T> {
 
-	private final String CODE = "2000";
-	private final String MESSAGE = "요청에 성공하였습니다.";
+	private final String code = "2000";
+	private final String message = "요청에 성공하였습니다.";
 	private T data;
 
 	@Builder
