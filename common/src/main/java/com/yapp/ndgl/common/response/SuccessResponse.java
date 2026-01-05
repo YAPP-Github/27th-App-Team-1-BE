@@ -18,7 +18,6 @@ public class SuccessResponse<T> {
 	@Builder
 	private SuccessResponse(final T data) {
 		this.data = data;
-		// this.error = error;
 	}
 
 	public static <T> SuccessResponse<Map<String, T>> success(final String key, final T data) {
