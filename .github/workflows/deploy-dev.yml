@@ -2,6 +2,9 @@ name: Deploy DEV
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - develop
 
 jobs:
   deploy-dev:
@@ -41,7 +44,7 @@ jobs:
           EOF
           
           # 파일 전송
-          scp -P ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEV_SERVER_PATH }}/docker-compose.yml
+          scp -P ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no docker-compose-dev.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEV_SERVER_PATH }}/docker-compose.yml
           scp -P ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEV_SERVER_PATH }}/.env
           
           # 배포 실행

@@ -2,17 +2,19 @@ version: '3.8'
 
 services:
   application:
-    image: ${IMAGE_NAME:-ndgl-application:local}
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${IMAGE_NAME:-ghcr.io/owner/repo:latest}
     container_name: ndgl-application
     ports:
-      - "8080:8080"
+      - "6080:8080"
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    networks:
+      - backend
     restart: unless-stopped
 
-# 로컬 개발: networks를 사용하지 않음
+networks:
+  backend:
+    name: backend-network
+    external: true
