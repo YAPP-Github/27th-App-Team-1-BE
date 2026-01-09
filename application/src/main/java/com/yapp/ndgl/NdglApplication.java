@@ -1,4 +1,4 @@
-package com.yapp.ndgl.application;
+package com.yapp.ndgl;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
