@@ -48,3 +48,6 @@ application-*.yaml
 ### Claude/Codex ###
 .claude/
 .codex/
+
+### ENV File ###
+.env

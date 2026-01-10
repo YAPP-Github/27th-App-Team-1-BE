@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  application:
+    image: ${IMAGE_NAME:-ndgl-application:local}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ndgl-application
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    restart: unless-stopped
+
+# 로컬 개발: networks를 사용하지 않음
