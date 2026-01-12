@@ -78,5 +78,7 @@ jobs:
       url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       color: ${{ needs.deploy-live.result == 'success' && 5763719 || 15158332 }}
       fields: '[{"name":"브랜치","value":"${{ github.ref_name }}","inline":true},{"name":"커밋","value":"${{ github.sha }}","inline":true}]'
+      button_label: "GitHub Actions 보기"
+      button_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
