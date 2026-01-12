@@ -1,0 +1,43 @@
+name: Notify Discord
+
+on:
+  workflow_call:
+    inputs:
+      title:
+        required: true
+        type: string
+      description:
+        required: true
+        type: string
+      url:
+        required: true
+        type: string
+      color:
+        required: true
+        type: number
+      fields:
+        required: false
+        type: string
+        default: '[]'
+    secrets:
+      DISCORD_WEBHOOK:
+        required: true
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord Notification
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          curl -H "Content-Type: application/json" -X POST "$DISCORD_WEBHOOK" -d "{
+            \"embeds\": [{
+              \"title\": \"${{ inputs.title }}\",
+              \"description\": \"${{ inputs.description }}\",
+              \"url\": \"${{ inputs.url }}\",
+              \"color\": ${{ inputs.color }},
+              \"fields\": ${{ inputs.fields }}
+            }]
+          }"
