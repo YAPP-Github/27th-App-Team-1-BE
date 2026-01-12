@@ -1,5 +1,12 @@
 import org.gradle.api.initialization.resolve.RepositoriesMode
 
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'NDGL'
 
 /**
@@ -12,6 +19,7 @@ dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 

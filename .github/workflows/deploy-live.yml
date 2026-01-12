@@ -1,0 +1,69 @@
+name: Deploy LIVE
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy-live:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build & Push LIVE Image
+        run: |
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker build -t ghcr.io/${REPO_LOWER}:live .
+          docker push ghcr.io/${REPO_LOWER}:live
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.SERVER_PORT }} -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts || true
+
+      - name: Deploy LIVE
+        run: |
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          
+          # .env 파일 생성
+          cat > .env << EOF
+          SPRING_DATASOURCE_URL=${{ secrets.LIVE_DB_URL }}
+          SPRING_DATASOURCE_USERNAME=${{ secrets.LIVE_DB_USER }}
+          SPRING_DATASOURCE_PASSWORD=${{ secrets.LIVE_DB_PASSWORD }}
+          IMAGE_NAME=ghcr.io/${REPO_LOWER}:live
+          TAG=live
+          EOF
+          
+          # 파일 전송
+          scp -P ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no docker-compose-live.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.LIVE_SERVER_PATH }}/docker-compose.yml
+          scp -P ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.LIVE_SERVER_PATH }}/.env
+          
+          # 배포 실행
+          ssh -p ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << EOF
+            set -e
+            mkdir -p ${{ secrets.LIVE_SERVER_PATH }}
+            cd ${{ secrets.LIVE_SERVER_PATH }}
+
+            # GHCR 로그인 (Organization 레포의 경우 인증 필요)
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker compose ps
+          EOF
+
+      - name: Cleanup SSH
+        if: always()
+        run: |
+          rm -f ~/.ssh/id_rsa
+          rm -f ~/.ssh/known_hosts
