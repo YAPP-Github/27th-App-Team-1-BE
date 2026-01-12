@@ -70,3 +70,16 @@ jobs:
         run: |
           rm -f ~/.ssh/id_rsa
           rm -f ~/.ssh/known_hosts
+
+  notify:
+    needs: deploy-dev
+    if: always()
+    uses: ./.github/workflows/send-discord-message.yml
+    with:
+      title: ${{ needs.deploy-dev.result == 'success' && '🚀 DEV 배포 성공' || '❌ DEV 배포 실패' }}
+      description: "**Deploy DEV**"
+      url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      color: ${{ needs.deploy-dev.result == 'success' && 5763719 || 15158332 }}
+      fields: '[{"name":"브랜치","value":"`${{ github.ref_name }}`","inline":true},{"name":"커밋","value":"`${{ github.sha }}`","inline":true}]'
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
