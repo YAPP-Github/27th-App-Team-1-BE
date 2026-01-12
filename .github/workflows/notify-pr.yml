@@ -15,7 +15,7 @@ jobs:
       description: "**[#${{ github.event.pull_request.number }}] ${{ github.event.pull_request.title }}**"
       url: ${{ github.event.pull_request.html_url }}
       color: 3447003
-      fields: '[{"name":"작성자","value":"${{ github.event.pull_request.user.login }}","inline":true},{"name":"브랜치","value":"`${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}`","inline":true}]'
+      fields: '[{"name":"작성자","value":"${{ github.event.pull_request.user.login }}","inline":true},{"name":"브랜치","value":"${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}","inline":true}]'
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 
@@ -27,7 +27,7 @@ jobs:
       description: "**[#${{ github.event.pull_request.number }}] ${{ github.event.pull_request.title }}**"
       url: ${{ github.event.pull_request.html_url }}
       color: 5763719
-      fields: '[{"name":"작성자","value":"${{ github.event.pull_request.user.login }}","inline":true},{"name":"병합자","value":"${{ github.event.pull_request.merged_by.login }}","inline":true},{"name":"브랜치","value":"`${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}`","inline":false}]'
+      fields: '[{"name":"작성자","value":"${{ github.event.pull_request.user.login }}","inline":true},{"name":"병합자","value":"${{ github.event.pull_request.merged_by.login }}","inline":true},{"name":"브랜치","value":"${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}","inline":false}]'
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 
