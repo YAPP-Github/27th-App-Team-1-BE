@@ -31,13 +31,18 @@ jobs:
         continue-on-error: true
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          TITLE: ${{ inputs.title }}
+          DESCRIPTION: ${{ inputs.description }}
+          URL: ${{ inputs.url }}
+          COLOR: ${{ inputs.color }}
+          FIELDS: ${{ inputs.fields }}
         run: |
-          curl -H "Content-Type: application/json" -X POST "$DISCORD_WEBHOOK" -d "{
-            \"embeds\": [{
-              \"title\": \"${{ inputs.title }}\",
-              \"description\": \"${{ inputs.description }}\",
-              \"url\": \"${{ inputs.url }}\",
-              \"color\": ${{ inputs.color }},
-              \"fields\": ${{ inputs.fields }}
-            }]
-          }"
+          PAYLOAD=$(jq -n \
+            --arg title "$TITLE" \
+            --arg description "$DESCRIPTION" \
+            --arg url "$URL" \
+            --argjson color "$COLOR" \
+            --argjson fields "$FIELDS" \
+            '{embeds: [{title: $title, description: $description, url: $url, color: $color, fields: $fields}]}')
+
+          curl -H "Content-Type: application/json" -X POST "$DISCORD_WEBHOOK" -d "$PAYLOAD"
