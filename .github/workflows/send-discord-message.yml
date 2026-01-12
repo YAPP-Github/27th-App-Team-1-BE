@@ -19,14 +19,6 @@ on:
         required: false
         type: string
         default: '[]'
-      button_label:
-        required: false
-        type: string
-        default: ''
-      button_url:
-        required: false
-        type: string
-        default: ''
     secrets:
       DISCORD_WEBHOOK:
         required: true
@@ -44,25 +36,13 @@ jobs:
           URL: ${{ inputs.url }}
           COLOR: ${{ inputs.color }}
           FIELDS: ${{ inputs.fields }}
-          BUTTON_LABEL: ${{ inputs.button_label }}
-          BUTTON_URL: ${{ inputs.button_url }}
         run: |
-          BASE_PAYLOAD=$(jq -n \
+          PAYLOAD=$(jq -n \
             --arg title "$TITLE" \
             --arg description "$DESCRIPTION" \
             --arg url "$URL" \
             --argjson color "$COLOR" \
             --argjson fields "$FIELDS" \
             '{embeds: [{title: $title, description: $description, url: $url, color: $color, fields: $fields}]}')
-
-          # 버튼이 있으면 components 추가
-          if [ -n "$BUTTON_LABEL" ] && [ -n "$BUTTON_URL" ]; then
-            PAYLOAD=$(echo "$BASE_PAYLOAD" | jq \
-              --arg label "$BUTTON_LABEL" \
-              --arg url "$BUTTON_URL" \
-              '. + {components: [{type: 1, components: [{type: 2, style: 5, label: $label, url: $url}]}]}')
-          else
-            PAYLOAD="$BASE_PAYLOAD"
-          fi
 
           curl -H "Content-Type: application/json" -X POST "$DISCORD_WEBHOOK" -d "$PAYLOAD"
