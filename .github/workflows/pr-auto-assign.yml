@@ -1,0 +1,62 @@
+name: PR Auto Assign & Reviewer
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign PR to author
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+
+            // PR 작성자를 assignee로 설정
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              assignees: [pr.user.login]
+            });
+
+            console.log(`✅ Assigned PR #${pr.number} to ${pr.user.login}`);
+
+      - name: Request reviewer (pair)
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const author = pr.user.login;
+
+            // 페어 개발자 2명의 GitHub username
+            const teamMembers = [
+              'WooJJam',  // 개발자 1
+              'Huey-J',  // 개발자 2
+            ];
+
+            // PR 작성자를 제외한 페어 (항상 1명)
+            const reviewer = teamMembers.find(member => member !== author);
+
+            if (!reviewer) {
+              console.log('⚠️  No reviewer to assign');
+              return;
+            }
+
+            // 리뷰어 요청
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              reviewers: [reviewer]
+            });
+
+            console.log(`✅ 리뷰어(${reviewer}) 를 할당하였습니다`);
