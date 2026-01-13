@@ -1,0 +1,56 @@
+name: PR Notifications
+
+on:
+  pull_request:
+    types: [opened, closed]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  pr-opened:
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    uses: ./.github/workflows/send-discord-message.yml
+    with:
+      title: "🔔 새로운 PR"
+      description: "**[#${{ github.event.pull_request.number }}] ${{ github.event.pull_request.title }}**"
+      url: ${{ github.event.pull_request.html_url }}
+      color: 3447003
+      fields: '[{"name":"작성자","value":"${{ github.event.pull_request.user.login }}","inline":true},{"name":"브랜치","value":"${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}","inline":true}]'
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  pr-merged:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    uses: ./.github/workflows/send-discord-message.yml
+    with:
+      title: "✅ PR 병합 완료"
+      description: "**[#${{ github.event.pull_request.number }}] ${{ github.event.pull_request.title }}**"
+      url: ${{ github.event.pull_request.html_url }}
+      color: 5763719
+      fields: '[{"name":"작성자","value":"${{ github.event.pull_request.user.login }}","inline":true},{"name":"병합자","value":"${{ github.event.pull_request.merged_by.login }}","inline":true},{"name":"브랜치","value":"${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}","inline":false}]'
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  pr-approved:
+    if: github.event_name == 'pull_request_review' && github.event.review.state == 'approved'
+    uses: ./.github/workflows/send-discord-message.yml
+    with:
+      title: "👍 PR 승인"
+      description: "**[#${{ github.event.pull_request.number }}] ${{ github.event.pull_request.title }}**"
+      url: ${{ github.event.pull_request.html_url }}
+      color: 3066993
+      fields: '[{"name":"리뷰어","value":"${{ github.event.review.user.login }}","inline":true},{"name":"작성자","value":"${{ github.event.pull_request.user.login }}","inline":true}]'
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  pr-changes-requested:
+    if: github.event_name == 'pull_request_review' && github.event.review.state == 'changes_requested'
+    uses: ./.github/workflows/send-discord-message.yml
+    with:
+      title: "🔄 수정 요청"
+      description: "**[#${{ github.event.pull_request.number }}] ${{ github.event.pull_request.title }}**"
+      url: ${{ github.event.pull_request.html_url }}
+      color: 15105570
+      fields: '[{"name":"리뷰어","value":"${{ github.event.review.user.login }}","inline":true},{"name":"작성자","value":"${{ github.event.pull_request.user.login }}","inline":true}]'
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
