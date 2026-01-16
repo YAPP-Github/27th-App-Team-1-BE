@@ -20,8 +20,8 @@ public class SuccessResponse<T> {
 		this.data = data;
 	}
 
-	public static <T> SuccessResponse success(final T data) {
-		return SuccessResponse.builder()
+	public static <T> SuccessResponse<T> success(final T data) {
+		return SuccessResponse.<T>builder()
 				.data(data)
 				.build();
 	}
