@@ -21,10 +21,10 @@ public class SwaggerConfig {
 
     @Bean
     public GroupedOpenApi apiGroup() {
-        return GroupedOpenApi
-            .builder()
+        return GroupedOpenApi.builder()
             .group("api")
-            .packagesToScan("com.yapp.ndgl.application.*")
+            .packagesToScan("com.yapp.ndgl.application")
+            .pathsToMatch("/api/**")
             .build();
     }
 }
