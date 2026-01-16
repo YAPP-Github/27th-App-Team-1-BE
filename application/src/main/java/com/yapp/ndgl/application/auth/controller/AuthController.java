@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.yapp.ndgl.application.auth.controller.dto.UserCreateRequest;
 import com.yapp.ndgl.application.auth.controller.dto.UserCreateResponse;
-import com.yapp.ndgl.application.auth.service.AuthService;
+import com.yapp.ndgl.application.auth.facade.AuthFacade;
 import com.yapp.ndgl.common.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,13 +19,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private final AuthService authService;
+  private final AuthFacade authFacade;
 
   @Operation(summary = "신규 유저 생성", description = "디바이스 정보와 푸시 알림 정보를 받아 신규 유저를 생성합니다.")
   @PostMapping("/users")
   public SuccessResponse<UserCreateResponse> createUser(
       @Valid @RequestBody UserCreateRequest request) {
-    UserCreateResponse response = authService.createUser(request);
+    UserCreateResponse response = authFacade.createUser(request);
     return SuccessResponse.success(response);
   }
 
