@@ -53,6 +53,10 @@ common/             - 공통 유틸/상수/예외
    SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/ndgl_dev?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
    SPRING_DATASOURCE_USERNAME=your_username
    SPRING_DATASOURCE_PASSWORD=your_password
+
+   # JWT 설정 (선택사항 - 기본값 사용 가능)
+   JWT_SECRET=your-secret-key-change-this-in-production-minimum-256-bits
+   JWT_EXPIRATION=86400000
    ```
 
 2. 애플리케이션 실행
