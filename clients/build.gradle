@@ -1,7 +1,7 @@
 /**
  * Clients 모듈
  * - 외부 API 호출 (Gemini, YouTube, Maps, FCM, SMS)
- * - WebClient 기반
+ * - RestClient 기반
  */
 bootJar {
     enabled = false
@@ -16,10 +16,20 @@ dependencies {
     implementation project(':support')
     implementation project(':common')
 
-    // Spring WebFlux (WebClient 사용)
-//    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    // Spring Boot 기본 의존성 (@Component, @Value 등)
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Jackson (JSON 직렬화/역직렬화)
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // SLF4J (로깅)
+    implementation 'org.slf4j:slf4j-api'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // Test dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
 }
