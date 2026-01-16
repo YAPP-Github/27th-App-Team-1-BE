@@ -24,3 +24,6 @@ springdoc:
 server:
   port: 8080
 
+google:
+  maps:
+    api-key: ${GOOGLE_MAPS_API_KEY:default_google_maps_api_key}
