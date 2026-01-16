@@ -24,7 +24,8 @@ public class SwaggerConfig {
         return GroupedOpenApi
             .builder()
             .group("api")
-            .packagesToScan("com.yapp.ndgl.application.*")
+            .packagesToScan("com.yapp.ndgl.application")
+            .pathsToMatch("/api/**")
             .build();
     }
 }
