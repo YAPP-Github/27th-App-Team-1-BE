@@ -1,6 +1,6 @@
 package com.yapp.ndgl.application.config;
 
-import com.yapp.ndgl.application.auth.resolver.CurrentUuidArgumentResolver;
+import com.yapp.ndgl.application.auth.filter.CurrentUuidArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

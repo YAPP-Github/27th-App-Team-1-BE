@@ -1,4 +1,4 @@
-package com.yapp.ndgl.application.auth.resolver;
+package com.yapp.ndgl.application.auth.filter;
 
 import com.yapp.ndgl.application.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.common.exception.CommonErrorCode;
