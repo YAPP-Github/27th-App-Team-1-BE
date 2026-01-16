@@ -14,7 +14,6 @@ jar {
 dependencies {
     // 내부 모듈 의존성
     implementation project(':domain:domain-service')
-    implementation project(':domain:domain-rdb')
     implementation project(':domain:domain-redis')
     implementation project(':clients')
     implementation project(':support')
@@ -23,6 +22,9 @@ dependencies {
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Transaction
+    implementation 'org.springframework:spring-tx'
 
     // Swagger (SpringDoc OpenAPI)
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.15'
