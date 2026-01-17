@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthFacade {
 
-  private final AuthService authService;
+    private final AuthService authService;
 
-  public UserCreateResponse createUser(final UserCreateRequest request) {
-    return authService.createUser(request);
-  }
+    public UserCreateResponse createUser(final UserCreateRequest request) {
+        return authService.createUser(request);
+    }
 }

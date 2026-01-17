@@ -12,22 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
-  private final UserDomainService userDomainService;
-  private final JwtTokenProvider jwtTokenProvider;
+    private final UserDomainService userDomainService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-  @Transactional
-  public UserCreateResponse createUser(final UserCreateRequest request) {
-    String uuid = userDomainService.createUser(
-        request.fcmToken(),
-        request.deviceModel(),
-        request.deviceOs(),
-        request.deviceOsVersion(),
-        request.appVersion()
-    );
+    @Transactional
+    public UserCreateResponse createUser(final UserCreateRequest request) {
+        String uuid = userDomainService.createUser(
+            request.fcmToken(),
+            request.deviceModel(),
+            request.deviceOs(),
+            request.deviceOsVersion(),
+            request.appVersion()
+        );
 
-    String accessToken = jwtTokenProvider.generateToken(uuid);
+        String accessToken = jwtTokenProvider.generateToken(uuid);
 
-    return new UserCreateResponse(uuid, accessToken);
-  }
+        return new UserCreateResponse(uuid, accessToken);
+    }
 }
 
