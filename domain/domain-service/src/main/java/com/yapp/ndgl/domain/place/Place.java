@@ -43,8 +43,6 @@ public class Place {
 		final String photosJson,
 		final String postalAddressJson
 	) {
-		LocalDateTime now = LocalDateTime.now();
-
 		return Place.builder()
 			.placeId(placeId)
 			.formattedAddress(formattedAddress)
@@ -60,8 +58,6 @@ public class Place {
 			.regularOpeningHoursJson(regularOpeningHoursJson)
 			.photosJson(photosJson)
 			.postalAddressJson(postalAddressJson)
-			.createdAt(now)
-			.updatedAt(now)
 			.build();
 	}
 }
