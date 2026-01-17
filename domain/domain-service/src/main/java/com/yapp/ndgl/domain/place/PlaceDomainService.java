@@ -9,6 +9,7 @@ import com.yapp.ndgl.domain.place.repository.PlaceRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -22,6 +23,7 @@ public class PlaceDomainService {
 			.map(PlaceMapper::toDomain);
 	}
 
+	@Transactional
 	public Place save(final Place place) {
 		PlaceEntity savedEntity = placeRepository.save(PlaceMapper.toEntity(place));
 		return PlaceMapper.toDomain(savedEntity);

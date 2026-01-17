@@ -3,7 +3,6 @@ package com.yapp.ndgl.application.domains.place.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +26,6 @@ public class PlaceDetailService {
 	private final GoogleMapsPlaceClient googleMapsPlaceClient;
 	private final ObjectMapper objectMapper;
 
-	@Transactional
 	public PlaceDetailsResponse readPlaceDetail(final String placeId) {
 		log.info("[GetPlaceDetail] 장소 상세 조회 시작. placeId:{}", placeId);
 
