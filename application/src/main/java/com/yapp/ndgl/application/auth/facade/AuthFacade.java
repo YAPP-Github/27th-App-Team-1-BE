@@ -1,13 +1,13 @@
 package com.yapp.ndgl.application.auth.facade;
 
+import com.yapp.ndgl.application.common.annotation.Facade;
 import com.yapp.ndgl.application.auth.controller.dto.AuthResponse;
 import com.yapp.ndgl.application.auth.controller.dto.UserCreateRequest;
 import com.yapp.ndgl.application.auth.controller.dto.UserLoginRequest;
 import com.yapp.ndgl.application.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Component
+@Facade
 @RequiredArgsConstructor
 public class AuthFacade {
 
