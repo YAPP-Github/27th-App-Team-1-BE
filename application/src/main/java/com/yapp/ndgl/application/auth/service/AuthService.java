@@ -1,8 +1,9 @@
 package com.yapp.ndgl.application.auth.service;
 
 import org.springframework.stereotype.Service;
+import com.yapp.ndgl.application.auth.controller.dto.AuthResponse;
 import com.yapp.ndgl.application.auth.controller.dto.UserCreateRequest;
-import com.yapp.ndgl.application.auth.controller.dto.UserCreateResponse;
+import com.yapp.ndgl.application.auth.controller.dto.UserLoginRequest;
 import com.yapp.ndgl.application.auth.component.JwtTokenProvider;
 import com.yapp.ndgl.domain.user.UserDomainService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public UserCreateResponse createUser(final UserCreateRequest request) {
+    public AuthResponse createUser(final UserCreateRequest request) {
         String uuid = userDomainService.createUser(
             request.fcmToken(),
             request.deviceModel(),
@@ -27,7 +28,16 @@ public class AuthService {
 
         String accessToken = jwtTokenProvider.generateToken(uuid);
 
-        return new UserCreateResponse(uuid, accessToken);
+        return new AuthResponse(uuid, accessToken);
+    }
+
+    @Transactional(readOnly = true)
+    public AuthResponse login(final UserLoginRequest request) {
+        userDomainService.findByUuid(request.uuid());
+
+        String accessToken = jwtTokenProvider.generateToken(request.uuid());
+
+        return new AuthResponse(request.uuid(), accessToken);
     }
 }
 
