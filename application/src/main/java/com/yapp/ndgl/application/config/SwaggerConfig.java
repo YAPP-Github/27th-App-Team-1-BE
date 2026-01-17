@@ -26,12 +26,12 @@ public class SwaggerConfig {
                 .bearerFormat("JWT")));
   }
 
-  @Bean
-  public GroupedOpenApi apiGroup() {
-    return GroupedOpenApi.builder()
-        .group("api")
-        .packagesToScan("com.yapp.ndgl.application")
-        .pathsToMatch("/api/**")
-        .build();
-  }
+    @Bean
+    public GroupedOpenApi apiGroup() {
+        return GroupedOpenApi.builder()
+            .group("api")
+            .packagesToScan("com.yapp.ndgl.application")
+            .pathsToMatch("/api/**")
+            .build();
+    }
 }
