@@ -50,17 +50,20 @@ common/             - 공통 유틸/상수/예외
 
    ```bash
    # 데이터베이스 설정 (필수)
-   SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/ndgl_dev
+   SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/ndgl_dev?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
    SPRING_DATASOURCE_USERNAME=your_username
    SPRING_DATASOURCE_PASSWORD=your_password
+
+   # JWT 설정 (선택사항 - 기본값 사용 가능)
+   JWT_SECRET=your-secret-key-change-this-in-production-minimum-256-bits
+   JWT_EXPIRATION=86400000
    ```
 
 2. 애플리케이션 실행
 
    ```bash
    docker compose build
-   docker compose up
-   docker compose logs -f application
+   docker compose up --build
    ```
 
 3. 애플리케이션 중지

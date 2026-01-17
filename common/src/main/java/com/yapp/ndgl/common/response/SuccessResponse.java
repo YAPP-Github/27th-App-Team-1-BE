@@ -20,6 +20,12 @@ public class SuccessResponse<T> {
 		this.data = data;
 	}
 
+	public static <T> SuccessResponse<T> success(final T data) {
+		return SuccessResponse.<T>builder()
+				.data(data)
+				.build();
+	}
+
 	public static <T> SuccessResponse<Map<String, T>> success(final String key, final T data) {
 		return SuccessResponse.<Map<String, T>>builder()
 			.data(Map.of(key, data))
