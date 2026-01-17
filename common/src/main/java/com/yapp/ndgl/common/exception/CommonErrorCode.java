@@ -48,6 +48,12 @@ public enum CommonErrorCode implements BaseErrorCode {
 	 * COMM-05-xxx
 	 * AUTHENTICATION
 	 */
+	UNAUTHORIZED(StatusCode.UNAUTHORIZED, DomainCode.COMM,
+		CategoryCode.AUTHENTICATION, "001", "인증이 필요합니다. JWT 토큰을 확인해주세요."),
+	INVALID_TOKEN(StatusCode.UNAUTHORIZED, DomainCode.COMM,
+		CategoryCode.AUTHENTICATION, "002", "유효하지 않은 JWT 토큰입니다."),
+	EXPIRED_TOKEN(StatusCode.UNAUTHORIZED, DomainCode.COMM,
+		CategoryCode.AUTHENTICATION, "003", "만료된 JWT 토큰입니다."),
 
 	/**
 	 * COMM-06-xxx
