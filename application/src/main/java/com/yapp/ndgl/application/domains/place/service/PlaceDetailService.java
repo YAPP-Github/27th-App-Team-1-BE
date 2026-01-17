@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceClient;
 import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsRequest;
 import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsResponse;
+import com.yapp.ndgl.common.exception.GlobalException;
+import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.PlaceDomainService;
 
@@ -101,7 +103,7 @@ public class PlaceDetailService {
 			);
 		} catch (Exception e) {
 			log.error("PlaceDetailsResponse 변환 실패: placeId={}", place.getPlaceId(), e);
-			throw new RuntimeException("PlaceDetailsResponse 변환 실패", e);
+			throw new GlobalException(GoogleMapsErrorCode.RESPONSE_PARSE_FAILED);
 		}
 	}
 
@@ -148,7 +150,7 @@ public class PlaceDetailService {
 			);
 		} catch (Exception e) {
 			log.error("Place 변환 실패: placeId={}", response.id(), e);
-			throw new RuntimeException("Place 변환 실패", e);
+			throw new GlobalException(GoogleMapsErrorCode.RESPONSE_PARSE_FAILED);
 		}
 	}
 }
