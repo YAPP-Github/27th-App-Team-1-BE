@@ -31,8 +31,6 @@ public enum CommonErrorCode implements BaseErrorCode {
 	 */
 	NOT_FOUND_URI(StatusCode.NOT_FOUND, DomainCode.COMM,
 		CategoryCode.RESOURCE_NOT_FOUND, "001", "요청하신 URI를 찾을 수 없습니다"),
-	NOT_FOUND_USER(StatusCode.NOT_FOUND, DomainCode.COMM,
-		CategoryCode.RESOURCE_NOT_FOUND, "002", "유저를 찾을 수 없습니다"),
 
 	/**
 	 * COMM-03-xxx

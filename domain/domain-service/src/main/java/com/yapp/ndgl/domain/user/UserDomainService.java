@@ -2,8 +2,8 @@ package com.yapp.ndgl.domain.user;
 
 import org.springframework.stereotype.Service;
 
-import com.yapp.ndgl.common.exception.CommonErrorCode;
 import com.yapp.ndgl.common.exception.GlobalException;
+import com.yapp.ndgl.common.exception.UserErrorCode;
 import com.yapp.ndgl.domain.user.entity.UserEntity;
 import com.yapp.ndgl.domain.user.repository.UserRepository;
 
@@ -39,6 +39,6 @@ public class UserDomainService {
   public User findByUuid(final String uuid) {
     return userRepository.findByUuid(uuid)
         .map(UserMapper::toDomain)
-        .orElseThrow(() -> new GlobalException(CommonErrorCode.NOT_FOUND_USER));
+        .orElseThrow(() -> new GlobalException(UserErrorCode.NOT_FOUND_USER));
   }
 }
