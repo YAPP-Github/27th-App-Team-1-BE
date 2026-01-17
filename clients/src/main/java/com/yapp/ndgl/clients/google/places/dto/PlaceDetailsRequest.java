@@ -16,10 +16,4 @@ public record PlaceDetailsRequest(
 			.build();
 	}
 
-	// private final String placeId = "ChIJSc8jdZORQTURu6BMwxrKbGg";
-	//
-	// @Builder.Default
-	// private final String language = "ko";
-
-
 }

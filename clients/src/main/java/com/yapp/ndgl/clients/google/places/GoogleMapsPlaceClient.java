@@ -75,7 +75,10 @@ public class GoogleMapsPlaceClient {
 
 			final PlaceDetailsResponse response = spec.body(PlaceDetailsResponse.class);
 			log.debug("Google Maps Place Details API 호출 성공: placeId={}", request.placeId());
-			return validateResponse(response);
+			validateResponse(response);
+
+			return response;
+
 		} catch (ResourceAccessException e) {
 			log.error("Google Maps API 요청 실패: {}", e.getMessage(), e);
 			if (e.getCause() instanceof SocketTimeoutException) {
@@ -91,11 +94,9 @@ public class GoogleMapsPlaceClient {
 		}
 	}
 
-	private PlaceDetailsResponse validateResponse(final PlaceDetailsResponse response) {
+	private void validateResponse(final PlaceDetailsResponse response) {
 		if (response == null) {
 			throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
 		}
-
-		return response;
 	}
 }
