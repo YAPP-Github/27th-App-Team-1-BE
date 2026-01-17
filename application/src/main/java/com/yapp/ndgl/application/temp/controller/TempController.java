@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Tag(name = "Test", description = "테스트 API")
 @RestController
-@RequestMapping("/api/temp")
+@RequestMapping("/api/v1/temp")
 public class TempController {
 
   @Operation(
