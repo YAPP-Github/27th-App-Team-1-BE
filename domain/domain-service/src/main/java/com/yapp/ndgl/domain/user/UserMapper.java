@@ -12,6 +12,7 @@ public class UserMapper {
 			.deviceOs(user.getDeviceOs())
 			.deviceOsVersion(user.getDeviceOsVersion())
 			.appVersion(user.getAppVersion())
+			.nickname(user.getNickname())
 			.build();
 	}
 
@@ -24,6 +25,7 @@ public class UserMapper {
 			.deviceOs(entity.getDeviceOs())
 			.deviceOsVersion(entity.getDeviceOsVersion())
 			.appVersion(entity.getAppVersion())
+			.nickname(entity.getNickname())
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
 			.build();

@@ -40,7 +40,8 @@ public interface AuthApi {
                           "message": "요청에 성공하였습니다.",
                           "data": {
                             "uuid": "550e8400-e29b-41d4-a716-446655440000",
-                            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                            "nickname": "로맨틱한 고양이"
                           }
                         }
                         """
@@ -112,7 +113,8 @@ public interface AuthApi {
                           "message": "요청에 성공하였습니다.",
                           "data": {
                             "uuid": "550e8400-e29b-41d4-a716-446655440000",
-                            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                            "nickname": "로맨틱한 고양이"
                           }
                         }
                         """
