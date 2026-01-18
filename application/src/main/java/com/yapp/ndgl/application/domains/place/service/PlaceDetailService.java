@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceClient;
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsRequest;
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
+import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
+import com.yapp.ndgl.clients.google.places.dto.response.PlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.domain.place.Place;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PlaceDetailService {
 
 	private final PlaceDomainService placeDomainService;
-	private final GoogleMapsPlaceClient googleMapsPlaceClient;
+	private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
 	private final ObjectMapper objectMapper;
 
 	public PlaceDetailsResponse readPlaceDetail(final String placeId) {
@@ -40,7 +40,7 @@ public class PlaceDetailService {
 		// 2. 없으면 구글 조회
 		log.info("[GetPlaceDetail] DB에 데이터 없음. Google Maps API 호출 시작. placeId:{}", placeId);
 		PlaceDetailsRequest request = PlaceDetailsRequest.of(placeId, "ko");
-		PlaceDetailsResponse response = googleMapsPlaceClient.readPlaceDetails(request);
+		PlaceDetailsResponse response = googleMapsPlaceDetailClient.readPlaceDetails(request);
 
 		// 3. 저장 후 반환
 		Place savedPlace = placeDomainService.save(toPlace(response));

@@ -3,14 +3,15 @@ package com.yapp.ndgl.clients.google.places;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsRequest;
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
+import com.yapp.ndgl.clients.google.places.dto.response.PlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 
@@ -23,8 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GoogleMapsPlaceClient {
+public class GoogleMapsPlaceDetailClient {
 
+	@Value("${google.maps.api-key}")
+	private String apiKey;
+	private static final String GOOGLE_MAPS_KEY_HEADER = "X-Goog-Api-Key";
 	private static final String FIELD_MASK_HEADER = "X-Goog-FieldMask";
 	private static final String DEFAULT_FIELD_MASK = String.join(",",
 		"displayName",
@@ -42,7 +46,7 @@ public class GoogleMapsPlaceClient {
 		"userRatingCount"
 	);
 
-	private final RestClient googleMapsRestClient;
+	private final RestClient googleMapsPlaceRestClient;
 
 	/**
 	 * Place Details API를 호출하고 응답 상태를 검증한다.
@@ -56,7 +60,7 @@ public class GoogleMapsPlaceClient {
 
 			final String uri = "/places/" + request.placeId();
 
-			RestClient.ResponseSpec spec = googleMapsRestClient.get()
+			RestClient.ResponseSpec spec = googleMapsPlaceRestClient.get()
 				.uri(uriBuilder -> {
 					final URI requestURI = uriBuilder
 						.path(uri)
@@ -66,6 +70,7 @@ public class GoogleMapsPlaceClient {
 					log.info("API 요청 URI = {}", requestURI);
 					return requestURI;
 				})
+				.header(GOOGLE_MAPS_KEY_HEADER, apiKey)
 				.header(FIELD_MASK_HEADER, DEFAULT_FIELD_MASK)
 				.retrieve()
 				.onStatus(HttpStatusCode::isError, (req, res) -> {
