@@ -3,6 +3,7 @@ package com.yapp.ndgl.clients.google.places;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -25,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GoogleMapsPlaceDetailClient {
 
+	@Value("${google.maps.api-key}")
+	private String apiKey;
+	private static final String GOOGLE_MAPS_KEY_HEADER = "X-Goog-Api-Key";
 	private static final String FIELD_MASK_HEADER = "X-Goog-FieldMask";
 	private static final String DEFAULT_FIELD_MASK = String.join(",",
 		"displayName",
@@ -66,6 +70,7 @@ public class GoogleMapsPlaceDetailClient {
 					log.info("API 요청 URI = {}", requestURI);
 					return requestURI;
 				})
+				.header(GOOGLE_MAPS_KEY_HEADER, apiKey)
 				.header(FIELD_MASK_HEADER, DEFAULT_FIELD_MASK)
 				.retrieve()
 				.onStatus(HttpStatusCode::isError, (req, res) -> {
