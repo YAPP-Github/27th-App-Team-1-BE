@@ -1,5 +1,6 @@
 package com.yapp.ndgl.domain.place;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +22,15 @@ public class PlaceDomainService {
 	public Optional<Place> findByPlaceId(final String placeId) {
 		return placeRepository.findByPlaceId(placeId)
 			.map(PlaceMapper::toDomain);
+	}
+
+	public List<Place> findByIds(final List<Long> ids) {
+		if (ids == null || ids.isEmpty()) {
+			return List.of();
+		}
+		return placeRepository.findAllById(ids).stream()
+			.map(PlaceMapper::toDomain)
+			.toList();
 	}
 
 	@Transactional
