@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 public enum DomainCode {
 	COMM("공통 에러"),
 	GMAP_PLACE("Google Maps Place 에러"),
-	USER("유저 도메인 에러");
+	USER("유저 도메인 에러"),
+	SURVEY("설문조사 도메인 에러");
 
 	private final String name;
 }
