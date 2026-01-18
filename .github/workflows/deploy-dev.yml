@@ -39,13 +39,7 @@ jobs:
           REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           
           # .env 파일 생성
-          cat > .env << EOF
-          SPRING_DATASOURCE_URL=${{ secrets.DEV_DB_URL }}
-          SPRING_DATASOURCE_USERNAME=${{ secrets.DEV_DB_USER }}
-          SPRING_DATASOURCE_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}
-          IMAGE_NAME=ghcr.io/${REPO_LOWER}:dev
-          TAG=dev
-          EOF
+          echo "${{ secrets.DEV_ENV_FILE }}" > .env
           
           # 파일 전송
           scp -P ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no docker-compose-dev.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEV_SERVER_PATH }}/docker-compose.yml
