@@ -2,7 +2,6 @@ package com.yapp.ndgl.clients.google.places.dto.response;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -24,7 +23,6 @@ public record PlaceDetailsResponse(
 	PostalAddress postalAddress
 ) {
 
-	@JsonCreator
 	public PlaceDetailsResponse(
 		@JsonProperty("id") final String id,
 		@JsonProperty("nationalPhoneNumber") final String nationalPhoneNumber,
@@ -57,7 +55,6 @@ public record PlaceDetailsResponse(
 
 	public record Location(Double latitude, Double longitude) {
 
-		@JsonCreator
 		public Location(
 			@JsonProperty("latitude") final Double latitude,
 			@JsonProperty("longitude") final Double longitude
@@ -69,7 +66,6 @@ public record PlaceDetailsResponse(
 
 	public record DisplayName(String text, String languageCode) {
 
-		@JsonCreator
 		public DisplayName(
 			@JsonProperty("text") final String text,
 			@JsonProperty("languageCode") final String languageCode
@@ -81,7 +77,6 @@ public record PlaceDetailsResponse(
 
 	public record RegularOpeningHours(Boolean openNow, List<Period> periods, List<String> weekdayDescriptions) {
 
-		@JsonCreator
 		public RegularOpeningHours(
 			@JsonProperty("openNow") final Boolean openNow,
 			@JsonProperty("periods") final List<Period> periods,
@@ -95,7 +90,6 @@ public record PlaceDetailsResponse(
 
 	public record Period(DayTime open, DayTime close) {
 
-		@JsonCreator
 		public Period(
 			@JsonProperty("open") final DayTime open,
 			@JsonProperty("close") final DayTime close
@@ -107,7 +101,6 @@ public record PlaceDetailsResponse(
 
 	public record DayTime(Integer day, Integer hour, Integer minute) {
 
-		@JsonCreator
 		public DayTime(
 			@JsonProperty("day") final Integer day,
 			@JsonProperty("hour") final Integer hour,
@@ -127,7 +120,6 @@ public record PlaceDetailsResponse(
 		String flagContentUri,
 		String googleMapsUri) {
 
-		@JsonCreator
 		public Photo(
 			@JsonProperty("name") final String name,
 			@JsonProperty("widthPx") final Integer widthPx,
@@ -150,7 +142,6 @@ public record PlaceDetailsResponse(
 		String uri,
 		String photoUri) {
 
-		@JsonCreator
 		public AuthorAttribution(
 			@JsonProperty("displayName") final String displayName,
 			@JsonProperty("uri") final String uri,
@@ -170,7 +161,6 @@ public record PlaceDetailsResponse(
 		List<String> addressLines
 	) {
 
-		@JsonCreator
 		public PostalAddress(
 			@JsonProperty("regionCode") final String regionCode,
 			@JsonProperty("languageCode") final String languageCode,
