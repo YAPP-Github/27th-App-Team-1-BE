@@ -8,11 +8,9 @@ import com.yapp.ndgl.application.auth.controller.dto.UserCreateRequest;
 import com.yapp.ndgl.application.auth.controller.dto.UserLoginRequest;
 import com.yapp.ndgl.application.auth.facade.AuthFacade;
 import com.yapp.ndgl.common.response.SuccessResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Auth", description = "인증 관련 API")
 @RequiredArgsConstructor
 @RestController
 public class AuthController implements AuthApi {
