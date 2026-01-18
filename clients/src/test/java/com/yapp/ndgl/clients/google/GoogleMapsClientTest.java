@@ -16,9 +16,9 @@ import org.springframework.web.client.RestClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.clients.google.config.GoogleMapsPlaceApiConfig;
-import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceClient;
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsRequest;
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
+import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
+import com.yapp.ndgl.clients.google.places.dto.response.PlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 
@@ -29,7 +29,7 @@ import okhttp3.mockwebserver.MockWebServer;
 class GoogleMapsClientTest {
 
 	private MockWebServer mockWebServer;
-	private GoogleMapsPlaceClient googleMapsClient;
+	private GoogleMapsPlaceDetailClient googleMapsClient;
 	private ObjectMapper objectMapper;
 
 	@BeforeEach
@@ -41,7 +41,7 @@ class GoogleMapsClientTest {
 			.baseUrl(mockWebServer.url("/").toString())
 			.build();
 
-		googleMapsClient = new GoogleMapsPlaceClient(restClient);
+		googleMapsClient = new GoogleMapsPlaceDetailClient(restClient);
 		objectMapper = new ObjectMapper();
 	}
 

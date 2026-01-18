@@ -1,4 +1,4 @@
-package com.yapp.ndgl.clients.google.places.dto;
+package com.yapp.ndgl.clients.google.places.dto.response;
 
 import java.util.List;
 

@@ -9,8 +9,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsRequest;
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
+import com.yapp.ndgl.clients.google.places.dto.response.PlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GoogleMapsPlaceClient {
+public class GoogleMapsPlaceDetailClient {
 
 	private static final String FIELD_MASK_HEADER = "X-Goog-FieldMask";
 	private static final String DEFAULT_FIELD_MASK = String.join(",",
@@ -42,7 +42,7 @@ public class GoogleMapsPlaceClient {
 		"userRatingCount"
 	);
 
-	private final RestClient googleMapsRestClient;
+	private final RestClient googleMapsPlaceRestClient;
 
 	/**
 	 * Place Details API를 호출하고 응답 상태를 검증한다.
@@ -56,7 +56,7 @@ public class GoogleMapsPlaceClient {
 
 			final String uri = "/places/" + request.placeId();
 
-			RestClient.ResponseSpec spec = googleMapsRestClient.get()
+			RestClient.ResponseSpec spec = googleMapsPlaceRestClient.get()
 				.uri(uriBuilder -> {
 					final URI requestURI = uriBuilder
 						.path(uri)
