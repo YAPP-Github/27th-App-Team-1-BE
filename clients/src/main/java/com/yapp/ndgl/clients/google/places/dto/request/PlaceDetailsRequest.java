@@ -1,4 +1,4 @@
-package com.yapp.ndgl.clients.google.places.dto;
+package com.yapp.ndgl.clients.google.places.dto.request;
 
 import lombok.Builder;
 

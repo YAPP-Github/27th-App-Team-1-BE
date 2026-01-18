@@ -2,7 +2,7 @@ package com.yapp.ndgl.application.domains.place.facade;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
 import com.yapp.ndgl.application.domains.place.service.PlaceDetailService;
-import com.yapp.ndgl.clients.google.places.dto.PlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.dto.response.PlaceDetailsResponse;
 
 import lombok.RequiredArgsConstructor;
 

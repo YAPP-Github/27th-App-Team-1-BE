@@ -17,7 +17,9 @@ public enum GoogleMapsErrorCode implements BaseErrorCode {
 	INVALID_PLACE_ID(StatusCode.BAD_REQUEST, DomainCode.GMAP_PLACE,
 		CategoryCode.EXTERNAL_SERVICE, "003", "유효하지 않은 Place ID 입니다"),
 	RESPONSE_PARSE_FAILED(StatusCode.INTERNAL_SERVER_ERROR, DomainCode.GMAP_PLACE,
-		CategoryCode.EXTERNAL_SERVICE, "004", "Google Maps Places API 응답 파싱에 실패했습니다");
+		CategoryCode.EXTERNAL_SERVICE, "004", "Google Maps Places API 응답 파싱에 실패했습니다"),
+	INVALID_PHOTO_NAME(StatusCode.BAD_REQUEST, DomainCode.GMAP_PLACE,
+		CategoryCode.EXTERNAL_SERVICE, "005", "유효하지 않은 Photo Name 입니다");
 
 	private final StatusCode statusCode;
 	private final DomainCode domainCode;
