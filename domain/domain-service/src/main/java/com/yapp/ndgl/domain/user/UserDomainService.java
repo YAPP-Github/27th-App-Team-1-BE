@@ -15,30 +15,32 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserDomainService {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  public String createUser(
-      final String fcmToken,
-      final String deviceModel,
-      final String deviceOs,
-      final String deviceOsVersion,
-      final String appVersion) {
-    User user = User.create(
-        fcmToken,
-        deviceModel,
-        deviceOs,
-        deviceOsVersion,
-        appVersion
-    );
+    public User createUser(
+        final String fcmToken,
+        final String deviceModel,
+        final String deviceOs,
+        final String deviceOsVersion,
+        final String appVersion) {
+        String nickname = UserNicknameGenerator.generate();
 
-    UserEntity savedUserEntity = userRepository.save(UserMapper.toEntity(user));
-    User savedUser = UserMapper.toDomain(savedUserEntity);
-    return savedUser.getUuid();
-  }
+        User user = User.create(
+            fcmToken,
+            deviceModel,
+            deviceOs,
+            deviceOsVersion,
+            appVersion,
+            nickname
+        );
 
-  public User findByUuid(final String uuid) {
-    return userRepository.findByUuid(uuid)
-        .map(UserMapper::toDomain)
-        .orElseThrow(() -> new GlobalException(UserErrorCode.NOT_FOUND_USER));
-  }
+        UserEntity savedUserEntity = userRepository.save(UserMapper.toEntity(user));
+        return UserMapper.toDomain(savedUserEntity);
+    }
+
+    public User findByUuid(final String uuid) {
+        return userRepository.findByUuid(uuid)
+            .map(UserMapper::toDomain)
+            .orElseThrow(() -> new GlobalException(UserErrorCode.NOT_FOUND_USER));
+    }
 }

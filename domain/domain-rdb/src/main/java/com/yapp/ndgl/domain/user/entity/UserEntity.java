@@ -15,38 +15,43 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity extends BaseEntity {
 
-  @Column(nullable = false, unique = true, length = 36)
-  private String uuid;
+    @Column(nullable = false, unique = true, length = 36)
+    private String uuid;
 
-  @Column(nullable = false, length = 500)
-  private String fcmToken;
+    @Column(nullable = false, length = 500)
+    private String fcmToken;
 
-  @Column(length = 100)
-  private String deviceModel;
+    @Column(length = 100)
+    private String deviceModel;
 
-  @Column(length = 50)
-  private String deviceOs;
+    @Column(length = 50)
+    private String deviceOs;
 
-  @Column(length = 100)
-  private String deviceOsVersion;
+    @Column(length = 100)
+    private String deviceOsVersion;
 
-  @Column(length = 50)
-  private String appVersion;
+    @Column(length = 50)
+    private String appVersion;
 
-  @Builder
-  public UserEntity(
-      final String uuid,
-      final String fcmToken,
-      final String deviceModel,
-      final String deviceOs,
-      final String deviceOsVersion,
-      final String appVersion
-  ) {
-    this.uuid = uuid;
-    this.fcmToken = fcmToken;
-    this.deviceModel = deviceModel;
-    this.deviceOs = deviceOs;
-    this.deviceOsVersion = deviceOsVersion;
-    this.appVersion = appVersion;
-  }
+    @Column(nullable = false, length = 50)
+    private String nickname;
+
+    @Builder
+    public UserEntity(
+        final String uuid,
+        final String fcmToken,
+        final String deviceModel,
+        final String deviceOs,
+        final String deviceOsVersion,
+        final String appVersion,
+        final String nickname
+    ) {
+        this.uuid = uuid;
+        this.fcmToken = fcmToken;
+        this.deviceModel = deviceModel;
+        this.deviceOs = deviceOs;
+        this.deviceOsVersion = deviceOsVersion;
+        this.appVersion = appVersion;
+        this.nickname = nickname;
+    }
 }

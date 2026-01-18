@@ -17,6 +17,7 @@ public class User {
   private final String deviceOs;
   private final String deviceOsVersion;
   private final String appVersion;
+  private final String nickname;
   private final LocalDateTime createdAt;
   private final LocalDateTime updatedAt;
 
@@ -25,7 +26,8 @@ public class User {
       final String deviceModel,
       final String deviceOs,
       final String deviceOsVersion,
-      final String appVersion
+      final String appVersion,
+      final String nickname
   ) {
     String uuid = UUID.randomUUID().toString();
     LocalDateTime now = LocalDateTime.now();
@@ -37,6 +39,7 @@ public class User {
         .deviceOs(deviceOs)
         .deviceOsVersion(deviceOsVersion)
         .appVersion(appVersion)
+        .nickname(nickname)
         .createdAt(now)
         .updatedAt(now)
         .build();

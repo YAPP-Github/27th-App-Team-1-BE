@@ -1,5 +1,6 @@
 package com.yapp.ndgl.application.auth.service;
 
+import com.yapp.ndgl.domain.user.User;
 import org.springframework.stereotype.Service;
 import com.yapp.ndgl.application.auth.controller.dto.AuthResponse;
 import com.yapp.ndgl.application.auth.controller.dto.UserCreateRequest;
@@ -18,7 +19,7 @@ public class AuthService {
 
     @Transactional
     public AuthResponse createUser(final UserCreateRequest request) {
-        String uuid = userDomainService.createUser(
+        User user = userDomainService.createUser(
             request.fcmToken(),
             request.deviceModel(),
             request.deviceOs(),
@@ -26,18 +27,18 @@ public class AuthService {
             request.appVersion()
         );
 
-        String accessToken = jwtTokenProvider.generateToken(uuid);
+        String accessToken = jwtTokenProvider.generateToken(user.getUuid());
 
-        return new AuthResponse(uuid, accessToken);
+        return new AuthResponse(user.getUuid(), accessToken, user.getNickname());
     }
 
     @Transactional(readOnly = true)
     public AuthResponse login(final UserLoginRequest request) {
-        userDomainService.findByUuid(request.uuid());
+        User user = userDomainService.findByUuid(request.uuid());
 
         String accessToken = jwtTokenProvider.generateToken(request.uuid());
 
-        return new AuthResponse(request.uuid(), accessToken);
+        return new AuthResponse(request.uuid(), accessToken, user.getNickname());
     }
 }
 
