@@ -1,5 +1,6 @@
 package com.yapp.ndgl.application.auth.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
+@Tag(name = "Auth", description = "인증 관련 API")
 @RequestMapping("/api/v1/auth")
 public interface AuthApi {
 
