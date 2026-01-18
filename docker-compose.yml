@@ -9,10 +9,7 @@ services:
     container_name: ndgl-application
     ports:
       - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    env_file: .env
     restart: unless-stopped
 
 # 로컬 개발: networks를 사용하지 않음

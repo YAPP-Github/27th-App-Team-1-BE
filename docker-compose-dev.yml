@@ -6,10 +6,7 @@ services:
     container_name: ndgl-application-dev
     ports:
       - "5080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    env_file: .env
     networks:
       - backend
     restart: unless-stopped

@@ -36,13 +36,7 @@ jobs:
           REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           
           # .env 파일 생성
-          cat > .env << EOF
-          SPRING_DATASOURCE_URL=${{ secrets.LIVE_DB_URL }}
-          SPRING_DATASOURCE_USERNAME=${{ secrets.LIVE_DB_USER }}
-          SPRING_DATASOURCE_PASSWORD=${{ secrets.LIVE_DB_PASSWORD }}
-          IMAGE_NAME=ghcr.io/${REPO_LOWER}:live
-          TAG=live
-          EOF
+          echo "${{ secrets.LIVE_ENV_FILE }}" > .env
           
           # 파일 전송
           scp -P ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no docker-compose-live.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.LIVE_SERVER_PATH }}/docker-compose.yml
