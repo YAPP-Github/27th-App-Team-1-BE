@@ -22,7 +22,6 @@ public class PlaceDetailFacade {
 		// 1. 장소 세부 정보 조회
 		GooglePlaceDetailsResponse googlePlaceDetailsResponse = placeDetailService.readPlaceDetail(placeId);
 
-		log.info("response = {}", googlePlaceDetailsResponse);
 		// 2. photo URIs 조회 (1개씩 순차 호출) 및 DB 저장
 		PlacePhotoUrisResponse photoResponse = placePhotoService.getPhotoUris(placeId, googlePlaceDetailsResponse.photos());
 
