@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
-import com.yapp.ndgl.clients.google.places.dto.response.PlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.domain.place.Place;
@@ -26,7 +26,7 @@ public class PlaceDetailService {
 	private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
 	private final ObjectMapper objectMapper;
 
-	public PlaceDetailsResponse readPlaceDetail(final String placeId) {
+	public GooglePlaceDetailsResponse readPlaceDetail(final String placeId) {
 		log.info("[GetPlaceDetail] 장소 상세 조회 시작. placeId:{}", placeId);
 
 		// 1. DB 조회
@@ -34,13 +34,13 @@ public class PlaceDetailService {
 
 		if (place != null) {
 			log.info("[GetPlaceDetail] DB 조회 성공 후 반환. placeId:{}, id:{}", placeId, place.getId());
-			return toPlaceDetailsResponse(place);
+			return toGooglePlaceDetailsResponse(place);
 		}
 
 		// 2. 없으면 구글 조회
 		log.info("[GetPlaceDetail] DB에 데이터 없음. Google Maps API 호출 시작. placeId:{}", placeId);
 		PlaceDetailsRequest request = PlaceDetailsRequest.of(placeId, "ko");
-		PlaceDetailsResponse response = googleMapsPlaceDetailClient.readPlaceDetails(request);
+		GooglePlaceDetailsResponse response = googleMapsPlaceDetailClient.readPlaceDetails(request);
 
 		// 3. 저장 후 반환
 		Place savedPlace = placeDomainService.save(toPlace(response));
@@ -48,43 +48,43 @@ public class PlaceDetailService {
 		return response;
 	}
 
-	private PlaceDetailsResponse toPlaceDetailsResponse(Place place) {
+	private GooglePlaceDetailsResponse toGooglePlaceDetailsResponse(Place place) {
 		try {
-			PlaceDetailsResponse.Location location = place.getLatitude() != null && place.getLongitude() != null
-				? new PlaceDetailsResponse.Location(place.getLatitude(), place.getLongitude())
+			GooglePlaceDetailsResponse.Location location = place.getLatitude() != null && place.getLongitude() != null
+				? new GooglePlaceDetailsResponse.Location(place.getLatitude(), place.getLongitude())
 				: null;
 
-			PlaceDetailsResponse.DisplayName displayName = null;
+			GooglePlaceDetailsResponse.DisplayName displayName = null;
 			if (place.getDisplayNameJson() != null) {
-				displayName = objectMapper.readValue(place.getDisplayNameJson(), PlaceDetailsResponse.DisplayName.class);
+				displayName = objectMapper.readValue(place.getDisplayNameJson(), GooglePlaceDetailsResponse.DisplayName.class);
 			}
 
-			PlaceDetailsResponse.RegularOpeningHours regularOpeningHours = null;
+			GooglePlaceDetailsResponse.RegularOpeningHours regularOpeningHours = null;
 			if (place.getRegularOpeningHoursJson() != null) {
 				regularOpeningHours = objectMapper.readValue(
 					place.getRegularOpeningHoursJson(),
-					PlaceDetailsResponse.RegularOpeningHours.class
+					GooglePlaceDetailsResponse.RegularOpeningHours.class
 				);
 			}
 
-			List<PlaceDetailsResponse.Photo> photos = null;
+			List<GooglePlaceDetailsResponse.Photo> photos = null;
 			if (place.getPhotosJson() != null) {
 				photos = objectMapper.readValue(
 					place.getPhotosJson(),
-					new TypeReference<List<PlaceDetailsResponse.Photo>>() {
+					new TypeReference<List<GooglePlaceDetailsResponse.Photo>>() {
 					}
 				);
 			}
 
-			PlaceDetailsResponse.PostalAddress postalAddress = null;
+			GooglePlaceDetailsResponse.PostalAddress postalAddress = null;
 			if (place.getPostalAddressJson() != null) {
 				postalAddress = objectMapper.readValue(
 					place.getPostalAddressJson(),
-					PlaceDetailsResponse.PostalAddress.class
+					GooglePlaceDetailsResponse.PostalAddress.class
 				);
 			}
 
-			return new PlaceDetailsResponse(
+			return new GooglePlaceDetailsResponse(
 				place.getPlaceId(),
 				place.getNationalPhoneNumber(),
 				place.getInternationalPhoneNumber(),
@@ -100,12 +100,12 @@ public class PlaceDetailService {
 				postalAddress
 			);
 		} catch (Exception e) {
-			log.error("PlaceDetailsResponse 변환 실패: placeId={}", place.getPlaceId(), e);
+			log.error("GooglePlaceDetailsResponse 변환 실패: placeId={}", place.getPlaceId(), e);
 			throw new GlobalException(GoogleMapsErrorCode.RESPONSE_PARSE_FAILED);
 		}
 	}
 
-	private Place toPlace(final PlaceDetailsResponse response) {
+	private Place toPlace(final GooglePlaceDetailsResponse response) {
 		try {
 			String displayNameJson = null;
 			if (response.displayName() != null) {

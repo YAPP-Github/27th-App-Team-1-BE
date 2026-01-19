@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.clients.google.config.GoogleMapsPlaceApiConfig;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
-import com.yapp.ndgl.clients.google.places.dto.response.PlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 
@@ -54,7 +54,7 @@ class GoogleMapsClientTest {
 	@DisplayName("Place Details API 호출 성공 시 장소 정보를 반환한다")
 	void getPlaceDetails_success() throws JsonProcessingException {
 		// given
-		PlaceDetailsResponse response = createSuccessResponse();
+		GooglePlaceDetailsResponse response = createSuccessResponse();
 		mockWebServer.enqueue(new MockResponse()
 			.setBody(objectMapper.writeValueAsString(response))
 			.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
@@ -64,7 +64,7 @@ class GoogleMapsClientTest {
 			.build();
 
 		// when
-		PlaceDetailsResponse result = googleMapsClient.readPlaceDetails(request);
+		GooglePlaceDetailsResponse result = googleMapsClient.readPlaceDetails(request);
 
 		// then
 		assertThat(result.id()).isEqualTo("ChIJN1t_tDeuEmsRUsoyG83frY4");
@@ -123,41 +123,41 @@ class GoogleMapsClientTest {
 			});
 	}
 
-	private PlaceDetailsResponse createSuccessResponse() {
-		PlaceDetailsResponse.DisplayName displayName = new PlaceDetailsResponse.DisplayName(
+	private GooglePlaceDetailsResponse createSuccessResponse() {
+		GooglePlaceDetailsResponse.DisplayName displayName = new GooglePlaceDetailsResponse.DisplayName(
 			"Test Place",
 			"en"
 		);
 
-		PlaceDetailsResponse.Location location = new PlaceDetailsResponse.Location(
+		GooglePlaceDetailsResponse.Location location = new GooglePlaceDetailsResponse.Location(
 			37.5665,
 			126.9780
 		);
 
-		PlaceDetailsResponse.DayTime openTime = new PlaceDetailsResponse.DayTime(
+		GooglePlaceDetailsResponse.DayTime openTime = new GooglePlaceDetailsResponse.DayTime(
 			0,
 			0,
 			0
 		);
 
-		PlaceDetailsResponse.Period period = new PlaceDetailsResponse.Period(
+		GooglePlaceDetailsResponse.Period period = new GooglePlaceDetailsResponse.Period(
 			openTime,
 			null
 		);
 
-		PlaceDetailsResponse.RegularOpeningHours openingHours = new PlaceDetailsResponse.RegularOpeningHours(
+		GooglePlaceDetailsResponse.RegularOpeningHours openingHours = new GooglePlaceDetailsResponse.RegularOpeningHours(
 			true,
 			List.of(period),
 			List.of("월요일: 24시간 영업")
 		);
 
-		PlaceDetailsResponse.AuthorAttribution attribution = new PlaceDetailsResponse.AuthorAttribution(
+		GooglePlaceDetailsResponse.AuthorAttribution attribution = new GooglePlaceDetailsResponse.AuthorAttribution(
 			"Y.Maruyama",
 			"https://maps.google.com/maps/contrib/110073645762581158013",
 			"https://lh3.googleusercontent.com/a-/test"
 		);
 
-		PlaceDetailsResponse.Photo photo = new PlaceDetailsResponse.Photo(
+		GooglePlaceDetailsResponse.Photo photo = new GooglePlaceDetailsResponse.Photo(
 			"places/test/photos/1",
 			3024,
 			3024,
@@ -166,7 +166,7 @@ class GoogleMapsClientTest {
 			"https://www.google.com/maps/place/test"
 		);
 
-		PlaceDetailsResponse.PostalAddress postalAddress = new PlaceDetailsResponse.PostalAddress(
+		GooglePlaceDetailsResponse.PostalAddress postalAddress = new GooglePlaceDetailsResponse.PostalAddress(
 			"JP",
 			"ko",
 			"810-0801",
@@ -174,7 +174,7 @@ class GoogleMapsClientTest {
 			List.of("5 조메-3-2 나카스", "하카타구 후쿠오카시")
 		);
 
-		return new PlaceDetailsResponse(
+		return new GooglePlaceDetailsResponse(
 			"ChIJN1t_tDeuEmsRUsoyG83frY4",
 			"050-0000-0000",
 			"+81 50-0000-0000",
@@ -191,16 +191,4 @@ class GoogleMapsClientTest {
 		);
 	}
 
-	private static class TestGoogleMapsConfig extends GoogleMapsPlaceApiConfig {
-		private final String testApiKey;
-
-		TestGoogleMapsConfig(final String testApiKey) {
-			this.testApiKey = testApiKey;
-		}
-
-		@Override
-		public String getApiKey() {
-			return testApiKey;
-		}
-	}
 }

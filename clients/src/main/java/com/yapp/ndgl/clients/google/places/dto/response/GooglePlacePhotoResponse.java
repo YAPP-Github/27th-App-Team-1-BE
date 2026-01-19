@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 /**
  * Google Maps Place Photo API 응답 모델.
  */
-public record PlacePhotoResponse(
+public record GooglePlacePhotoResponse(
 	@JsonAlias("photoUri") String uri
 ) {
 }

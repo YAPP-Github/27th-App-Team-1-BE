@@ -11,7 +11,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
-import com.yapp.ndgl.clients.google.places.dto.response.PlacePhotoResponse;
+import com.yapp.ndgl.clients.google.places.dto.response.GooglePlacePhotoResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 
@@ -36,7 +36,7 @@ public class GoogleMapsPlacePhotoClient {
 	 * @param request Place Photo API 요청 파라미터
 	 * @return 사진 URI가 포함된 응답
 	 */
-	public PlacePhotoResponse getPhotoUri(final PlacePhotoRequest request) {
+	public GooglePlacePhotoResponse getPhotoUri(final PlacePhotoRequest request) {
 		try {
 			validateRequest(request);
 
@@ -59,7 +59,7 @@ public class GoogleMapsPlacePhotoClient {
 					throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
 				});
 
-			PlacePhotoResponse response = spec.body(PlacePhotoResponse.class);
+			GooglePlacePhotoResponse response = spec.body(GooglePlacePhotoResponse.class);
 			log.info("Google Maps Place Photo API 호출 성공: photoName={}", request.photoName());
 			validateResponse(response);
 
@@ -80,7 +80,7 @@ public class GoogleMapsPlacePhotoClient {
 		}
 	}
 
-	private void validateResponse(final PlacePhotoResponse response) {
+	private void validateResponse(final GooglePlacePhotoResponse response) {
 		if (response == null || !StringUtils.hasText(response.uri())) {
 			throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
 		}
