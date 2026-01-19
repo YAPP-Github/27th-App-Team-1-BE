@@ -21,13 +21,21 @@ public class PlacePhotoService {
 	private final PlacePhotoDomainService placePhotoDomainService;
 
 	/**
-	 * photos 목록에서 각 photo의 URI를 1개씩 조회하고 DB에 저장한 후 반환한다.
+	 * placeId에 해당하는 photo URI 목록을 조회한다.
+	 * DB에 저장된 데이터가 있으면 DB에서 조회하고, 없으면 Google API를 호출하여 저장 후 반환한다.
 	 *
 	 * @param placeId 장소 ID
 	 * @param photoMetas GooglePlaceDetailsResponse의 Photo meta 목록
 	 * @return photo URI가 포함된 응답
 	 */
 	public PlacePhotoUrisResponse getPhotoUris(final String placeId, final List<GooglePlaceDetailsResponse.PhotoMeta> photoMetas) {
+		// 1. DB에서 조회
+		List<PlacePhoto> existingPhotos = placePhotoDomainService.findByPlaceId(placeId);
+		if (!existingPhotos.isEmpty()) {
+			return toResponse(existingPhotos);
+		}
+
+		// 2. DB에 없으면 Google API 호출
 		if (photoMetas == null || photoMetas.isEmpty()) {
 			return PlacePhotoUrisResponse.empty();
 		}
@@ -43,7 +51,7 @@ public class PlacePhotoService {
 				);
 			}).toList();
 
-		// POJO 객체 생성
+		// 3. DB에 저장
 		List<PlacePhoto> placePhotos = uris.stream()
 			.map(uri -> PlacePhoto.create(
 				placeId,
@@ -57,6 +65,18 @@ public class PlacePhotoService {
 		placePhotoDomainService.saveAllIfNotExists(placePhotos);
 
 		return PlacePhotoUrisResponse.from(uris);
+	}
+
+	private PlacePhotoUrisResponse toResponse(final List<PlacePhoto> placePhotos) {
+		List<PlacePhotoUrisResponse.PhotoUri> photoUris = placePhotos.stream()
+			.map(photo -> PlacePhotoUrisResponse.PhotoUri.of(
+				photo.getPhotoName(),
+				photo.getWidthPx(),
+				photo.getHeightPx(),
+				photo.getPhotoUri()
+			))
+			.toList();
+		return PlacePhotoUrisResponse.from(photoUris);
 	}
 
 	private String fetchPhotoUri(final GooglePlaceDetailsResponse.PhotoMeta meta) {
