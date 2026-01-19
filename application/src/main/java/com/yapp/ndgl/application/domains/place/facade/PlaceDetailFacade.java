@@ -20,12 +20,13 @@ public class PlaceDetailFacade {
 
 	public PlaceDetailResponse readPlaceDetail(final String placeId) {
 		// 1. 장소 세부 정보 조회
-		GooglePlaceDetailsResponse placeDetailsResponse = placeDetailService.readPlaceDetail(placeId);
+		GooglePlaceDetailsResponse googlePlaceDetailsResponse = placeDetailService.readPlaceDetail(placeId);
 
-		// 2. photo URIs 조회 (1개씩 순차 호출)
-		PlacePhotoUrisResponse photoResponse = placePhotoService.getPhotoUris(placeDetailsResponse.photos());
+		log.info("response = {}", googlePlaceDetailsResponse);
+		// 2. photo URIs 조회 (1개씩 순차 호출) 및 DB 저장
+		PlacePhotoUrisResponse photoResponse = placePhotoService.getPhotoUris(placeId, googlePlaceDetailsResponse.photos());
 
 		// 3. 두 응답을 합쳐서 반환
-		return PlaceDetailResponse.of(placeDetailsResponse, photoResponse);
+		return PlaceDetailResponse.of(googlePlaceDetailsResponse, photoResponse);
 	}
 }

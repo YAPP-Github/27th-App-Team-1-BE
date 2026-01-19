@@ -81,41 +81,22 @@ public record PlaceDetailResponse(
 		String name,
 		Integer widthPx,
 		Integer heightPx,
-		List<AuthorAttribution> authorAttributions,
-		String flagContentUri,
-		String googleMapsUri,
 		String photoUri
 	) {
 
-		public static Photo from(
-			final GooglePlaceDetailsResponse.Photo googlePhoto,
+		public static Photo of(
+			final GooglePlaceDetailsResponse.PhotoMeta googlePhoto,
 			final String photoUri
 		) {
 			if (googlePhoto == null) {
 				return null;
 			}
-			List<AuthorAttribution> attributions = googlePhoto.authorAttributions() != null
-				? googlePhoto.authorAttributions().stream().map(AuthorAttribution::from).toList()
-				: null;
 			return new Photo(
 				googlePhoto.name(),
 				googlePhoto.widthPx(),
 				googlePhoto.heightPx(),
-				attributions,
-				googlePhoto.flagContentUri(),
-				googlePhoto.googleMapsUri(),
 				photoUri
 			);
-		}
-	}
-
-	public record AuthorAttribution(String displayName, String uri, String photoUri) {
-
-		public static AuthorAttribution from(final GooglePlaceDetailsResponse.AuthorAttribution attribution) {
-			if (attribution == null) {
-				return null;
-			}
-			return new AuthorAttribution(attribution.displayName(), attribution.uri(), attribution.photoUri());
 		}
 	}
 
@@ -150,7 +131,7 @@ public record PlaceDetailResponse(
 			photos = googleResponse.photos().stream()
 				.map(googlePhoto -> {
 					String photoUri = findPhotoUri(googlePhoto.name(), photoResponse);
-					return Photo.from(googlePhoto, photoUri);
+					return Photo.of(googlePhoto, photoUri);
 				})
 				.toList();
 		}
@@ -176,10 +157,12 @@ public record PlaceDetailResponse(
 		if (photoResponse == null || photoResponse.photoUris() == null) {
 			return null;
 		}
+
 		return photoResponse.photoUris().stream()
 			.filter(p -> p.name().equals(photoName))
 			.findFirst()
 			.map(PlacePhotoUrisResponse.PhotoUri::photoUri)
 			.orElse(null);
+
 	}
 }

@@ -8,7 +8,8 @@ import com.yapp.ndgl.application.domains.place.dto.PlacePhotoUrisResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
-import com.yapp.ndgl.clients.google.places.dto.response.GooglePlacePhotoResponse;
+import com.yapp.ndgl.domain.place.PlacePhoto;
+import com.yapp.ndgl.domain.place.PlacePhotoDomainService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,48 +18,55 @@ import lombok.RequiredArgsConstructor;
 public class PlacePhotoService {
 
 	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
-
-	public GooglePlacePhotoResponse getPlacePhoto(
-		final String photoName,
-		final int maxHeightPx,
-		final int maxWidthPx
-	) {
-		PlacePhotoRequest request = PlacePhotoRequest.of(photoName, maxHeightPx, maxWidthPx);
-		return googleMapsPlacePhotoClient.getPhotoUri(request);
-	}
+	private final PlacePhotoDomainService placePhotoDomainService;
 
 	/**
-	 * photos 목록에서 각 photo의 URI를 1개씩 조회하여 반환한다.
+	 * photos 목록에서 각 photo의 URI를 1개씩 조회하고 DB에 저장한 후 반환한다.
 	 *
-	 * @param photos GooglePlaceDetailsResponse의 photo 목록
+	 * @param placeId 장소 ID
+	 * @param photoMetas GooglePlaceDetailsResponse의 Photo meta 목록
 	 * @return photo URI가 포함된 응답
 	 */
-	public PlacePhotoUrisResponse getPhotoUris(final List<GooglePlaceDetailsResponse.Photo> photos) {
-		if (photos == null || photos.isEmpty()) {
+	public PlacePhotoUrisResponse getPhotoUris(final String placeId, final List<GooglePlaceDetailsResponse.PhotoMeta> photoMetas) {
+		if (photoMetas == null || photoMetas.isEmpty()) {
 			return PlacePhotoUrisResponse.empty();
 		}
 
-		List<PlacePhotoUrisResponse.PhotoUri> photoUris = photos.stream()
-			.map(this::fetchPhotoUri)
+		List<PlacePhotoUrisResponse.PhotoUri> uris = photoMetas.stream()
+			.map(photoMeta -> {
+				String uri = fetchPhotoUri(photoMeta);
+				return PlacePhotoUrisResponse.PhotoUri.of(
+					photoMeta.name(),
+					photoMeta.widthPx(),
+					photoMeta.heightPx(),
+					uri
+				);
+			}).toList();
+
+		// POJO 객체 생성
+		List<PlacePhoto> placePhotos = uris.stream()
+			.map(uri -> PlacePhoto.create(
+				placeId,
+				uri.name(),
+				uri.photoUri(),
+				uri.widthPx(),
+				uri.heightPx()
+			))
 			.toList();
 
-		return PlacePhotoUrisResponse.from(photoUris);
+		placePhotoDomainService.saveAllIfNotExists(placePhotos);
+
+		return PlacePhotoUrisResponse.from(uris);
 	}
 
-	private PlacePhotoUrisResponse.PhotoUri fetchPhotoUri(final GooglePlaceDetailsResponse.Photo photo) {
+	private String fetchPhotoUri(final GooglePlaceDetailsResponse.PhotoMeta meta) {
 		PlacePhotoRequest request = PlacePhotoRequest.of(
-			photo.name(),
-			photo.heightPx(),
-			photo.widthPx()
+			meta.name(),
+			meta.heightPx(),
+			meta.widthPx()
 		);
 
-		GooglePlacePhotoResponse response = googleMapsPlacePhotoClient.getPhotoUri(request);
+		return googleMapsPlacePhotoClient.getPhotoUri(request).uri();
 
-		return PlacePhotoUrisResponse.PhotoUri.of(
-			photo.name(),
-			photo.widthPx(),
-			photo.heightPx(),
-			response.uri()
-		);
 	}
 }

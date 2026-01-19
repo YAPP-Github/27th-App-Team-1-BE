@@ -5,9 +5,18 @@ import java.util.List;
 /**
  * Photo URI 목록 응답 DTO.
  */
+
 public record PlacePhotoUrisResponse(
 	List<PhotoUri> photoUris
 ) {
+
+	public static PlacePhotoUrisResponse empty() {
+		return new PlacePhotoUrisResponse(List.of());
+	}
+
+	public static PlacePhotoUrisResponse from(final List<PhotoUri> photoUris) {
+		return new PlacePhotoUrisResponse(photoUris);
+	}
 
 	public record PhotoUri(
 		String name,
@@ -15,7 +24,6 @@ public record PlacePhotoUrisResponse(
 		Integer heightPx,
 		String photoUri
 	) {
-
 		public static PhotoUri of(
 			final String name,
 			final Integer widthPx,
@@ -24,13 +32,5 @@ public record PlacePhotoUrisResponse(
 		) {
 			return new PhotoUri(name, widthPx, heightPx, photoUri);
 		}
-	}
-
-	public static PlacePhotoUrisResponse from(final List<PhotoUri> photoUris) {
-		return new PlacePhotoUrisResponse(photoUris);
-	}
-
-	public static PlacePhotoUrisResponse empty() {
-		return new PlacePhotoUrisResponse(List.of());
 	}
 }

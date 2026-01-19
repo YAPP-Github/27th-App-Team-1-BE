@@ -67,11 +67,11 @@ public class PlaceDetailService {
 				);
 			}
 
-			List<GooglePlaceDetailsResponse.Photo> photos = null;
+			List<GooglePlaceDetailsResponse.PhotoMeta> photos = null;
 			if (place.getPhotosJson() != null) {
 				photos = objectMapper.readValue(
 					place.getPhotosJson(),
-					new TypeReference<List<GooglePlaceDetailsResponse.Photo>>() {
+					new TypeReference<List<GooglePlaceDetailsResponse.PhotoMeta>>() {
 					}
 				);
 			}
