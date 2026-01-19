@@ -1,8 +1,14 @@
 package com.yapp.ndgl.application.travel.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.yapp.ndgl.application.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,10 +17,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "Travel Template", description = "여행 템플릿 관련 API")
 @RequestMapping("/api/v1/travel-templates")
@@ -29,7 +31,7 @@ public interface TravelTemplateApi {
             responseCode = "200",
             description = "성공",
             content = @Content(
-                schema = @Schema(implementation = SuccessResponse.class),
+                schema = @Schema(implementation = TravelTemplateResponse.class),
                 examples = @ExampleObject(
                     name = "SUCCESS",
                     value = """
