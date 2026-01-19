@@ -19,7 +19,7 @@ public record GooglePlaceDetailsResponse(
 	RegularOpeningHours regularOpeningHours,
 	Integer userRatingCount,
 	DisplayName displayName,
-	List<Photo> photos,
+	List<PhotoMeta> photos,
 	PostalAddress postalAddress
 ) {
 
@@ -35,7 +35,7 @@ public record GooglePlaceDetailsResponse(
 		@JsonProperty("regularOpeningHours") final RegularOpeningHours regularOpeningHours,
 		@JsonProperty("userRatingCount") final Integer userRatingCount,
 		@JsonProperty("displayName") final DisplayName displayName,
-		@JsonProperty("photos") final List<Photo> photos,
+		@JsonProperty("photos") final List<PhotoMeta> photos,
 		@JsonProperty("postalAddress") final PostalAddress postalAddress
 	) {
 		this.id = id;
@@ -112,7 +112,7 @@ public record GooglePlaceDetailsResponse(
 		}
 	}
 
-	public record Photo(
+	public record PhotoMeta(
 		String name,
 		Integer widthPx,
 		Integer heightPx,
@@ -120,7 +120,7 @@ public record GooglePlaceDetailsResponse(
 		String flagContentUri,
 		String googleMapsUri) {
 
-		public Photo(
+		public PhotoMeta(
 			@JsonProperty("name") final String name,
 			@JsonProperty("widthPx") final Integer widthPx,
 			@JsonProperty("heightPx") final Integer heightPx,
