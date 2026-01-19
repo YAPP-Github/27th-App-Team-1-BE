@@ -14,4 +14,8 @@ public interface PlacePhotoRepository extends JpaRepository<PlacePhotoEntity, Lo
 	Optional<PlacePhotoEntity> findByPlaceIdAndPhotoName(String placeId, String photoName);
 
 	boolean existsByPlaceIdAndPhotoName(String placeId, String photoName);
+
+	boolean existsByPhotoName(String photoName);
+
+	List<PlacePhotoEntity> findByPhotoNameIn(List<String> photoNames);
 }
