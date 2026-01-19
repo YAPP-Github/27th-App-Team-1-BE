@@ -1,5 +1,6 @@
-package com.yapp.ndgl.domain.travel;
+package com.yapp.ndgl.domain.travel.mapper;
 
+import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
 
 public class TravelTemplateMapper {

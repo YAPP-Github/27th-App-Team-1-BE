@@ -1,16 +1,18 @@
-package com.yapp.ndgl.domain.place;
+package com.yapp.ndgl.domain.place.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.yapp.ndgl.domain.place.Place;
+import com.yapp.ndgl.domain.place.mapper.PlaceMapper;
 import com.yapp.ndgl.domain.place.entity.PlaceEntity;
 import com.yapp.ndgl.domain.place.repository.PlaceRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service

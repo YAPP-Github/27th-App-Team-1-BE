@@ -9,7 +9,7 @@ import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.domain.place.PlacePhoto;
-import com.yapp.ndgl.domain.place.PlacePhotoDomainService;
+import com.yapp.ndgl.domain.place.service.PlacePhotoDomainService;
 
 import lombok.RequiredArgsConstructor;
 

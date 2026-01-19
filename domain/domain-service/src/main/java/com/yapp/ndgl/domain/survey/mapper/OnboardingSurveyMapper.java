@@ -1,5 +1,6 @@
-package com.yapp.ndgl.domain.survey;
+package com.yapp.ndgl.domain.survey.mapper;
 
+import com.yapp.ndgl.domain.survey.OnboardingSurvey;
 import com.yapp.ndgl.domain.survey.entity.OnboardingSurveyEntity;
 
 public class OnboardingSurveyMapper {

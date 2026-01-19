@@ -2,9 +2,9 @@ package com.yapp.ndgl.application.domains.survey.service;
 
 import com.yapp.ndgl.application.domains.survey.controller.dto.OnboardingSurveyCreateRequest;
 import com.yapp.ndgl.domain.survey.OnboardingSurvey;
-import com.yapp.ndgl.domain.survey.OnboardingSurveyDomainService;
+import com.yapp.ndgl.domain.survey.service.OnboardingSurveyDomainService;
 import com.yapp.ndgl.domain.user.User;
-import com.yapp.ndgl.domain.user.UserDomainService;
+import com.yapp.ndgl.domain.user.service.UserDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

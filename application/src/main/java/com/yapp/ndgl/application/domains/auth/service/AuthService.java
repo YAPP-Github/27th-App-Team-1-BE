@@ -6,7 +6,7 @@ import com.yapp.ndgl.application.domains.auth.controller.dto.AuthResponse;
 import com.yapp.ndgl.application.domains.auth.controller.dto.UserCreateRequest;
 import com.yapp.ndgl.application.domains.auth.controller.dto.UserLoginRequest;
 import com.yapp.ndgl.application.domains.auth.component.JwtTokenProvider;
-import com.yapp.ndgl.domain.user.UserDomainService;
+import com.yapp.ndgl.domain.user.service.UserDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

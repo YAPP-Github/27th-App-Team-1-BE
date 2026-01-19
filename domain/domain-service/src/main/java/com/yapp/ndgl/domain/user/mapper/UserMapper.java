@@ -1,5 +1,6 @@
-package com.yapp.ndgl.domain.user;
+package com.yapp.ndgl.domain.user.mapper;
 
+import com.yapp.ndgl.domain.user.User;
 import com.yapp.ndgl.domain.user.entity.UserEntity;
 
 public class UserMapper {

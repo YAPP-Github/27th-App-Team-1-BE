@@ -12,7 +12,7 @@ import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsRespon
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.domain.place.Place;
-import com.yapp.ndgl.domain.place.PlaceDomainService;
+import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

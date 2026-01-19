@@ -2,9 +2,9 @@ package com.yapp.ndgl.application.domains.travel.service;
 
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.domain.place.Place;
-import com.yapp.ndgl.domain.place.PlaceDomainService;
+import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
-import com.yapp.ndgl.domain.travel.TravelTemplateDomainService;
+import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

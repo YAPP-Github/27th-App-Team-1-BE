@@ -1,4 +1,4 @@
-package com.yapp.ndgl.domain.place;
+package com.yapp.ndgl.domain.place.service;
 
 import java.util.List;
 import java.util.Set;
@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yapp.ndgl.domain.place.PlacePhoto;
+import com.yapp.ndgl.domain.place.mapper.PlacePhotoMapper;
 import com.yapp.ndgl.domain.place.entity.PlacePhotoEntity;
 import com.yapp.ndgl.domain.place.repository.PlacePhotoRepository;
 

@@ -1,5 +1,6 @@
-package com.yapp.ndgl.domain.place;
+package com.yapp.ndgl.domain.place.mapper;
 
+import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.entity.PlaceEntity;
 
 public class PlaceMapper {
