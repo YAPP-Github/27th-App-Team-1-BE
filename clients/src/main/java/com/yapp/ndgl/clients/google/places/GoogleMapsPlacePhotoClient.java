@@ -39,11 +39,12 @@ public class GoogleMapsPlacePhotoClient {
 	public GooglePlacePhotoResponse getPhotoUri(final PlacePhotoRequest request) {
 		try {
 			validateRequest(request);
+			log.info("request = {}", request);
 
 			RestClient.ResponseSpec spec = googleMapsPlaceRestClient.get()
 				.uri(uriBuilder -> {
 					URI requestURI = uriBuilder
-						.path("/" + request.photoName())
+						.path("/" + request.photoName() + "/media")
 						.queryParam("key", apiKey)
 						.queryParam("maxHeightPx", request.maxHeightPx())
 						.queryParam("maxWidthPx", request.maxWidthPx())
