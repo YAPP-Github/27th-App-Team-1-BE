@@ -1,6 +1,7 @@
 package com.yapp.ndgl.application.domains.place.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 
@@ -159,7 +160,7 @@ public record PlaceDetailResponse(
 		}
 
 		return photoResponse.photoUris().stream()
-			.filter(p -> p.name().equals(photoName))
+			.filter(p -> Objects.equals(p.name(), photoName))
 			.findFirst()
 			.map(PlacePhotoUrisResponse.PhotoUri::photoUri)
 			.orElse(null);
