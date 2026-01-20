@@ -18,7 +18,7 @@ public record GooglePlaceDetailsResponse(
 	String websiteUri,
 	RegularOpeningHours regularOpeningHours,
 	Integer userRatingCount,
-	DisplayName displayName,
+	DisplayName name,
 	List<PhotoMeta> photos
 ) {
 
@@ -33,7 +33,7 @@ public record GooglePlaceDetailsResponse(
 		@JsonProperty("websiteUri") final String websiteUri,
 		@JsonProperty("regularOpeningHours") final RegularOpeningHours regularOpeningHours,
 		@JsonProperty("userRatingCount") final Integer userRatingCount,
-		@JsonProperty("displayName") final DisplayName displayName,
+		@JsonProperty("displayName") final DisplayName name,
 		@JsonProperty("photos") final List<PhotoMeta> photos
 	) {
 		this.id = id;
@@ -46,7 +46,7 @@ public record GooglePlaceDetailsResponse(
 		this.websiteUri = websiteUri;
 		this.regularOpeningHours = regularOpeningHours;
 		this.userRatingCount = userRatingCount;
-		this.displayName = displayName;
+		this.name = name;
 		this.photos = photos;
 	}
 

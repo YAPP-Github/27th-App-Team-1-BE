@@ -20,7 +20,7 @@ public class Place {
 	private final String websiteUri;
 	private final String googleMapsUri;
 	private final Integer userRatingCount;
-	private final String displayNameJson;
+	private final String name;
 	private final String regularOpeningHoursJson;
 	private final String photosJson;
 	private final LocalDateTime createdAt;
@@ -37,7 +37,7 @@ public class Place {
 		final String websiteUri,
 		final String googleMapsUri,
 		final Integer userRatingCount,
-		final String displayNameJson,
+		final String name,
 		final String regularOpeningHoursJson,
 		final String photosJson
 	) {
@@ -52,7 +52,7 @@ public class Place {
 			.websiteUri(websiteUri)
 			.googleMapsUri(googleMapsUri)
 			.userRatingCount(userRatingCount)
-			.displayNameJson(displayNameJson)
+			.name(name)
 			.regularOpeningHoursJson(regularOpeningHoursJson)
 			.photosJson(photosJson)
 			.build();
