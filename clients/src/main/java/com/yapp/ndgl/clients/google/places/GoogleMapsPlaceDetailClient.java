@@ -11,7 +11,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
-import com.yapp.ndgl.clients.google.places.dto.response.PlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 
@@ -54,7 +54,7 @@ public class GoogleMapsPlaceDetailClient {
 	 * @param request Place Details API 요청 파라미터
 	 * @return 검증된 Place Details 응답
 	 */
-	public PlaceDetailsResponse readPlaceDetails(final PlaceDetailsRequest request) {
+	public GooglePlaceDetailsResponse readPlaceDetails(final PlaceDetailsRequest request) {
 		try {
 			validateRequest(request);
 
@@ -78,7 +78,7 @@ public class GoogleMapsPlaceDetailClient {
 					throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
 				});
 
-			final PlaceDetailsResponse response = spec.body(PlaceDetailsResponse.class);
+			final GooglePlaceDetailsResponse response = spec.body(GooglePlaceDetailsResponse.class);
 			log.debug("Google Maps Place Details API 호출 성공: placeId={}", request.placeId());
 			validateResponse(response);
 
@@ -99,7 +99,7 @@ public class GoogleMapsPlaceDetailClient {
 		}
 	}
 
-	private void validateResponse(final PlaceDetailsResponse response) {
+	private void validateResponse(final GooglePlaceDetailsResponse response) {
 		if (response == null) {
 			throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
 		}
