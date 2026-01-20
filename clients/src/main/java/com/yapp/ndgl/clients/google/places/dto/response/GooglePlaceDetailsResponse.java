@@ -82,22 +82,16 @@ public record GooglePlaceDetailsResponse(
 	public record PhotoMeta(
 		String name,
 		Integer widthPx,
-		Integer heightPx,
-		String flagContentUri,
-		String googleMapsUri) {
+		Integer heightPx) {
 
 		public PhotoMeta(
 			@JsonProperty("name") final String name,
 			@JsonProperty("widthPx") final Integer widthPx,
-			@JsonProperty("heightPx") final Integer heightPx,
-			@JsonProperty("flagContentUri") final String flagContentUri,
-			@JsonProperty("googleMapsUri") final String googleMapsUri
+			@JsonProperty("heightPx") final Integer heightPx
 		) {
 			this.name = name;
 			this.widthPx = widthPx;
 			this.heightPx = heightPx;
-			this.flagContentUri = flagContentUri;
-			this.googleMapsUri = googleMapsUri;
 		}
 	}
 }

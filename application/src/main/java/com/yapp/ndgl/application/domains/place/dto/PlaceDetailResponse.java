@@ -10,6 +10,7 @@ import java.util.Objects;
 public record PlaceDetailResponse(
 	String id,
 	String name,
+	String thumbnail,
 	String nationalPhoneNumber,
 	String internationalPhoneNumber,
 	String formattedAddress,
@@ -72,6 +73,7 @@ public record PlaceDetailResponse(
 		return new PlaceDetailResponse(
 			placeInfoResponse.id(),
 			placeInfoResponse.name(),
+			placeInfoResponse.thumbnail(),
 			placeInfoResponse.nationalPhoneNumber(),
 			placeInfoResponse.internationalPhoneNumber(),
 			placeInfoResponse.formattedAddress(),

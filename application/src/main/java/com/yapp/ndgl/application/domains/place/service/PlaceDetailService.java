@@ -1,14 +1,13 @@
 package com.yapp.ndgl.application.domains.place.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.place.dto.PlaceInfoResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
+import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
+import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
@@ -25,6 +24,7 @@ public class PlaceDetailService {
 
 	private final PlaceDomainService placeDomainService;
 	private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
+	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
 	private final ObjectMapper objectMapper;
 
 	public PlaceInfoResponse readPlaceDetail(final String placeId) {
@@ -35,7 +35,7 @@ public class PlaceDetailService {
 
 		if (place != null) {
 			log.info("[GetPlaceDetail] DB 조회 성공 후 반환. placeId:{}, id:{}", placeId, place.getId());
-			return toPlaceDetailInfoResponse(place);
+			return PlaceInfoResponse.from(place, objectMapper);
 		}
 
 		// 2. 없으면 구글 조회
@@ -43,57 +43,17 @@ public class PlaceDetailService {
 		PlaceDetailsRequest request = PlaceDetailsRequest.of(placeId, "ko");
 		GooglePlaceDetailsResponse response = googleMapsPlaceDetailClient.readPlaceDetails(request);
 
+		GooglePlaceDetailsResponse.PhotoMeta photoMeta = response.photos().get(0);
+		PlacePhotoRequest photoRequest = PlacePhotoRequest.of(photoMeta.name(), photoMeta.heightPx(), photoMeta.widthPx());
+		String thumbnail = googleMapsPlacePhotoClient.getPhotoUri(photoRequest).uri();
+
 		// 3. 저장 후 반환
-		Place savedPlace = placeDomainService.save(toPlace(response));
+		Place savedPlace = placeDomainService.save(toPlace(response, thumbnail));
 		log.info("[GetPlaceDetail] DB 저장 완료 후 반환. placeId:{}, id:{}", placeId, savedPlace.getId());
-		return PlaceInfoResponse.from(response);
+		return PlaceInfoResponse.from(savedPlace, objectMapper);
 	}
 
-	private PlaceInfoResponse toPlaceDetailInfoResponse(final Place place) {
-		try {
-			PlaceInfoResponse.Location location = place.getLatitude() != null && place.getLongitude() != null
-				? new PlaceInfoResponse.Location(place.getLatitude(), place.getLongitude())
-				: null;
-
-			List<PlaceInfoResponse.PhotoMeta> photos = null;
-			if (place.getPhotosJson() != null) {
-				photos = objectMapper.readValue(
-					place.getPhotosJson(),
-					new TypeReference<List<PlaceInfoResponse.PhotoMeta>>() {
-					}
-				);
-			}
-
-			List<String> regularOpeningHours = null;
-			if (place.getRegularOpeningHours() != null) {
-				regularOpeningHours = objectMapper.readValue(
-					place.getRegularOpeningHours(),
-					new TypeReference<List<String>>() {
-					}
-				);
-			}
-
-			return new PlaceInfoResponse(
-				place.getPlaceId(),
-				place.getName(),
-				place.getNationalPhoneNumber(),
-				place.getInternationalPhoneNumber(),
-				place.getFormattedAddress(),
-				location,
-				place.getUserRatingCount(),
-				place.getRating(),
-				regularOpeningHours,
-				place.getGoogleMapsUri(),
-				place.getWebsiteUri(),
-				photos
-			);
-		} catch (Exception e) {
-			log.error("PlaceDetailInfoResponse 변환 실패: placeId={}", place.getPlaceId(), e);
-			throw new GlobalException(GoogleMapsErrorCode.RESPONSE_PARSE_FAILED);
-		}
-	}
-
-	private Place toPlace(final GooglePlaceDetailsResponse response) {
+	private Place toPlace(final GooglePlaceDetailsResponse response, final String thumbnail) {
 		try {
 			String name = null;
 			if (response.name() != null) {
@@ -127,6 +87,7 @@ public class PlaceDetailService {
 				response.googleMapsUri(),
 				response.userRatingCount(),
 				name,
+				thumbnail,
 				regularOpeningHours,
 				photosJson
 			);

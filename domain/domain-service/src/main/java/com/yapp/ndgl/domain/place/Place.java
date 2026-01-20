@@ -20,6 +20,7 @@ public class Place {
 	private final String googleMapsUri;
 	private final Integer userRatingCount;
 	private final String name;
+	private final String thumbnail;
 	private final String regularOpeningHours;
 	private final String photosJson;
 	private final LocalDateTime createdAt;
@@ -37,6 +38,7 @@ public class Place {
 		final String googleMapsUri,
 		final Integer userRatingCount,
 		final String name,
+		final String thumbnail,
 		final String regularOpeningHours,
 		final String photosJson
 	) {
@@ -52,6 +54,7 @@ public class Place {
 			.googleMapsUri(googleMapsUri)
 			.userRatingCount(userRatingCount)
 			.name(name)
+			.thumbnail(thumbnail)
 			.regularOpeningHours(regularOpeningHours)
 			.photosJson(photosJson)
 			.build();
