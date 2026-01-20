@@ -32,12 +32,9 @@ public interface PlaceApi {
 				examples = @ExampleObject(
 					name = "SUCCESS",
 					value = """
-						{
-						    "code": "2000",
-						    "message": "요청에 성공하였습니다.",
-						    "data": {
-						        "place": {
+						"place": {
 						            "id": "ChIJPR5EUkCNGGARyhvN1EVWEc0",
+						            "name": "규카츠 모토무라 신주쿠 본점",
 						            "nationalPhoneNumber": "03-6457-6920",
 						            "internationalPhoneNumber": "+81 3-6457-6920",
 						            "formattedAddress": "일본 〒160-0021 Tokyo, Shinjuku City, Kabukichō, 1-chōme−２５−３ WaMall, B2F 西武新宿駅前ビル",
@@ -45,112 +42,19 @@ public interface PlaceApi {
 						                "latitude": 35.6946268,
 						                "longitude": 139.7016497
 						            },
+						            "userRatingCount": 7294,
 						            "rating": 4.9,
+						            "regularOpeningHours": [
+						                "월요일: AM 11:00 ~ PM 10:00",
+						                "화요일: AM 11:00 ~ PM 10:00",
+						                "수요일: AM 11:00 ~ PM 10:00",
+						                "목요일: AM 11:00 ~ PM 10:00",
+						                "금요일: AM 11:00 ~ PM 10:00",
+						                "토요일: AM 11:00 ~ PM 10:00",
+						                "일요일: AM 11:00 ~ PM 10:00"
+						            ],
 						            "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
 						            "websiteUri": "https://www.gyukatsu-motomura.com/store/Shinjuku-Main_Store?utm_source=google&utm_medium=GBP_shinjuku-main",
-						            "regularOpeningHours": {
-						                "openNow": false,
-						                "periods": [
-						                    {
-						                        "open": {
-						                            "day": 0,
-						                            "hour": 11,
-						                            "minute": 0
-						                        },
-						                        "close": {
-						                            "day": 0,
-						                            "hour": 22,
-						                            "minute": 0
-						                        }
-						                    },
-						                    {
-						                        "open": {
-						                            "day": 1,
-						                            "hour": 11,
-						                            "minute": 0
-						                        },
-						                        "close": {
-						                            "day": 1,
-						                            "hour": 22,
-						                            "minute": 0
-						                        }
-						                    },
-						                    {
-						                        "open": {
-						                            "day": 2,
-						                            "hour": 11,
-						                            "minute": 0
-						                        },
-						                        "close": {
-						                            "day": 2,
-						                            "hour": 22,
-						                            "minute": 0
-						                        }
-						                    },
-						                    {
-						                        "open": {
-						                            "day": 3,
-						                            "hour": 11,
-						                            "minute": 0
-						                        },
-						                        "close": {
-						                            "day": 3,
-						                            "hour": 22,
-						                            "minute": 0
-						                        }
-						                    },
-						                    {
-						                        "open": {
-						                            "day": 4,
-						                            "hour": 11,
-						                            "minute": 0
-						                        },
-						                        "close": {
-						                            "day": 4,
-						                            "hour": 22,
-						                            "minute": 0
-						                        }
-						                    },
-						                    {
-						                        "open": {
-						                            "day": 5,
-						                            "hour": 11,
-						                            "minute": 0
-						                        },
-						                        "close": {
-						                            "day": 5,
-						                            "hour": 22,
-						                            "minute": 0
-						                        }
-						                    },
-						                    {
-						                        "open": {
-						                            "day": 6,
-						                            "hour": 11,
-						                            "minute": 0
-						                        },
-						                        "close": {
-						                            "day": 6,
-						                            "hour": 22,
-						                            "minute": 0
-						                        }
-						                    }
-						                ],
-						                "weekdayDescriptions": [
-						                    "월요일: AM 11:00 ~ PM 10:00",
-						                    "화요일: AM 11:00 ~ PM 10:00",
-						                    "수요일: AM 11:00 ~ PM 10:00",
-						                    "목요일: AM 11:00 ~ PM 10:00",
-						                    "금요일: AM 11:00 ~ PM 10:00",
-						                    "토요일: AM 11:00 ~ PM 10:00",
-						                    "일요일: AM 11:00 ~ PM 10:00"
-						                ]
-						            },
-						            "userRatingCount": 7294,
-						            "displayName": {
-						                "text": "규카츠 모토무라 신주쿠 본점",
-						                "languageCode": "ko"
-						            },
 						            "photos": [
 						                {
 						                    "name": "places/ChIJPR5EUkCNGGARyhvN1EVWEc0/photos/AcnlKN0lI8P4nBUdzcxtdgiIoqfHBok-JjiblvJSkRWRz0tY7qOx36ur_nTq5ge0PDrqVisUNGhJXu5eRLkAh47A46O1nl-Pz9u6uF6hA9qexlhjGjza2OU7RvFkKZO08B-NlGiHX48wwxJHYPJP7zjDlxHMW01RQ50tjQ-cElBSw5SWJV7WeFaV7ucL6hVm_C4AzpgmFMM7Zn6W5D04tyN7XY7t1sv4s3cWgvm_qP98z1D6iY8B9XIiFybFFkPG-B_AkZsjUy0mfdWVKOzs9m2XbTqj5DV0_BtxunE6NHDmMb7xaA",
@@ -175,26 +79,9 @@ public interface PlaceApi {
 						                    "widthPx": 2048,
 						                    "heightPx": 2048,
 						                    "photoUri": "https://lh3.googleusercontent.com/place-photos/AEkURDy1Cnf9q3WReJC6ENTjje5HlfMMBMLJ9c833nfozwS1CgriTRQlOWOnbetukGXDCUwKHEu6xeK79CHxsZe75jlFJIoz6pViokXK12NZojqQZnYcyvgUAhXHqEmiQQ3bx9Ohsf9gCdu-nSRrJ-c=s4800-w2048-h2048"
-						                },
-						                {
-						                    "name": "places/ChIJPR5EUkCNGGARyhvN1EVWEc0/photos/AcnlKN1m5EfYd0XVg70EZHFzQ45TQNffUqEJmiyD2_ljhIxbti67AHXx07wpmQE1kvTl2soaw2kmUkvtmCHrd8qq249qMn7J52ApKCfjTqGbJP47yB2LWqfyOUqklNfBhtB7z9fkNj0FrzGCrk6ZctFbf0OH4T-mAr05uE7Ng3BWT2afwb4lv2nfgksa78XuIOQgV6CK8rnFXJOyI-Kqaajoukhkl-YA0MMxwAd60epMpzO4SxaLs44eNR-oklkjJ8oLfHs6lRSyKz1mNaoK-YECebDr416yAhATCJKDXHFFNtvYHpniXiPQsS4-GDPa-AueXekuMZ8Y8C6w-U1eLcm5f4_lNuHwMtlia3H5w_KSVNtREcqZMWnYcudlqYGmW0jvbp7x15zmBNHwFSAKN7oZuaO94K5Mr0PwswA8p084kJTe8-e_GoJDcsjB9vkL9b9k",
-						                    "widthPx": 4000,
-						                    "heightPx": 2252,
-						                    "photoUri": "https://lh3.googleusercontent.com/place-photos/AEkURDx4RWAufHCbizf6am4bOWA2nOJoJJo2GiwC9BZNO4K4U1h7x-AzZuGHhevacqp8R8FILlKwFx91Ea4KT6ic_GZsWKiuFNr8t6XSSwmWgsi1T_eynJXLtGXi-rMF5b4piijISE6AIwd6WtCS6SEvSsEC7g=s4800-w4000-h2252"
 						                }
-						            ],
-						            "postalAddress": {
-						                "regionCode": "JP",
-						                "languageCode": "ko",
-						                "postalCode": "160-0021",
-						                "administrativeArea": "도쿄도",
-						                "addressLines": [
-						                    "신주쿠구 가부키초 1 조메−２５−3 WaMall, B2F 西武新宿駅前ビル"
-						                ]
-						            }
+						            ]
 						        }
-						    }
-						}
 						"""
 				)
 			)
