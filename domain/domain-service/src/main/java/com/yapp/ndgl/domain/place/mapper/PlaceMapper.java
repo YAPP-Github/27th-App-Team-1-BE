@@ -18,7 +18,7 @@ public class PlaceMapper {
 			.googleMapsUri(place.getGoogleMapsUri())
 			.userRatingCount(place.getUserRatingCount())
 			.name(place.getName())
-			.regularOpeningHoursJson(place.getRegularOpeningHoursJson())
+			.regularOpeningHours(place.getRegularOpeningHours())
 			.photosJson(place.getPhotosJson())
 			.build();
 	}
@@ -37,7 +37,7 @@ public class PlaceMapper {
 			.googleMapsUri(entity.getGoogleMapsUri())
 			.userRatingCount(entity.getUserRatingCount())
 			.name(entity.getName())
-			.regularOpeningHoursJson(entity.getRegularOpeningHoursJson())
+			.regularOpeningHours(entity.getRegularOpeningHours())
 			.photosJson(entity.getPhotosJson())
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())

@@ -55,19 +55,20 @@ public class PlaceDetailService {
 				? new PlaceInfoResponse.Location(place.getLatitude(), place.getLongitude())
 				: null;
 
-			PlaceInfoResponse.RegularOpeningHours regularOpeningHours = null;
-			if (place.getRegularOpeningHoursJson() != null) {
-				regularOpeningHours = objectMapper.readValue(
-					place.getRegularOpeningHoursJson(),
-					PlaceInfoResponse.RegularOpeningHours.class
-				);
-			}
-
 			List<PlaceInfoResponse.PhotoMeta> photos = null;
 			if (place.getPhotosJson() != null) {
 				photos = objectMapper.readValue(
 					place.getPhotosJson(),
 					new TypeReference<List<PlaceInfoResponse.PhotoMeta>>() {
+					}
+				);
+			}
+
+			List<String> regularOpeningHours = null;
+			if (place.getRegularOpeningHours() != null) {
+				regularOpeningHours = objectMapper.readValue(
+					place.getRegularOpeningHours(),
+					new TypeReference<List<String>>() {
 					}
 				);
 			}
@@ -99,9 +100,11 @@ public class PlaceDetailService {
 				name = response.name().text();
 			}
 
-			String regularOpeningHoursJson = null;
+			String regularOpeningHours = null;
 			if (response.regularOpeningHours() != null) {
-				regularOpeningHoursJson = objectMapper.writeValueAsString(response.regularOpeningHours());
+				regularOpeningHours = objectMapper.writeValueAsString(
+					response.regularOpeningHours().regularOpeningHours()
+				);
 			}
 
 			String photosJson = null;
@@ -124,7 +127,7 @@ public class PlaceDetailService {
 				response.googleMapsUri(),
 				response.userRatingCount(),
 				name,
-				regularOpeningHoursJson,
+				regularOpeningHours,
 				photosJson
 			);
 		} catch (Exception e) {

@@ -70,12 +70,12 @@ public record GooglePlaceDetailsResponse(
 		}
 	}
 
-	public record RegularOpeningHours(List<String> weekdayDescriptions) {
+	public record RegularOpeningHours(List<String> regularOpeningHours) {
 
 		public RegularOpeningHours(
-			@JsonProperty("weekdayDescriptions") final List<String> weekdayDescriptions
+			@JsonProperty("weekdayDescriptions") final List<String> regularOpeningHours
 		) {
-			this.weekdayDescriptions = weekdayDescriptions;
+			this.regularOpeningHours = regularOpeningHours;
 		}
 	}
 

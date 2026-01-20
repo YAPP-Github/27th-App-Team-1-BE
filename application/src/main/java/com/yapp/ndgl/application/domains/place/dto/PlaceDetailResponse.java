@@ -56,12 +56,12 @@ public record PlaceDetailResponse(
 	}
 
 	public static PlaceDetailResponse of(
-		final PlaceInfoResponse googleResponse,
+		final PlaceInfoResponse placeInfoResponse,
 		final PlacePhotoUrisResponse photoResponse
 	) {
 		List<Photo> photos = null;
-		if (googleResponse.photos() != null) {
-			photos = googleResponse.photos().stream()
+		if (placeInfoResponse.photos() != null) {
+			photos = placeInfoResponse.photos().stream()
 				.map(googlePhoto -> {
 					String photoUri = findPhotoUri(googlePhoto.name(), photoResponse);
 					return Photo.of(googlePhoto, photoUri);
@@ -70,17 +70,17 @@ public record PlaceDetailResponse(
 		}
 
 		return new PlaceDetailResponse(
-			googleResponse.id(),
-			googleResponse.name(),
-			googleResponse.nationalPhoneNumber(),
-			googleResponse.internationalPhoneNumber(),
-			googleResponse.formattedAddress(),
-			Location.from(googleResponse.location()),
-			googleResponse.userRatingCount(),
-			googleResponse.rating(),
-			googleResponse.regularOpeningHours().weekdayDescriptions(),
-			googleResponse.googleMapsUri(),
-			googleResponse.websiteUri(),
+			placeInfoResponse.id(),
+			placeInfoResponse.name(),
+			placeInfoResponse.nationalPhoneNumber(),
+			placeInfoResponse.internationalPhoneNumber(),
+			placeInfoResponse.formattedAddress(),
+			Location.from(placeInfoResponse.location()),
+			placeInfoResponse.userRatingCount(),
+			placeInfoResponse.rating(),
+			placeInfoResponse.regularOpeningHours(),
+			placeInfoResponse.googleMapsUri(),
+			placeInfoResponse.websiteUri(),
 			photos
 			);
 	}

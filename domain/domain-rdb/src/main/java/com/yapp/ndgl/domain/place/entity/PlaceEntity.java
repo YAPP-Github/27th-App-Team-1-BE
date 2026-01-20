@@ -1,6 +1,7 @@
 package com.yapp.ndgl.domain.place.entity;
 
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
@@ -52,7 +53,7 @@ public class PlaceEntity extends BaseEntity {
 
 	@Lob
 	@Column(columnDefinition = "JSON")
-	private String regularOpeningHoursJson;
+	private String regularOpeningHours;
 
 	@Lob
 	@Column(columnDefinition = "JSON")
@@ -71,7 +72,7 @@ public class PlaceEntity extends BaseEntity {
 		final String googleMapsUri,
 		final Integer userRatingCount,
 		final String name,
-		final String regularOpeningHoursJson,
+		final String regularOpeningHours,
 		final String photosJson
 	) {
 		this.placeId = placeId;
@@ -85,7 +86,7 @@ public class PlaceEntity extends BaseEntity {
 		this.googleMapsUri = googleMapsUri;
 		this.userRatingCount = userRatingCount;
 		this.name = name;
-		this.regularOpeningHoursJson = regularOpeningHoursJson;
+		this.regularOpeningHours = regularOpeningHours;
 		this.photosJson = photosJson;
 	}
 }

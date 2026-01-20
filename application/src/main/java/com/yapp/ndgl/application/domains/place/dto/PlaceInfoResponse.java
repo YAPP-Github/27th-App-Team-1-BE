@@ -16,7 +16,7 @@ public record PlaceInfoResponse(
 	Location location,
 	Integer userRatingCount,
 	Double rating,
-	RegularOpeningHours regularOpeningHours,
+	List<String> regularOpeningHours,
 	String googleMapsUri,
 	String websiteUri,
 	List<PhotoMeta> photos
@@ -28,15 +28,6 @@ public record PlaceInfoResponse(
 				return null;
 			}
 			return new Location(location.latitude(), location.longitude());
-		}
-	}
-
-	public record RegularOpeningHours(List<String> weekdayDescriptions) {
-		public static RegularOpeningHours from(final GooglePlaceDetailsResponse.RegularOpeningHours regularOpeningHours) {
-			if (regularOpeningHours == null) {
-				return null;
-			}
-			return new RegularOpeningHours(regularOpeningHours.weekdayDescriptions());
 		}
 	}
 
@@ -84,7 +75,7 @@ public record PlaceInfoResponse(
 			Location.from(response.location()),
 			response.userRatingCount(),
 			response.rating(),
-			RegularOpeningHours.from(response.regularOpeningHours()),
+			response.regularOpeningHours().regularOpeningHours(),
 			response.googleMapsUri(),
 			response.websiteUri(),
 			photos
