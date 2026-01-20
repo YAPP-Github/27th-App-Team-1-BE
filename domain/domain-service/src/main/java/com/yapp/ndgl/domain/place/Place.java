@@ -23,7 +23,6 @@ public class Place {
 	private final String displayNameJson;
 	private final String regularOpeningHoursJson;
 	private final String photosJson;
-	private final String postalAddressJson;
 	private final LocalDateTime createdAt;
 	private final LocalDateTime updatedAt;
 
@@ -40,8 +39,7 @@ public class Place {
 		final Integer userRatingCount,
 		final String displayNameJson,
 		final String regularOpeningHoursJson,
-		final String photosJson,
-		final String postalAddressJson
+		final String photosJson
 	) {
 		return Place.builder()
 			.placeId(placeId)
@@ -57,7 +55,6 @@ public class Place {
 			.displayNameJson(displayNameJson)
 			.regularOpeningHoursJson(regularOpeningHoursJson)
 			.photosJson(photosJson)
-			.postalAddressJson(postalAddressJson)
 			.build();
 	}
 }

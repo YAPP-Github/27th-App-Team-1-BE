@@ -76,14 +76,6 @@ public class PlaceDetailService {
 				);
 			}
 
-			GooglePlaceDetailsResponse.PostalAddress postalAddress = null;
-			if (place.getPostalAddressJson() != null) {
-				postalAddress = objectMapper.readValue(
-					place.getPostalAddressJson(),
-					GooglePlaceDetailsResponse.PostalAddress.class
-				);
-			}
-
 			return new GooglePlaceDetailsResponse(
 				place.getPlaceId(),
 				place.getNationalPhoneNumber(),
@@ -96,8 +88,7 @@ public class PlaceDetailService {
 				regularOpeningHours,
 				place.getUserRatingCount(),
 				displayName,
-				photos,
-				postalAddress
+				photos
 			);
 		} catch (Exception e) {
 			log.error("GooglePlaceDetailsResponse 변환 실패: placeId={}", place.getPlaceId(), e);
@@ -122,11 +113,6 @@ public class PlaceDetailService {
 				photosJson = objectMapper.writeValueAsString(response.photos());
 			}
 
-			String postalAddressJson = null;
-			if (response.postalAddress() != null) {
-				postalAddressJson = objectMapper.writeValueAsString(response.postalAddress());
-			}
-
 			Double latitude = response.location() != null ? response.location().latitude() : null;
 			Double longitude = response.location() != null ? response.location().longitude() : null;
 
@@ -143,8 +129,7 @@ public class PlaceDetailService {
 				response.userRatingCount(),
 				displayNameJson,
 				regularOpeningHoursJson,
-				photosJson,
-				postalAddressJson
+				photosJson
 			);
 		} catch (Exception e) {
 			log.error("Place 변환 실패: placeId={}", response.id(), e);

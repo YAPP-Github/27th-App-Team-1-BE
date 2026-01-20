@@ -20,7 +20,6 @@ public class PlaceMapper {
 			.displayNameJson(place.getDisplayNameJson())
 			.regularOpeningHoursJson(place.getRegularOpeningHoursJson())
 			.photosJson(place.getPhotosJson())
-			.postalAddressJson(place.getPostalAddressJson())
 			.build();
 	}
 
@@ -40,7 +39,6 @@ public class PlaceMapper {
 			.displayNameJson(entity.getDisplayNameJson())
 			.regularOpeningHoursJson(entity.getRegularOpeningHoursJson())
 			.photosJson(entity.getPhotosJson())
-			.postalAddressJson(entity.getPostalAddressJson())
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
 			.build();
