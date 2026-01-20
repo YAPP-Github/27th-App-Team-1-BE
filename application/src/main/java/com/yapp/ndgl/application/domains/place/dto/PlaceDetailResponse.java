@@ -3,11 +3,9 @@ package com.yapp.ndgl.application.domains.place.dto;
 import java.util.List;
 import java.util.Objects;
 
-import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
-
 /**
  * 장소 세부 정보 최종 응답 DTO.
- * GooglePlaceDetailsResponse와 PlacePhotoUrisResponse를 합친 결과.
+ * PlaceDetailInfoResponse와 PlacePhotoUrisResponse를 합친 결과.
  */
 public record PlaceDetailResponse(
 	String id,
@@ -26,7 +24,7 @@ public record PlaceDetailResponse(
 
 	public record Location(Double latitude, Double longitude) {
 
-		public static Location from(final GooglePlaceDetailsResponse.Location location) {
+		public static Location from(final PlaceInfoResponse.Location location) {
 			if (location == null) {
 				return null;
 			}
@@ -42,7 +40,7 @@ public record PlaceDetailResponse(
 	) {
 
 		public static Photo of(
-			final GooglePlaceDetailsResponse.PhotoMeta googlePhoto,
+			final PlaceInfoResponse.PhotoMeta googlePhoto,
 			final String photoUri
 		) {
 			if (googlePhoto == null) {
@@ -58,7 +56,7 @@ public record PlaceDetailResponse(
 	}
 
 	public static PlaceDetailResponse of(
-		final GooglePlaceDetailsResponse googleResponse,
+		final PlaceInfoResponse googleResponse,
 		final PlacePhotoUrisResponse photoResponse
 	) {
 		List<Photo> photos = null;
@@ -73,7 +71,7 @@ public record PlaceDetailResponse(
 
 		return new PlaceDetailResponse(
 			googleResponse.id(),
-			googleResponse.displayName().text(),
+			googleResponse.name(),
 			googleResponse.nationalPhoneNumber(),
 			googleResponse.internationalPhoneNumber(),
 			googleResponse.formattedAddress(),

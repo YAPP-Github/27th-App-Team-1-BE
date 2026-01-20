@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.application.domains.place.dto.PlaceInfoResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
@@ -26,7 +27,7 @@ public class PlaceDetailService {
 	private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
 	private final ObjectMapper objectMapper;
 
-	public GooglePlaceDetailsResponse readPlaceDetail(final String placeId) {
+	public PlaceInfoResponse readPlaceDetail(final String placeId) {
 		log.info("[GetPlaceDetail] 장소 상세 조회 시작. placeId:{}", placeId);
 
 		// 1. DB 조회
@@ -34,7 +35,7 @@ public class PlaceDetailService {
 
 		if (place != null) {
 			log.info("[GetPlaceDetail] DB 조회 성공 후 반환. placeId:{}, id:{}", placeId, place.getId());
-			return toGooglePlaceDetailsResponse(place);
+			return toPlaceDetailInfoResponse(place);
 		}
 
 		// 2. 없으면 구글 조회
@@ -45,62 +46,57 @@ public class PlaceDetailService {
 		// 3. 저장 후 반환
 		Place savedPlace = placeDomainService.save(toPlace(response));
 		log.info("[GetPlaceDetail] DB 저장 완료 후 반환. placeId:{}, id:{}", placeId, savedPlace.getId());
-		return response;
+		return PlaceInfoResponse.from(response);
 	}
 
-	private GooglePlaceDetailsResponse toGooglePlaceDetailsResponse(Place place) {
+	private PlaceInfoResponse toPlaceDetailInfoResponse(final Place place) {
 		try {
-			GooglePlaceDetailsResponse.Location location = place.getLatitude() != null && place.getLongitude() != null
-				? new GooglePlaceDetailsResponse.Location(place.getLatitude(), place.getLongitude())
+			PlaceInfoResponse.Location location = place.getLatitude() != null && place.getLongitude() != null
+				? new PlaceInfoResponse.Location(place.getLatitude(), place.getLongitude())
 				: null;
 
-			GooglePlaceDetailsResponse.DisplayName displayName = null;
-			if (place.getDisplayNameJson() != null) {
-				displayName = objectMapper.readValue(place.getDisplayNameJson(), GooglePlaceDetailsResponse.DisplayName.class);
-			}
-
-			GooglePlaceDetailsResponse.RegularOpeningHours regularOpeningHours = null;
+			PlaceInfoResponse.RegularOpeningHours regularOpeningHours = null;
 			if (place.getRegularOpeningHoursJson() != null) {
 				regularOpeningHours = objectMapper.readValue(
 					place.getRegularOpeningHoursJson(),
-					GooglePlaceDetailsResponse.RegularOpeningHours.class
+					PlaceInfoResponse.RegularOpeningHours.class
 				);
 			}
 
-			List<GooglePlaceDetailsResponse.PhotoMeta> photos = null;
+			List<PlaceInfoResponse.PhotoMeta> photos = null;
 			if (place.getPhotosJson() != null) {
 				photos = objectMapper.readValue(
 					place.getPhotosJson(),
-					new TypeReference<List<GooglePlaceDetailsResponse.PhotoMeta>>() {
+					new TypeReference<List<PlaceInfoResponse.PhotoMeta>>() {
 					}
 				);
 			}
 
-			return new GooglePlaceDetailsResponse(
+			return new PlaceInfoResponse(
 				place.getPlaceId(),
+				place.getName(),
 				place.getNationalPhoneNumber(),
 				place.getInternationalPhoneNumber(),
 				place.getFormattedAddress(),
 				location,
+				place.getUserRatingCount(),
 				place.getRating(),
+				regularOpeningHours,
 				place.getGoogleMapsUri(),
 				place.getWebsiteUri(),
-				regularOpeningHours,
-				place.getUserRatingCount(),
-				displayName,
 				photos
 			);
 		} catch (Exception e) {
-			log.error("GooglePlaceDetailsResponse 변환 실패: placeId={}", place.getPlaceId(), e);
+			log.error("PlaceDetailInfoResponse 변환 실패: placeId={}", place.getPlaceId(), e);
 			throw new GlobalException(GoogleMapsErrorCode.RESPONSE_PARSE_FAILED);
 		}
 	}
 
 	private Place toPlace(final GooglePlaceDetailsResponse response) {
 		try {
-			String displayNameJson = null;
-			if (response.displayName() != null) {
-				displayNameJson = objectMapper.writeValueAsString(response.displayName());
+			String name = null;
+			if (response.name() != null) {
+				name = response.name().text();
 			}
 
 			String regularOpeningHoursJson = null;
@@ -127,7 +123,7 @@ public class PlaceDetailService {
 				response.websiteUri(),
 				response.googleMapsUri(),
 				response.userRatingCount(),
-				displayNameJson,
+				name,
 				regularOpeningHoursJson,
 				photosJson
 			);

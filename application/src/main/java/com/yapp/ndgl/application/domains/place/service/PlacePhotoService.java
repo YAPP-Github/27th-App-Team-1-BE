@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.yapp.ndgl.application.domains.place.dto.PlaceInfoResponse;
 import com.yapp.ndgl.application.domains.place.dto.PlacePhotoUrisResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
-import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.domain.place.PlacePhoto;
 import com.yapp.ndgl.domain.place.service.PlacePhotoDomainService;
 
@@ -25,10 +25,10 @@ public class PlacePhotoService {
 	 * DB에 저장된 데이터가 있으면 DB에서 조회하고, 없으면 Google API를 호출하여 저장 후 반환한다.
 	 *
 	 * @param placeId 장소 ID
-	 * @param photoMetas GooglePlaceDetailsResponse의 Photo meta 목록
+	 * @param photoMetas PlaceInfoResponse의 Photo meta 목록
 	 * @return photo URI가 포함된 응답
 	 */
-	public PlacePhotoUrisResponse getPhotoUris(final String placeId, final List<GooglePlaceDetailsResponse.PhotoMeta> photoMetas) {
+	public PlacePhotoUrisResponse getPhotoUris(final String placeId, final List<PlaceInfoResponse.PhotoMeta> photoMetas) {
 		// 1. DB에서 조회
 		List<PlacePhoto> existingPhotos = placePhotoDomainService.findByPlaceId(placeId);
 		if (!existingPhotos.isEmpty()) {
@@ -79,7 +79,7 @@ public class PlacePhotoService {
 		return PlacePhotoUrisResponse.from(photoUris);
 	}
 
-	private String fetchPhotoUri(final GooglePlaceDetailsResponse.PhotoMeta meta) {
+	private String fetchPhotoUri(final PlaceInfoResponse.PhotoMeta meta) {
 		PlacePhotoRequest request = PlacePhotoRequest.of(
 			meta.name(),
 			meta.heightPx(),
