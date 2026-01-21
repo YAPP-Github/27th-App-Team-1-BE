@@ -4,7 +4,6 @@ import java.util.List;
 
 /**
  * 장소 세부 정보 최종 응답 DTO.
- * PlaceDetailInfoResponse와 PlacePhotoUrisResponse를 합친 결과.
  */
 public record PlaceDetailResponse(
 	String id,
@@ -18,8 +17,7 @@ public record PlaceDetailResponse(
 	Double rating,
 	List<String> regularOpeningHours,
 	String googleMapsUri,
-	String websiteUri,
-	List<Photo> photos
+	String websiteUri
 ) {
 
 	public record Location(Double latitude, Double longitude) {
@@ -51,21 +49,12 @@ public record PlaceDetailResponse(
 		}
 	}
 
-	public static PlaceDetailResponse of(
-		final PlaceInfoResponse placeInfoResponse,
-		final PlacePhotoUrisResponse photoResponse
+	public static PlaceDetailResponse from(
+		final PlaceInfoResponse placeInfoResponse
 	) {
 
 		Location location = Location.of(placeInfoResponse.location().latitude(),
 			placeInfoResponse.location().longitude());
-
-		List<Photo> photos = photoResponse.photoUris().stream()
-			.map(uri ->
-				Photo.of(
-					uri.widthPx(),
-					uri.heightPx(),
-					uri.photoUri()
-				)).toList();
 
 		return new PlaceDetailResponse(
 			placeInfoResponse.id(),
@@ -79,8 +68,7 @@ public record PlaceDetailResponse(
 			placeInfoResponse.rating(),
 			placeInfoResponse.regularOpeningHours(),
 			placeInfoResponse.googleMapsUri(),
-			placeInfoResponse.websiteUri(),
-			photos
+			placeInfoResponse.websiteUri()
 		);
 	}
 }
