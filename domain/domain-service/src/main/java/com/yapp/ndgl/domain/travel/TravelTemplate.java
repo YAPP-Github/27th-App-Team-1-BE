@@ -22,4 +22,5 @@ public class TravelTemplate {
     private String title;
     private Integer nights;
     private Integer days;
+    private String profileImage;
 }

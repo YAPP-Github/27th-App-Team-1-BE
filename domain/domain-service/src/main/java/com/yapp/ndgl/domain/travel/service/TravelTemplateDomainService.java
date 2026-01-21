@@ -25,13 +25,13 @@ public class TravelTemplateDomainService {
     private final TravelTemplateRepository travelTemplateRepository;
     private final TravelTemplatePlaceRepository travelTemplatePlaceRepository;
 
-    public TravelTemplate findById(Long id) {
+    public TravelTemplate findById(final Long id) {
         return travelTemplateRepository.findById(id)
             .map(TravelTemplateMapper::toDomain)
             .orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_TRAVEL_TEMPLATE));
     }
 
-    public List<TravelTemplatePlace> findPlacesByTravelTemplateId(Long travelTemplateId) {
+    public List<TravelTemplatePlace> findPlacesByTravelTemplateId(final Long travelTemplateId) {
         List<TravelTemplatePlaceEntity> placeEntities = travelTemplatePlaceRepository
             .findByTravelTemplateIdOrderByDayAscSequenceAsc(travelTemplateId);
 

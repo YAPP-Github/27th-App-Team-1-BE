@@ -57,6 +57,9 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(name = "days")
     private Integer days;
 
+    @Column(length = 1000)
+    private String profileImage;
+
     @Builder
     public TravelTemplateEntity(
         final String travelId,
@@ -72,7 +75,8 @@ public class TravelTemplateEntity extends BaseEntity {
         final String summary,
         final String title,
         final Integer nights,
-        final Integer days
+        final Integer days,
+        final String profileImage
     ) {
         this.travelId = travelId;
         this.traveler = traveler;
@@ -88,5 +92,6 @@ public class TravelTemplateEntity extends BaseEntity {
         this.title = title;
         this.nights = nights;
         this.days = days;
+        this.profileImage = profileImage;
     }
 }

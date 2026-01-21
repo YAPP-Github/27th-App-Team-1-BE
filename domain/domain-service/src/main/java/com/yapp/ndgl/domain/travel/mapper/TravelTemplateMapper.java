@@ -26,6 +26,7 @@ public class TravelTemplateMapper {
             .title(entity.getTitle())
             .nights(entity.getNights())
             .days(entity.getDays())
+            .profileImage(entity.getProfileImage())
             .build();
     }
 }
