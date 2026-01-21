@@ -1,6 +1,9 @@
 package com.yapp.ndgl.application.domains.place.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -35,11 +38,11 @@ public class PlacePhotoService {
 
 		// 1. DB에서 기존 photo 조회
 		List<PlacePhoto> existingPhotos = placePhotoDomainService.findByPlaceId(placeId);
-		java.util.Map<String, PlacePhoto> existingPhotoMap = existingPhotos.stream()
-			.collect(java.util.stream.Collectors.toMap(PlacePhoto::getPhotoName, p -> p));
+		Map<String, PlacePhoto> existingPhotoMap = existingPhotos.stream()
+			.collect(Collectors.toMap(PlacePhoto::getPhotoName, p -> p));
 
 		// 2. photoMetas를 순회하면서 없는 것만 API 호출
-		List<PlacePhoto> newPhotos = new java.util.ArrayList<>();
+		List<PlacePhoto> newPhotos = new ArrayList<>();
 		for (PlaceInfoResponse.PhotoMeta photoMeta : photoMetas) {
 			if (!existingPhotoMap.containsKey(photoMeta.name())) {
 				// Google API 호출
