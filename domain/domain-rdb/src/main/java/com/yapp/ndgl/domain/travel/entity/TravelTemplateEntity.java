@@ -1,8 +1,12 @@
 package com.yapp.ndgl.domain.travel.entity;
 
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
+import com.yapp.ndgl.domain.travel.type.YoutuberType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,6 +21,10 @@ public class TravelTemplateEntity extends BaseEntity {
 
     @Column(nullable = false, unique = true, length = 255)
     private String travelId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private YoutuberType youtuber;
 
     @Column(nullable = false, length = 100)
     private String traveler;
@@ -57,9 +65,13 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(name = "days")
     private Integer days;
 
+    @Column(length = 1000)
+    private String profileImage;
+
     @Builder
     public TravelTemplateEntity(
         final String travelId,
+        final YoutuberType youtuber,
         final String traveler,
         final String country,
         final String city,
@@ -72,9 +84,11 @@ public class TravelTemplateEntity extends BaseEntity {
         final String summary,
         final String title,
         final Integer nights,
-        final Integer days
+        final Integer days,
+        final String profileImage
     ) {
         this.travelId = travelId;
+        this.youtuber = youtuber;
         this.traveler = traveler;
         this.country = country;
         this.city = city;
@@ -88,5 +102,6 @@ public class TravelTemplateEntity extends BaseEntity {
         this.title = title;
         this.nights = nights;
         this.days = days;
+        this.profileImage = profileImage;
     }
 }

@@ -9,6 +9,8 @@ public class TravelTemplate {
 
     private Long id;
     private String travelId;
+    private String youtuber;
+    private String profileImage;
     private String traveler;
     private String country;
     private String city;

@@ -1,10 +1,9 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
@@ -19,7 +18,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Travel Template", description = "여행 템플릿 관련 API")
-@RequestMapping("/api/v1/travel-templates")
 public interface TravelTemplateApi {
 
     @Operation(
@@ -130,9 +128,67 @@ public interface TravelTemplateApi {
             )
         )
     })
-    @GetMapping("/{id}")
     ResponseEntity<SuccessResponse<TravelTemplateResponse>> getTravelTemplate(
         @Parameter(description = "여행 템플릿 ID", example = "1", required = true)
         @PathVariable Long id
+    );
+
+    @Operation(
+        summary = "여행 템플릿 상세 조회",
+        description = "ID로 여행 템플릿 상세 정보를 조회합니다."
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = TravelTemplateHighlightsResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                            "code": "2000",
+                            "message": "요청에 성공하였습니다.",
+                            "data": {
+                                "travelId": "TRAVEL_001",
+                                "country": "태국",
+                                "city": "방콕",
+                                "budgetPerPerson": 1200000,
+                                "nights": 3,
+                                "days": 4,
+                                "youtube": {
+                                    "title": "방콕 풀코스, 동남아 안 가본 곽튜브와 함께 【방콕】",
+                                    "youtuber": "빠니보틀",
+                                    "thumbnail": "https://i.ytimg.com/vi/F2utz6L76D0/mqdefault.jpg",
+                                    "profileImage": "프로필 이미지",
+                                    "link": "https://www.youtube.com/watch?v=F2utz6L76D0",
+                                    "summary": "빠니보틀은 주말을 이용해 직장인들도 충분히 다녀올 수 있는 '금요일 퇴근 후 방콕 여행'의 가능성을 보여주며, 곽튜브와의 티격태격 케미를 통해 방콕의 매력을 소개합니다"
+                                }
+                            }
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "여행 템플릿을 찾을 수 없음",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "NOT_FOUND_TRAVEL_TEMPLATE",
+                    value = """
+                        {
+                          "code": "TRAVEL-02-001",
+                          "message": "여행 템플릿을 찾을 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<SuccessResponse<TravelTemplateHighlightsResponse>> readTravelTemplateHighlights(
+        @PathVariable("id") final Long id
     );
 }

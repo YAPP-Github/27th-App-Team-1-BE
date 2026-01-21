@@ -5,14 +5,19 @@ import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
 
 public class TravelTemplateMapper {
 
-    public static TravelTemplate toDomain(TravelTemplateEntity entity) {
+    public static TravelTemplate toDomain(final TravelTemplateEntity entity) {
         if (entity == null) {
             return null;
         }
 
+        String name = entity.getYoutuber() == null ? null : entity.getYoutuber().getName();
+        String profileImage = entity.getYoutuber() == null ? null : entity.getYoutuber().getProfileImage();
+
         return TravelTemplate.builder()
             .id(entity.getId())
             .travelId(entity.getTravelId())
+            .youtuber(name)
+            .profileImage(profileImage)
             .traveler(entity.getTraveler())
             .country(entity.getCountry())
             .city(entity.getCity())

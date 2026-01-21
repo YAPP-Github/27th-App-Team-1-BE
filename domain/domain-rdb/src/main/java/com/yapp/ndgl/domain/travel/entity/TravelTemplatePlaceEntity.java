@@ -24,10 +24,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TravelTemplatePlaceEntity extends BaseEntity {
 
-    @Column(name = "travel_template_id", nullable = false)
+    @Column(name = "travel_template_id", nullable = false, unique = true)
     private Long travelTemplateId;
 
-    @Column(name = "place_id", nullable = false)
+    @Column(name = "place_id", nullable = false, unique = true)
     private Long placeId;
 
     @Column(name = "sequence", nullable = false)

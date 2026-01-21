@@ -1,18 +1,21 @@
 package com.yapp.ndgl.application.domains.travel.service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
-import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -80,6 +83,15 @@ public class TravelTemplateService {
             travelTemplate.getDays(),
             places
         );
+    }
+
+    @Transactional(readOnly = true)
+    public TravelTemplateHighlightsResponse readTravelTemplateHighlights(final Long id) {
+
+        // 템플릿 상단에 보여줄 핵심 요약 묶음
+        TravelTemplate travelTemplate = travelTemplateDomainService.findById(id);
+
+        return TravelTemplateHighlightsResponse.toResponse(travelTemplate);
     }
 
 }

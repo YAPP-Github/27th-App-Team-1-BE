@@ -1,8 +1,8 @@
 package com.yapp.ndgl.application.domains.travel.controller.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public record TravelTemplateResponse(
     @Schema(description = "여행 템플릿 ID", example = "Unique_ID_문자열")
