@@ -7,13 +7,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
+import com.yapp.ndgl.domain.travel.service.TravelTemplatePlaceDomainService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +24,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TravelTemplateService {
 
+    private final TravelTemplatePlaceDomainService travelTemplatePlaceDomainService;
     private final TravelTemplateDomainService travelTemplateDomainService;
     private final PlaceDomainService placeDomainService;
+    private final ObjectMapper objectMapper;
 
     @Transactional(readOnly = true)
     public TravelTemplateResponse getTravelTemplate(Long id) {
@@ -92,6 +97,26 @@ public class TravelTemplateService {
         TravelTemplate travelTemplate = travelTemplateDomainService.findById(id);
 
         return TravelTemplateHighlightsResponse.toResponse(travelTemplate);
+    }
+
+    @Transactional(readOnly = true)
+    public TravelTemplateItineraryResponse readTravelTemplateItinerary(final Long travelTemplateId, final Integer day) {
+        // 여행 템플릿 장소 목록 조회 (day 파라미터에 따라 DB에서 필터링)
+        List<TravelTemplatePlace> travelTemplatePlaces = day != null
+            ? travelTemplatePlaceDomainService.findPlacesByTravelTemplateIdAndDay(travelTemplateId, day)
+            : travelTemplatePlaceDomainService.findPlacesByTravelTemplateId(travelTemplateId);
+
+        // placeId 목록 추출
+        List<Long> placeIds = travelTemplatePlaces.stream()
+            .map(TravelTemplatePlace::getPlaceId)
+            .collect(Collectors.toList());
+
+        // 장소 목록 조회
+        List<Place> placeList = placeDomainService.findByIds(placeIds);
+        Map<Long, Place> placeMap = placeList.stream()
+            .collect(Collectors.toMap(Place::getId, place -> place));
+
+        return TravelTemplateItineraryResponse.of(travelTemplatePlaces, placeMap, objectMapper);
     }
 
 }
