@@ -12,6 +12,7 @@ DELETE FROM places WHERE place_id IN (
 -- 테스트용 Travel Template 데이터 삽입
 INSERT INTO travel_templates (
     travel_id,
+    youtuber,
     traveler,
     country,
     city,
@@ -25,23 +26,26 @@ INSERT INTO travel_templates (
     title,
     nights,
     days,
+    profile_image,
     created_at,
     updated_at
 ) VALUES (
     'TRAVEL_001',
-    '도쿄여행러버',
-    '일본',
-    '도쿄',
+    'PANI_BOTTLE',
+    '빠니보틀',
+    '태국',
+    '방콕',
     '여름철 고온다습, 가벼운 옷차림 권장. 우산 필수.',
     '식당에서 팁 불필요, 조용히 식사하는 것이 예의. 신발 벗는 곳이 많음.',
     '라멘과 초밥이 유명하며, 현지 식당에서 현금 결제가 일반적. 편의점 음식도 훌륭함.',
-    'https://example.com/thumbnail/tokyo.jpg',
-    'https://www.youtube.com/watch?v=tokyo-travel',
+    'https://i.ytimg.com/vi/F2utz6L76D0/mqdefault.jpg',
+    'https://www.youtube.com/watch?v=F2utz6L76D0',
     1200000,
-    '도쿄 3박 4일 여행의 모든 것. 유튜버가 직접 다녀온 코스로 구성된 완벽한 가이드.',
+    '빠니보틀은 주말을 이용해 직장인들도 충분히 다녀올 수 있는 ''금요일 퇴근 후 방콕 여행''의 가능성을 보여주며, 곽튜브와의 티격태격 케미를 통해 방콕의 매력을 소개합니다',
     '도쿄 3박 4일 완벽 여행 가이드',
     3,
     4,
+    'https://i.ytimg.com/vi/F2utz6L76D0/mqdefault.jpg',
     NOW(),
     NOW()
 );
@@ -78,8 +82,8 @@ INSERT INTO places (
     10000,
     'Tokyo Tower',
     'https://example.com/thumbnail/tokyo-tower.jpg',
-    NULL,
-    NULL,
+    '{"weekdayDescriptions":["월요일: 09:00~23:00","화요일: 09:00~23:00","수요일: 09:00~23:00","목요일: 09:00~23:00","금요일: 09:00~23:00","토요일: 09:00~23:00","일요일: 09:00~23:00"]}',
+    '[{"photoReference":"photo1","width":1920,"height":1080}]',
     NOW(),
     NOW()
 ),
@@ -96,8 +100,8 @@ INSERT INTO places (
     15000,
     'Meiji Jingu',
     'https://example.com/thumbnail/meiji-jingu.jpg',
-    NULL,
-    NULL,
+    '{"weekdayDescriptions":["월요일: 06:00~18:00","화요일: 06:00~18:00","수요일: 06:00~18:00","목요일: 06:00~18:00","금요일: 06:00~18:00","토요일: 06:00~18:00","일요일: 06:00~18:00"]}',
+    '[{"photoReference":"photo2","width":1920,"height":1080}]',
     NOW(),
     NOW()
 ),
@@ -114,8 +118,8 @@ INSERT INTO places (
     8000,
     'Shibuya Scramble Square',
     'https://example.com/thumbnail/shibuya-scramble.jpg',
-    NULL,
-    NULL,
+    '{"weekdayDescriptions":["월요일: 10:00~21:00","화요일: 10:00~21:00","수요일: 10:00~21:00","목요일: 10:00~21:00","금요일: 10:00~21:00","토요일: 10:00~21:00","일요일: 10:00~21:00"]}',
+    '[{"photoReference":"photo3","width":1920,"height":1080}]',
     NOW(),
     NOW()
 );
@@ -131,6 +135,7 @@ INSERT INTO travel_template_places (
     sequence,
     day,
     traveler_tip,
+    estimated_duration,
     created_at,
     updated_at
 ) VALUES (
@@ -139,6 +144,7 @@ INSERT INTO travel_template_places (
     1,
     1,
     '도쿄 타워는 저녁 시간대 방문하는 것이 좋습니다. 야경이 아름답습니다.',
+    60,
     NOW(),
     NOW()
 );
@@ -150,6 +156,7 @@ INSERT INTO travel_template_places (
     sequence,
     day,
     traveler_tip,
+    estimated_duration,
     created_at,
     updated_at
 ) VALUES (
@@ -158,6 +165,7 @@ INSERT INTO travel_template_places (
     2,
     1,
     '메이지 신궁은 조용한 분위기로 유명합니다. 아침 일찍 방문하면 더욱 좋습니다.',
+    90,
     NOW(),
     NOW()
 );
@@ -169,6 +177,7 @@ INSERT INTO travel_template_places (
     sequence,
     day,
     traveler_tip,
+    estimated_duration,
     created_at,
     updated_at
 ) VALUES (
@@ -177,6 +186,7 @@ INSERT INTO travel_template_places (
     1,
     2,
     '시부야 스크램블 스퀘어는 쇼핑과 식사 모두 즐길 수 있는 곳입니다. 옥상 전망대도 추천합니다.',
+    120,
     NOW(),
     NOW()
 );
