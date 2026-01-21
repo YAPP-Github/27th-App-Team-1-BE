@@ -23,7 +23,7 @@ public class TravelTemplateEntity extends BaseEntity {
     private String travelId;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 50)
+    @Column(nullable = false, length = 50)
     private YoutuberType youtuber;
 
     @Column(nullable = false, length = 100)

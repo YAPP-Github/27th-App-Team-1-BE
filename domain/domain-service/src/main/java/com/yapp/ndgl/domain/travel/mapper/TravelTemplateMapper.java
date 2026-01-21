@@ -10,11 +10,14 @@ public class TravelTemplateMapper {
             return null;
         }
 
+        String name = entity.getYoutuber() == null ? null : entity.getYoutuber().getName();
+        String profileImage = entity.getYoutuber() == null ? null : entity.getYoutuber().getProfileImage();
+
         return TravelTemplate.builder()
             .id(entity.getId())
             .travelId(entity.getTravelId())
-            .youtuber(entity.getYoutuber().getName())
-            .profileImage(entity.getYoutuber().getProfileImage())
+            .youtuber(name)
+            .profileImage(profileImage)
             .traveler(entity.getTraveler())
             .country(entity.getCountry())
             .city(entity.getCity())
