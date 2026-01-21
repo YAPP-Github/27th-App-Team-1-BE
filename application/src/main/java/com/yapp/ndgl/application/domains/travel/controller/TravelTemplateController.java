@@ -4,9 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.facade.TravelTemplateFacade;
 import com.yapp.ndgl.common.response.SuccessResponse;
@@ -34,6 +36,16 @@ public class TravelTemplateController implements TravelTemplateApi {
         @PathVariable("id") final Long id
     ) {
         TravelTemplateHighlightsResponse response = travelTemplateFacade.readTravelTemplateHighlights(id);
+        return ResponseEntity.ok(SuccessResponse.success(response));
+    }
+
+    @Override
+    @GetMapping("/{id}/itinerary")
+    public ResponseEntity<SuccessResponse<TravelTemplateItineraryResponse>> readTravelTemplateItinerary(
+        @PathVariable("id") final Long id,
+        @RequestParam(value = "day", required = false) final Integer day
+    ) {
+        TravelTemplateItineraryResponse response = travelTemplateFacade.readTravelTemplateItinerary(id, day);
         return ResponseEntity.ok(SuccessResponse.success(response));
     }
 }
