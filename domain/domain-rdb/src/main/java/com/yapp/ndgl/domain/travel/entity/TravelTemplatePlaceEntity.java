@@ -39,18 +39,23 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
     @Column(name = "traveler_tip", length = 1000)
     private String travelerTip;
 
+    @Column(name = "estimated_duration")
+    private Integer estimatedDuration;
+
     @Builder
     public TravelTemplatePlaceEntity(
         final Long travelTemplateId,
         final Long placeId,
         final int sequence,
         final int day,
-        final String travelerTip
+        final String travelerTip,
+        final Integer estimatedDuration
     ) {
         this.travelTemplateId = travelTemplateId;
         this.placeId = placeId;
         this.sequence = sequence;
         this.day = day;
         this.travelerTip = travelerTip;
+        this.estimatedDuration = estimatedDuration;
     }
 }

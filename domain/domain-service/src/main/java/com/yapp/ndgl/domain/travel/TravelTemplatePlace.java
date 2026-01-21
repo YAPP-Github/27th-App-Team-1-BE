@@ -13,4 +13,5 @@ public class TravelTemplatePlace {
     private int sequence;
     private int day;
     private String travelerTip;
+    private Integer estimatedDuration;
 }
