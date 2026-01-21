@@ -5,7 +5,7 @@ import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
 
 public class TravelTemplateMapper {
 
-    public static TravelTemplate toDomain(TravelTemplateEntity entity) {
+    public static TravelTemplate toDomain(final TravelTemplateEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -13,6 +13,8 @@ public class TravelTemplateMapper {
         return TravelTemplate.builder()
             .id(entity.getId())
             .travelId(entity.getTravelId())
+            .youtuber(entity.getYoutuber().getName())
+            .profileImage(entity.getYoutuber().getProfileImage())
             .traveler(entity.getTraveler())
             .country(entity.getCountry())
             .city(entity.getCity())
@@ -26,7 +28,6 @@ public class TravelTemplateMapper {
             .title(entity.getTitle())
             .nights(entity.getNights())
             .days(entity.getDays())
-            .profileImage(entity.getProfileImage())
             .build();
     }
 }

@@ -27,7 +27,7 @@ public record TravelTemplateHighlightsResponse(
 		final TravelTemplate travelTemplate
 	) {
 		YoutubeInfo youtubeInfo = YoutubeInfo.of(
-			travelTemplate.getTitle(), travelTemplate.getTraveler(), travelTemplate.getThumbnail(), travelTemplate.getProfileImage(),
+			travelTemplate.getTitle(), travelTemplate.getYoutuber(), travelTemplate.getThumbnail(), travelTemplate.getProfileImage(),
 			travelTemplate.getLink(), travelTemplate.getSummary());
 
 		return new TravelTemplateHighlightsResponse(
@@ -46,10 +46,10 @@ public record TravelTemplateHighlightsResponse(
 		String title,
 		@Schema(description = "유튜버 이름", example = "빠니보틀")
 		String youtuber,
-		@Schema(description = "영상 썸네일 URL", example = "https://example.com/thumbnail/tokyo.jpg")
-		String thumbnail,
 		@Schema(description = "유튜버 프로필 이미지 URL", example = "https://example.com/thumbnail/panibottle.jpg")
 		String profileImage,
+		@Schema(description = "영상 썸네일 URL", example = "https://example.com/thumbnail/tokyo.jpg")
+		String thumbnail,
 		@Schema(description = "유튜브 링크", example = "https://www.youtube.com/watch?v=tokyo-travel")
 		String link,
 		@Schema(description = "영상 요약", example = "도쿄 3박 4일 여행의 모든 것. 유튜버가 직접 다녀온 코스로 구성된 완벽한 가이드.")
@@ -59,16 +59,16 @@ public record TravelTemplateHighlightsResponse(
 		public static YoutubeInfo of(
 			final String title,
 			final String youtuber,
-			final String thumbnail,
 			final String profileImage,
+			final String thumbnail,
 			final String link,
 			final String summary
 		) {
 			return new YoutubeInfo(
 				title,
 				youtuber,
-				thumbnail,
 				profileImage,
+				thumbnail,
 				link,
 				summary
 			);
