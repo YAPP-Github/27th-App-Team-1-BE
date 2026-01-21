@@ -17,10 +17,10 @@ public class PlaceMapper {
 			.websiteUri(place.getWebsiteUri())
 			.googleMapsUri(place.getGoogleMapsUri())
 			.userRatingCount(place.getUserRatingCount())
-			.displayNameJson(place.getDisplayNameJson())
-			.regularOpeningHoursJson(place.getRegularOpeningHoursJson())
+			.name(place.getName())
+			.thumbnail(place.getThumbnail())
+			.regularOpeningHours(place.getRegularOpeningHours())
 			.photosJson(place.getPhotosJson())
-			.postalAddressJson(place.getPostalAddressJson())
 			.build();
 	}
 
@@ -37,10 +37,10 @@ public class PlaceMapper {
 			.websiteUri(entity.getWebsiteUri())
 			.googleMapsUri(entity.getGoogleMapsUri())
 			.userRatingCount(entity.getUserRatingCount())
-			.displayNameJson(entity.getDisplayNameJson())
-			.regularOpeningHoursJson(entity.getRegularOpeningHoursJson())
+			.name(entity.getName())
+			.thumbnail(entity.getThumbnail())
+			.regularOpeningHours(entity.getRegularOpeningHours())
 			.photosJson(entity.getPhotosJson())
-			.postalAddressJson(entity.getPostalAddressJson())
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
 			.build();

@@ -1,13 +1,13 @@
 package com.yapp.ndgl.application.domains.place.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.application.domains.place.dto.PlaceInfoResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
+import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
+import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
@@ -24,9 +24,10 @@ public class PlaceDetailService {
 
 	private final PlaceDomainService placeDomainService;
 	private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
+	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
 	private final ObjectMapper objectMapper;
 
-	public GooglePlaceDetailsResponse readPlaceDetail(final String placeId) {
+	public PlaceInfoResponse readPlaceDetail(final String placeId) {
 		log.info("[GetPlaceDetail] 장소 상세 조회 시작. placeId:{}", placeId);
 
 		// 1. DB 조회
@@ -34,7 +35,7 @@ public class PlaceDetailService {
 
 		if (place != null) {
 			log.info("[GetPlaceDetail] DB 조회 성공 후 반환. placeId:{}, id:{}", placeId, place.getId());
-			return toGooglePlaceDetailsResponse(place);
+			return PlaceInfoResponse.from(place, objectMapper);
 		}
 
 		// 2. 없으면 구글 조회
@@ -42,89 +43,38 @@ public class PlaceDetailService {
 		PlaceDetailsRequest request = PlaceDetailsRequest.of(placeId, "ko");
 		GooglePlaceDetailsResponse response = googleMapsPlaceDetailClient.readPlaceDetails(request);
 
-		// 3. 저장 후 반환
-		Place savedPlace = placeDomainService.save(toPlace(response));
-		log.info("[GetPlaceDetail] DB 저장 완료 후 반환. placeId:{}, id:{}", placeId, savedPlace.getId());
-		return response;
-	}
+		String thumbnail = null;
 
-	private GooglePlaceDetailsResponse toGooglePlaceDetailsResponse(Place place) {
-		try {
-			GooglePlaceDetailsResponse.Location location = place.getLatitude() != null && place.getLongitude() != null
-				? new GooglePlaceDetailsResponse.Location(place.getLatitude(), place.getLongitude())
-				: null;
-
-			GooglePlaceDetailsResponse.DisplayName displayName = null;
-			if (place.getDisplayNameJson() != null) {
-				displayName = objectMapper.readValue(place.getDisplayNameJson(), GooglePlaceDetailsResponse.DisplayName.class);
-			}
-
-			GooglePlaceDetailsResponse.RegularOpeningHours regularOpeningHours = null;
-			if (place.getRegularOpeningHoursJson() != null) {
-				regularOpeningHours = objectMapper.readValue(
-					place.getRegularOpeningHoursJson(),
-					GooglePlaceDetailsResponse.RegularOpeningHours.class
-				);
-			}
-
-			List<GooglePlaceDetailsResponse.PhotoMeta> photos = null;
-			if (place.getPhotosJson() != null) {
-				photos = objectMapper.readValue(
-					place.getPhotosJson(),
-					new TypeReference<List<GooglePlaceDetailsResponse.PhotoMeta>>() {
-					}
-				);
-			}
-
-			GooglePlaceDetailsResponse.PostalAddress postalAddress = null;
-			if (place.getPostalAddressJson() != null) {
-				postalAddress = objectMapper.readValue(
-					place.getPostalAddressJson(),
-					GooglePlaceDetailsResponse.PostalAddress.class
-				);
-			}
-
-			return new GooglePlaceDetailsResponse(
-				place.getPlaceId(),
-				place.getNationalPhoneNumber(),
-				place.getInternationalPhoneNumber(),
-				place.getFormattedAddress(),
-				location,
-				place.getRating(),
-				place.getGoogleMapsUri(),
-				place.getWebsiteUri(),
-				regularOpeningHours,
-				place.getUserRatingCount(),
-				displayName,
-				photos,
-				postalAddress
-			);
-		} catch (Exception e) {
-			log.error("GooglePlaceDetailsResponse 변환 실패: placeId={}", place.getPlaceId(), e);
-			throw new GlobalException(GoogleMapsErrorCode.RESPONSE_PARSE_FAILED);
+		if (response.photos() != null && !response.photos().isEmpty()) {
+			GooglePlaceDetailsResponse.PhotoMeta photoMeta = response.photos().get(0);
+			PlacePhotoRequest photoRequest = PlacePhotoRequest.of(photoMeta.name(), photoMeta.heightPx(),
+				photoMeta.widthPx());
+			thumbnail = googleMapsPlacePhotoClient.getPhotoUri(photoRequest).uri();
 		}
+
+		// 3. 저장 후 반환
+		Place savedPlace = placeDomainService.save(toPlace(response, thumbnail));
+		log.info("[GetPlaceDetail] DB 저장 완료 후 반환. placeId:{}, id:{}", placeId, savedPlace.getId());
+		return PlaceInfoResponse.from(savedPlace, objectMapper);
 	}
 
-	private Place toPlace(final GooglePlaceDetailsResponse response) {
+	private Place toPlace(final GooglePlaceDetailsResponse response, final String thumbnail) {
 		try {
-			String displayNameJson = null;
-			if (response.displayName() != null) {
-				displayNameJson = objectMapper.writeValueAsString(response.displayName());
+			String name = null;
+			if (response.name() != null) {
+				name = response.name().text();
 			}
 
-			String regularOpeningHoursJson = null;
+			String regularOpeningHours = null;
 			if (response.regularOpeningHours() != null) {
-				regularOpeningHoursJson = objectMapper.writeValueAsString(response.regularOpeningHours());
+				regularOpeningHours = objectMapper.writeValueAsString(
+					response.regularOpeningHours().regularOpeningHours()
+				);
 			}
 
 			String photosJson = null;
 			if (response.photos() != null && !response.photos().isEmpty()) {
 				photosJson = objectMapper.writeValueAsString(response.photos());
-			}
-
-			String postalAddressJson = null;
-			if (response.postalAddress() != null) {
-				postalAddressJson = objectMapper.writeValueAsString(response.postalAddress());
 			}
 
 			Double latitude = response.location() != null ? response.location().latitude() : null;
@@ -141,10 +91,10 @@ public class PlaceDetailService {
 				response.websiteUri(),
 				response.googleMapsUri(),
 				response.userRatingCount(),
-				displayNameJson,
-				regularOpeningHoursJson,
-				photosJson,
-				postalAddressJson
+				name,
+				thumbnail,
+				regularOpeningHours,
+				photosJson
 			);
 		} catch (Exception e) {
 			log.error("Place 변환 실패: placeId={}", response.id(), e);

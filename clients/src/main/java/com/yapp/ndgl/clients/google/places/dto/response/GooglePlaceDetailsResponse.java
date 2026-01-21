@@ -18,9 +18,8 @@ public record GooglePlaceDetailsResponse(
 	String websiteUri,
 	RegularOpeningHours regularOpeningHours,
 	Integer userRatingCount,
-	DisplayName displayName,
-	List<PhotoMeta> photos,
-	PostalAddress postalAddress
+	DisplayName name,
+	List<PhotoMeta> photos
 ) {
 
 	public GooglePlaceDetailsResponse(
@@ -34,9 +33,8 @@ public record GooglePlaceDetailsResponse(
 		@JsonProperty("websiteUri") final String websiteUri,
 		@JsonProperty("regularOpeningHours") final RegularOpeningHours regularOpeningHours,
 		@JsonProperty("userRatingCount") final Integer userRatingCount,
-		@JsonProperty("displayName") final DisplayName displayName,
-		@JsonProperty("photos") final List<PhotoMeta> photos,
-		@JsonProperty("postalAddress") final PostalAddress postalAddress
+		@JsonProperty("displayName") final DisplayName name,
+		@JsonProperty("photos") final List<PhotoMeta> photos
 	) {
 		this.id = id;
 		this.nationalPhoneNumber = nationalPhoneNumber;
@@ -48,9 +46,8 @@ public record GooglePlaceDetailsResponse(
 		this.websiteUri = websiteUri;
 		this.regularOpeningHours = regularOpeningHours;
 		this.userRatingCount = userRatingCount;
-		this.displayName = displayName;
+		this.name = name;
 		this.photos = photos;
-		this.postalAddress = postalAddress;
 	}
 
 	public record Location(Double latitude, Double longitude) {
@@ -64,115 +61,37 @@ public record GooglePlaceDetailsResponse(
 		}
 	}
 
-	public record DisplayName(String text, String languageCode) {
+	public record DisplayName(String text) {
 
 		public DisplayName(
-			@JsonProperty("text") final String text,
-			@JsonProperty("languageCode") final String languageCode
+			@JsonProperty("text") final String text
 		) {
 			this.text = text;
-			this.languageCode = languageCode;
 		}
 	}
 
-	public record RegularOpeningHours(Boolean openNow, List<Period> periods, List<String> weekdayDescriptions) {
+	public record RegularOpeningHours(List<String> regularOpeningHours) {
 
 		public RegularOpeningHours(
-			@JsonProperty("openNow") final Boolean openNow,
-			@JsonProperty("periods") final List<Period> periods,
-			@JsonProperty("weekdayDescriptions") final List<String> weekdayDescriptions
+			@JsonProperty("weekdayDescriptions") final List<String> regularOpeningHours
 		) {
-			this.openNow = openNow;
-			this.periods = periods;
-			this.weekdayDescriptions = weekdayDescriptions;
-		}
-	}
-
-	public record Period(DayTime open, DayTime close) {
-
-		public Period(
-			@JsonProperty("open") final DayTime open,
-			@JsonProperty("close") final DayTime close
-		) {
-			this.open = open;
-			this.close = close;
-		}
-	}
-
-	public record DayTime(Integer day, Integer hour, Integer minute) {
-
-		public DayTime(
-			@JsonProperty("day") final Integer day,
-			@JsonProperty("hour") final Integer hour,
-			@JsonProperty("minute") final Integer minute
-		) {
-			this.day = day;
-			this.hour = hour;
-			this.minute = minute;
+			this.regularOpeningHours = regularOpeningHours;
 		}
 	}
 
 	public record PhotoMeta(
 		String name,
 		Integer widthPx,
-		Integer heightPx,
-		List<AuthorAttribution> authorAttributions,
-		String flagContentUri,
-		String googleMapsUri) {
+		Integer heightPx) {
 
 		public PhotoMeta(
 			@JsonProperty("name") final String name,
 			@JsonProperty("widthPx") final Integer widthPx,
-			@JsonProperty("heightPx") final Integer heightPx,
-			@JsonProperty("authorAttributions") final List<AuthorAttribution> authorAttributions,
-			@JsonProperty("flagContentUri") final String flagContentUri,
-			@JsonProperty("googleMapsUri") final String googleMapsUri
+			@JsonProperty("heightPx") final Integer heightPx
 		) {
 			this.name = name;
 			this.widthPx = widthPx;
 			this.heightPx = heightPx;
-			this.authorAttributions = authorAttributions;
-			this.flagContentUri = flagContentUri;
-			this.googleMapsUri = googleMapsUri;
-		}
-	}
-
-	public record AuthorAttribution(
-		String displayName,
-		String uri,
-		String photoUri) {
-
-		public AuthorAttribution(
-			@JsonProperty("displayName") final String displayName,
-			@JsonProperty("uri") final String uri,
-			@JsonProperty("photoUri") final String photoUri
-		) {
-			this.displayName = displayName;
-			this.uri = uri;
-			this.photoUri = photoUri;
-		}
-	}
-
-	public record PostalAddress(
-		String regionCode,
-		String languageCode,
-		String postalCode,
-		String administrativeArea,
-		List<String> addressLines
-	) {
-
-		public PostalAddress(
-			@JsonProperty("regionCode") final String regionCode,
-			@JsonProperty("languageCode") final String languageCode,
-			@JsonProperty("postalCode") final String postalCode,
-			@JsonProperty("administrativeArea") final String administrativeArea,
-			@JsonProperty("addressLines") final List<String> addressLines
-		) {
-			this.regionCode = regionCode;
-			this.languageCode = languageCode;
-			this.postalCode = postalCode;
-			this.administrativeArea = administrativeArea;
-			this.addressLines = addressLines;
 		}
 	}
 }

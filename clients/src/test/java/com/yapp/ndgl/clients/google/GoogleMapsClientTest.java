@@ -15,7 +15,6 @@ import org.springframework.web.client.RestClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yapp.ndgl.clients.google.config.GoogleMapsPlaceApiConfig;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
@@ -81,25 +80,12 @@ class GoogleMapsClientTest {
 		assertThat(result.location().latitude()).isEqualTo(37.5665);
 		assertThat(result.location().longitude()).isEqualTo(126.9780);
 		assertThat(result.regularOpeningHours()).isNotNull();
-		assertThat(result.regularOpeningHours().openNow()).isTrue();
-		assertThat(result.regularOpeningHours().periods()).hasSize(1);
-		assertThat(result.regularOpeningHours().periods().get(0).open().day()).isEqualTo(0);
-		assertThat(result.regularOpeningHours().periods().get(0).open().hour()).isEqualTo(0);
-		assertThat(result.regularOpeningHours().periods().get(0).open().minute()).isEqualTo(0);
 		assertThat(result.photos()).hasSize(1);
 		assertThat(result.photos().get(0).name()).isEqualTo("places/test/photos/1");
 		assertThat(result.photos().get(0).widthPx()).isEqualTo(3024);
 		assertThat(result.photos().get(0).heightPx()).isEqualTo(3024);
-		assertThat(result.photos().get(0).authorAttributions()).hasSize(1);
-		assertThat(result.photos().get(0).authorAttributions().get(0).displayName()).isEqualTo("Y.Maruyama");
 		assertThat(result.photos().get(0).flagContentUri()).isEqualTo("https://www.google.com/local/imagery/report/?image_key=test");
 		assertThat(result.photos().get(0).googleMapsUri()).isEqualTo("https://www.google.com/maps/place/test");
-		assertThat(result.postalAddress()).isNotNull();
-		assertThat(result.postalAddress().regionCode()).isEqualTo("JP");
-		assertThat(result.postalAddress().languageCode()).isEqualTo("ko");
-		assertThat(result.postalAddress().postalCode()).isEqualTo("810-0801");
-		assertThat(result.postalAddress().administrativeArea()).isEqualTo("후쿠오카현");
-		assertThat(result.postalAddress().addressLines()).containsExactly("5 조메-3-2 나카스", "하카타구 후쿠오카시");
 	}
 
 	@Test
@@ -125,8 +111,7 @@ class GoogleMapsClientTest {
 
 	private GooglePlaceDetailsResponse createSuccessResponse() {
 		GooglePlaceDetailsResponse.DisplayName displayName = new GooglePlaceDetailsResponse.DisplayName(
-			"Test Place",
-			"en"
+			"Test Place"
 		);
 
 		GooglePlaceDetailsResponse.Location location = new GooglePlaceDetailsResponse.Location(
@@ -134,44 +119,16 @@ class GoogleMapsClientTest {
 			126.9780
 		);
 
-		GooglePlaceDetailsResponse.DayTime openTime = new GooglePlaceDetailsResponse.DayTime(
-			0,
-			0,
-			0
-		);
-
-		GooglePlaceDetailsResponse.Period period = new GooglePlaceDetailsResponse.Period(
-			openTime,
-			null
-		);
-
 		GooglePlaceDetailsResponse.RegularOpeningHours openingHours = new GooglePlaceDetailsResponse.RegularOpeningHours(
-			true,
-			List.of(period),
 			List.of("월요일: 24시간 영업")
 		);
 
-		GooglePlaceDetailsResponse.AuthorAttribution attribution = new GooglePlaceDetailsResponse.AuthorAttribution(
-			"Y.Maruyama",
-			"https://maps.google.com/maps/contrib/110073645762581158013",
-			"https://lh3.googleusercontent.com/a-/test"
-		);
-
-		GooglePlaceDetailsResponse.Photo photo = new GooglePlaceDetailsResponse.Photo(
+		GooglePlaceDetailsResponse.PhotoMeta photo = new GooglePlaceDetailsResponse.PhotoMeta(
 			"places/test/photos/1",
 			3024,
 			3024,
-			List.of(attribution),
 			"https://www.google.com/local/imagery/report/?image_key=test",
 			"https://www.google.com/maps/place/test"
-		);
-
-		GooglePlaceDetailsResponse.PostalAddress postalAddress = new GooglePlaceDetailsResponse.PostalAddress(
-			"JP",
-			"ko",
-			"810-0801",
-			"후쿠오카현",
-			List.of("5 조메-3-2 나카스", "하카타구 후쿠오카시")
 		);
 
 		return new GooglePlaceDetailsResponse(
@@ -186,8 +143,7 @@ class GoogleMapsClientTest {
 			openingHours,
 			100,
 			displayName,
-			List.of(photo),
-			postalAddress
+			List.of(photo)
 		);
 	}
 

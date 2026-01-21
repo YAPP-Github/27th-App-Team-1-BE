@@ -1,13 +1,16 @@
 package com.yapp.ndgl.application.domains.place.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.yapp.ndgl.application.domains.place.dto.PlaceInfoResponse;
 import com.yapp.ndgl.application.domains.place.dto.PlacePhotoUrisResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
-import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.domain.place.PlacePhoto;
 import com.yapp.ndgl.domain.place.service.PlacePhotoDomainService;
 
@@ -22,49 +25,43 @@ public class PlacePhotoService {
 
 	/**
 	 * placeId에 해당하는 photo URI 목록을 조회한다.
-	 * DB에 저장된 데이터가 있으면 DB에서 조회하고, 없으면 Google API를 호출하여 저장 후 반환한다.
+	 * DB에 저장된 photo는 DB에서 조회하고, 없는 photo만 Google API를 호출하여 저장 후 반환한다.
 	 *
 	 * @param placeId 장소 ID
-	 * @param photoMetas GooglePlaceDetailsResponse의 Photo meta 목록
+	 * @param photoMetas PlaceInfoResponse의 Photo meta 목록
 	 * @return photo URI가 포함된 응답
 	 */
-	public PlacePhotoUrisResponse getPhotoUris(final String placeId, final List<GooglePlaceDetailsResponse.PhotoMeta> photoMetas) {
-		// 1. DB에서 조회
-		List<PlacePhoto> existingPhotos = placePhotoDomainService.findByPlaceId(placeId);
-		if (!existingPhotos.isEmpty()) {
-			return toResponse(existingPhotos);
-		}
-
-		// 2. DB에 없으면 Google API 호출
+	public void savePhotoUrls(final String placeId, final List<PlaceInfoResponse.PhotoMeta> photoMetas) {
 		if (photoMetas == null || photoMetas.isEmpty()) {
-			return PlacePhotoUrisResponse.empty();
+			return;
 		}
 
-		List<PlacePhotoUrisResponse.PhotoUri> uris = photoMetas.stream()
-			.map(photoMeta -> {
+		// 1. DB에서 기존 photo 조회
+		List<PlacePhoto> existingPhotos = placePhotoDomainService.findByPlaceId(placeId);
+		Map<String, PlacePhoto> existingPhotoMap = existingPhotos.stream()
+			.collect(Collectors.toMap(PlacePhoto::getPhotoName, p -> p));
+
+		// 2. photoMetas를 순회하면서 없는 것만 API 호출
+		List<PlacePhoto> newPhotos = new ArrayList<>();
+		for (PlaceInfoResponse.PhotoMeta photoMeta : photoMetas) {
+			if (!existingPhotoMap.containsKey(photoMeta.name())) {
+				// Google API 호출
 				String uri = fetchPhotoUri(photoMeta);
-				return PlacePhotoUrisResponse.PhotoUri.of(
+				PlacePhoto placePhoto = PlacePhoto.create(
+					placeId,
 					photoMeta.name(),
+					uri,
 					photoMeta.widthPx(),
-					photoMeta.heightPx(),
-					uri
+					photoMeta.heightPx()
 				);
-			}).toList();
+				newPhotos.add(placePhoto);
+			}
+		}
 
-		// 3. DB에 저장
-		List<PlacePhoto> placePhotos = uris.stream()
-			.map(uri -> PlacePhoto.create(
-				placeId,
-				uri.name(),
-				uri.photoUri(),
-				uri.widthPx(),
-				uri.heightPx()
-			))
-			.toList();
-
-		placePhotoDomainService.saveAllIfNotExists(placePhotos);
-
-		return PlacePhotoUrisResponse.from(uris);
+		// 3. 새로운 photo만 저장
+		if (!newPhotos.isEmpty()) {
+			placePhotoDomainService.saveAllIfNotExists(newPhotos);
+		}
 	}
 
 	private PlacePhotoUrisResponse toResponse(final List<PlacePhoto> placePhotos) {
@@ -79,7 +76,7 @@ public class PlacePhotoService {
 		return PlacePhotoUrisResponse.from(photoUris);
 	}
 
-	private String fetchPhotoUri(final GooglePlaceDetailsResponse.PhotoMeta meta) {
+	private String fetchPhotoUri(final PlaceInfoResponse.PhotoMeta meta) {
 		PlacePhotoRequest request = PlacePhotoRequest.of(
 			meta.name(),
 			meta.heightPx(),

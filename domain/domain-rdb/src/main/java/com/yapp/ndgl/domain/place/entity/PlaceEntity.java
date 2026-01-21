@@ -1,6 +1,7 @@
 package com.yapp.ndgl.domain.place.entity;
 
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
@@ -47,20 +48,19 @@ public class PlaceEntity extends BaseEntity {
 	private Integer userRatingCount;
 
 	@Lob
-	@Column(columnDefinition = "JSON")
-	private String displayNameJson;
+	@Column(length = 500)
+	private String name;
+
+	@Column(columnDefinition = "TEXT")
+	private String thumbnail;
 
 	@Lob
 	@Column(columnDefinition = "JSON")
-	private String regularOpeningHoursJson;
+	private String regularOpeningHours;
 
 	@Lob
 	@Column(columnDefinition = "JSON")
 	private String photosJson;
-
-	@Lob
-	@Column(columnDefinition = "JSON")
-	private String postalAddressJson;
 
 	@Builder
 	public PlaceEntity(
@@ -74,10 +74,10 @@ public class PlaceEntity extends BaseEntity {
 		final String websiteUri,
 		final String googleMapsUri,
 		final Integer userRatingCount,
-		final String displayNameJson,
-		final String regularOpeningHoursJson,
-		final String photosJson,
-		final String postalAddressJson
+		final String name,
+		final String thumbnail,
+		final String regularOpeningHours,
+		final String photosJson
 	) {
 		this.placeId = placeId;
 		this.formattedAddress = formattedAddress;
@@ -89,9 +89,9 @@ public class PlaceEntity extends BaseEntity {
 		this.websiteUri = websiteUri;
 		this.googleMapsUri = googleMapsUri;
 		this.userRatingCount = userRatingCount;
-		this.displayNameJson = displayNameJson;
-		this.regularOpeningHoursJson = regularOpeningHoursJson;
+		this.name = name;
+		this.thumbnail = thumbnail;
+		this.regularOpeningHours = regularOpeningHours;
 		this.photosJson = photosJson;
-		this.postalAddressJson = postalAddressJson;
 	}
 }

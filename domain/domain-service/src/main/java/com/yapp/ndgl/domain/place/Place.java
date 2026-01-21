@@ -1,7 +1,6 @@
 package com.yapp.ndgl.domain.place;
 
 import java.time.LocalDateTime;
-
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,10 +19,10 @@ public class Place {
 	private final String websiteUri;
 	private final String googleMapsUri;
 	private final Integer userRatingCount;
-	private final String displayNameJson;
-	private final String regularOpeningHoursJson;
+	private final String name;
+	private final String thumbnail;
+	private final String regularOpeningHours;
 	private final String photosJson;
-	private final String postalAddressJson;
 	private final LocalDateTime createdAt;
 	private final LocalDateTime updatedAt;
 
@@ -38,10 +37,10 @@ public class Place {
 		final String websiteUri,
 		final String googleMapsUri,
 		final Integer userRatingCount,
-		final String displayNameJson,
-		final String regularOpeningHoursJson,
-		final String photosJson,
-		final String postalAddressJson
+		final String name,
+		final String thumbnail,
+		final String regularOpeningHours,
+		final String photosJson
 	) {
 		return Place.builder()
 			.placeId(placeId)
@@ -54,10 +53,10 @@ public class Place {
 			.websiteUri(websiteUri)
 			.googleMapsUri(googleMapsUri)
 			.userRatingCount(userRatingCount)
-			.displayNameJson(displayNameJson)
-			.regularOpeningHoursJson(regularOpeningHoursJson)
+			.name(name)
+			.thumbnail(thumbnail)
+			.regularOpeningHours(regularOpeningHours)
 			.photosJson(photosJson)
-			.postalAddressJson(postalAddressJson)
 			.build();
 	}
 }
