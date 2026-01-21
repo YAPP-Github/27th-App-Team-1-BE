@@ -70,7 +70,7 @@ public record PlaceInfoResponse(
 	public record Location(Double latitude, Double longitude) {
 		public static Location of(final Double latitude, final Double longitude) {
 
-			if (latitude == null | longitude == null) {
+			if (latitude == null || longitude == null) {
 				return null;
 			}
 
