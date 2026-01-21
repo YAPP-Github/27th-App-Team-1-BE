@@ -43,9 +43,14 @@ public class PlaceDetailService {
 		PlaceDetailsRequest request = PlaceDetailsRequest.of(placeId, "ko");
 		GooglePlaceDetailsResponse response = googleMapsPlaceDetailClient.readPlaceDetails(request);
 
-		GooglePlaceDetailsResponse.PhotoMeta photoMeta = response.photos().get(0);
-		PlacePhotoRequest photoRequest = PlacePhotoRequest.of(photoMeta.name(), photoMeta.heightPx(), photoMeta.widthPx());
-		String thumbnail = googleMapsPlacePhotoClient.getPhotoUri(photoRequest).uri();
+		String thumbnail = null;
+
+		if (response.photos() != null && !response.photos().isEmpty()) {
+			GooglePlaceDetailsResponse.PhotoMeta photoMeta = response.photos().get(0);
+			PlacePhotoRequest photoRequest = PlacePhotoRequest.of(photoMeta.name(), photoMeta.heightPx(),
+				photoMeta.widthPx());
+			thumbnail = googleMapsPlacePhotoClient.getPhotoUri(photoRequest).uri();
+		}
 
 		// 3. 저장 후 반환
 		Place savedPlace = placeDomainService.save(toPlace(response, thumbnail));
