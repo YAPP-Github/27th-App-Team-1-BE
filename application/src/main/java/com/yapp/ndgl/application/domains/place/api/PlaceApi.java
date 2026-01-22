@@ -200,6 +200,7 @@ public interface PlaceApi {
 						                        "widthPx": 4800,
 						                        "heightPx": 3199
 						                    },
+						        ]
 						    }
 						}
 						"""
