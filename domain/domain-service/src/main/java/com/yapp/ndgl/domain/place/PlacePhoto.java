@@ -10,7 +10,7 @@ import lombok.Getter;
 public class PlacePhoto {
 
 	private final Long id;
-	private final String placeId;
+	private final String googlePlaceId;
 	private final String photoName;
 	private final String photoUri;
 	private final Integer widthPx;
@@ -19,14 +19,14 @@ public class PlacePhoto {
 	private final LocalDateTime updatedAt;
 
 	public static PlacePhoto create(
-		final String placeId,
+		final String googlePlaceId,
 		final String photoName,
 		final String photoUri,
 		final Integer widthPx,
 		final Integer heightPx
 	) {
 		return PlacePhoto.builder()
-			.placeId(placeId)
+			.googlePlaceId(googlePlaceId)
 			.photoName(photoName)
 			.photoUri(photoUri)
 			.widthPx(widthPx)
