@@ -25,7 +25,8 @@ public interface TravelTemplateApi {
 
     @Operation(
         summary = "여행 템플릿 상세 조회",
-        description = "ID로 여행 템플릿 상세 정보를 조회합니다."
+        description = "ID로 여행 템플릿 상세 정보를 조회합니다.",
+        deprecated = true
     )
     @ApiResponses({
         @ApiResponse(

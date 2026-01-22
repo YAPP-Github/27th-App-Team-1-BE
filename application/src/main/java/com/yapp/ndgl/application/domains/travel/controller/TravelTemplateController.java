@@ -26,6 +26,7 @@ public class TravelTemplateController implements TravelTemplateApi {
 
     @Override
     @GetMapping("/{id}")
+    @Deprecated
     public ResponseEntity<SuccessResponse<TravelTemplateResponse>> getTravelTemplate(
         @PathVariable Long id
     ) {
