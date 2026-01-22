@@ -7,11 +7,11 @@ import lombok.Builder;
  */
 @Builder
 public record PlaceDetailsRequest(
-	String placeId, String language) {
+	String googlePlaceId, String language) {
 
-	public static PlaceDetailsRequest of(final String placeId, final String language) {
+	public static PlaceDetailsRequest of(final String googlePlaceId, final String language) {
 		return PlaceDetailsRequest.builder()
-			.placeId(placeId)
+			.googlePlaceId(googlePlaceId)
 			.language(language)
 			.build();
 	}

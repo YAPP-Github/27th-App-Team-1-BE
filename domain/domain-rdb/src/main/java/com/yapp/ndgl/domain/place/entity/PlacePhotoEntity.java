@@ -15,15 +15,15 @@ import lombok.NoArgsConstructor;
 @Table(
 	name = "place_photos",
 	indexes = {
-		@Index(name = "idx_place_photos_place_id", columnList = "placeId")
+		@Index(name = "idx_place_photos_place_id", columnList = "google_place_id")
 	}
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlacePhotoEntity extends BaseEntity {
 
-	@Column(nullable = false, length = 255)
-	private String placeId;
+	@Column(name = "google_place_id", nullable = false, length = 255)
+	private String googlePlaceId;
 
 	@Column(nullable = false, length = 2000, unique = true)
 	private String photoName;
@@ -39,13 +39,13 @@ public class PlacePhotoEntity extends BaseEntity {
 
 	@Builder
 	public PlacePhotoEntity(
-		final String placeId,
+		final String googlePlaceId,
 		final String photoName,
 		final String photoUri,
 		final Integer widthPx,
 		final Integer heightPx
 	) {
-		this.placeId = placeId;
+		this.googlePlaceId = googlePlaceId;
 		this.photoName = photoName;
 		this.photoUri = photoUri;
 		this.widthPx = widthPx;

@@ -61,7 +61,7 @@ public interface TravelTemplateApi {
                                  "day": 1,
                                  "travelerTip": "도쿄 타워는 저녁 시간대 방문하는 것이 좋습니다. 야경이 아름답습니다.",
                                  "place": {
-                                   "placeId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
+                                   "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
                                    "formattedAddress": "일본 〒105-0011 Tokyo, Minato City, Shiba-koen, 4 Chome−2−8",
                                    "latitude": 35.6585805,
                                    "longitude": 139.7454329,
@@ -78,7 +78,7 @@ public interface TravelTemplateApi {
                                  "day": 1,
                                  "travelerTip": "메이지 신궁은 조용한 분위기로 유명합니다. 아침 일찍 방문하면 더욱 좋습니다.",
                                  "place": {
-                                   "placeId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+                                   "googlePlaceId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
                                    "formattedAddress": "일본 〒150-0001 Tokyo, Shibuya City, Jingumae, 4 Chome−2−8",
                                    "latitude": 35.6592606,
                                    "longitude": 139.7002586,
@@ -95,7 +95,7 @@ public interface TravelTemplateApi {
                                  "day": 2,
                                  "travelerTip": "시부야 스크램블 스퀘어는 쇼핑과 식사 모두 즐길 수 있는 곳입니다. 옥상 전망대도 추천합니다.",
                                  "place": {
-                                   "placeId": "ChIJ_xkgOmOuEmsR8FhZz3qJN1I",
+                                   "googlePlaceId": "ChIJ_xkgOmOuEmsR8FhZz3qJN1I",
                                    "formattedAddress": "일본 〒150-0043 Tokyo, Shibuya City, Dogenzaka, 2 Chome−1",
                                    "latitude": 35.6580339,
                                    "longitude": 139.7016358,
@@ -221,7 +221,7 @@ public interface TravelTemplateApi {
 										"travelerTip": "도쿄 타워는 저녁 시간대 방문하는 것이 좋습니다. 야경이 아름답습니다.",
 										"estimatedDuration": 60,
 										"place": {
-											"placeId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
+											"googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
 											"latitude": 35.6585805,
 											"longitude": 139.7454329,
 											"name": "Tokyo Tower",
@@ -235,7 +235,7 @@ public interface TravelTemplateApi {
 										"travelerTip": "메이지 신궁은 조용한 분위기로 유명합니다. 아침 일찍 방문하면 더욱 좋습니다.",
 										"estimatedDuration": 90,
 										"place": {
-											"placeId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+											"googlePlaceId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
 											"latitude": 35.6592606,
 											"longitude": 139.7002586,
 											"name": "Meiji Jingu",

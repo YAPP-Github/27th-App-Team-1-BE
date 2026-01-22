@@ -56,7 +56,7 @@ public class TravelTemplateService {
                     travelTemplatePlace.getDay(),
                     travelTemplatePlace.getTravelerTip(),
                     place == null ? null : new TravelTemplateResponse.PlaceResponse(
-                        place.getPlaceId(),
+                        place.getGooglePlaceId(),
                         place.getFormattedAddress(),
                         place.getLatitude(),
                         place.getLongitude(),

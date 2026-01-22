@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.yapp.ndgl.application.domains.place.dto.PlaceDetailResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +22,7 @@ public interface PlaceApi {
 
 	@Operation(
 		summary = "장소 상세 조회",
-		description = "placeId로 Google Places 상세 정보를 조회한다."
+		description = "googlePlaceId로 Google Places 상세 정보를 조회한다."
 	)
 	@ApiResponses({
 		@ApiResponse(
@@ -168,6 +169,145 @@ public interface PlaceApi {
 	@GetMapping("/detail")
 	ResponseEntity<?> readPlaceDetail(
 		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
-		@RequestParam("placeId") final String placeId
+		@RequestParam("googlePlaceId") final String googlePlaceId
+	);
+
+	@Operation(
+		summary = "장소 사진 조회",
+		description = "googlePlaceId로 Google Places 사진 URI 목록을 조회한다."
+	)
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(
+				schema = @Schema(implementation = PlacePhotoResponse.class),
+				examples = @ExampleObject(
+					name = "SUCCESS",
+					value = """
+						{
+						    "code": "2000",
+						    "message": "요청에 성공하였습니다.",
+						    "data": {
+						        "photos": [
+						                    {
+						                        "photoUri": "https://lh3.googleusercontent.com/places/ANXAkqGbrXxA6_1tCvdNIB0BxCAB1ovsQH2KHOY5sBZEDZ8MI86hg5WIjXA0Ts_l3lKhJre-RpTvHVSMKusLWnwsDCW3HbqOAx6l3D0=s4800-w4800-h3200",
+						                        "widthPx": 4800,
+						                        "heightPx": 3200
+						                    },
+						                    {
+						                        "photoUri": "https://lh3.googleusercontent.com/places/ANXAkqEMPzXk9awDHM_DUUM4AIZhI517Gt5aXJbgunsMGjYHF0nfPn-GnmmXQkYD_b8oa05FSBFdjZ3F0a0hI8efpSbuGppnuIktE0I=s4800-w4800-h3199",
+						                        "widthPx": 4800,
+						                        "heightPx": 3199
+						                    },
+						        ]
+						    }
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "400",
+			description = "잘못된 요청",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = {
+					@ExampleObject(
+						name = "MISSING_REQUEST_PARAMETER",
+						value = """
+							{
+							  "code": "COMM-01-006",
+							  "message": "필수 요청 파라미터가 존재하지 않습니다",
+							  "errors": []
+							}
+							"""
+					),
+					@ExampleObject(
+						name = "INVALID_PLACE_ID",
+						value = """
+							{
+							  "code": "GMAP_PLACE-07-003",
+							  "message": "유효하지 않은 Place ID 입니다",
+							  "errors": []
+							}
+							"""
+					),
+					@ExampleObject(
+						name = "INVALID_PHOTO_NAME",
+						value = """
+							{
+							  "code": "GMAP_PLACE-07-005",
+							  "message": "유효하지 않은 Photo Name 입니다",
+							  "errors": []
+							}
+							"""
+					)
+				}
+			)
+		),
+		@ApiResponse(
+			responseCode = "504",
+			description = "외부 API 호출 실패 또는 타임아웃",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = {
+					@ExampleObject(
+						name = "API_CALL_FAILED",
+						value = """
+							{
+							  "code": "GMAP_PLACE-07-001",
+							  "message": "Google Maps Places API 호출에 실패했습니다",
+							  "errors": []
+							}
+							"""
+					),
+					@ExampleObject(
+						name = "API_TIMEOUT",
+						value = """
+							{
+							  "code": "GMAP_PLACE-07-002",
+							  "message": "Google Maps Places API 응답 시간이 초과되었습니다",
+							  "errors": []
+							}
+							"""
+					)
+				}
+			)
+		),
+		@ApiResponse(
+			responseCode = "500",
+			description = "서버 내부 오류",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = {
+					@ExampleObject(
+						name = "INTERNAL_SERVER_ERROR",
+						value = """
+							{
+							  "code": "COMM-08-001",
+							  "message": "서버 내부 오류가 발생했습니다",
+							  "errors": []
+							}
+							"""
+					),
+					@ExampleObject(
+						name = "RESPONSE_PARSE_FAILED",
+						value = """
+							{
+							  "code": "GMAP_PLACE-07-004",
+							  "message": "Google Maps Places API 응답 파싱에 실패했습니다",
+							  "errors": []
+							}
+							"""
+					)
+				}
+			)
+		)
+	})
+	@GetMapping("/photos")
+	ResponseEntity<?> readPlacePhotos(
+		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
+		@RequestParam("googlePlaceId") final String googlePlaceId
 	);
 }

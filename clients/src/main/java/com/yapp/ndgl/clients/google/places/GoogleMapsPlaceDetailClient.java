@@ -58,7 +58,7 @@ public class GoogleMapsPlaceDetailClient {
 		try {
 			validateRequest(request);
 
-			final String uri = "/places/" + request.placeId();
+			final String uri = "/places/" + request.googlePlaceId();
 
 			RestClient.ResponseSpec spec = googleMapsPlaceRestClient.get()
 				.uri(uriBuilder -> {
@@ -79,7 +79,7 @@ public class GoogleMapsPlaceDetailClient {
 				});
 
 			final GooglePlaceDetailsResponse response = spec.body(GooglePlaceDetailsResponse.class);
-			log.debug("Google Maps Place Details API 호출 성공: placeId={}", request.placeId());
+			log.debug("Google Maps Place Details API 호출 성공: googlePlaceId={}", request.googlePlaceId());
 			validateResponse(response);
 
 			return response;
@@ -94,7 +94,7 @@ public class GoogleMapsPlaceDetailClient {
 	}
 
 	private void validateRequest(final PlaceDetailsRequest request) {
-		if (request == null || !StringUtils.hasText(request.placeId())) {
+		if (request == null || !StringUtils.hasText(request.googlePlaceId())) {
 			throw new GlobalException(GoogleMapsErrorCode.INVALID_PLACE_ID);
 		}
 	}

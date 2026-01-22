@@ -9,7 +9,7 @@ import lombok.Getter;
 public class Place {
 
 	private final Long id;
-	private final String placeId;
+	private final String googlePlaceId;
 	private final String formattedAddress;
 	private final Double latitude;
 	private final Double longitude;
@@ -27,7 +27,7 @@ public class Place {
 	private final LocalDateTime updatedAt;
 
 	public static Place create(
-		final String placeId,
+		final String googlePlaceId,
 		final String formattedAddress,
 		final Double latitude,
 		final Double longitude,
@@ -43,7 +43,7 @@ public class Place {
 		final String photosJson
 	) {
 		return Place.builder()
-			.placeId(placeId)
+			.googlePlaceId(googlePlaceId)
 			.formattedAddress(formattedAddress)
 			.latitude(latitude)
 			.longitude(longitude)

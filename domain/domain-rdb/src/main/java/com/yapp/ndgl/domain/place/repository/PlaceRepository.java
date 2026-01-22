@@ -8,6 +8,6 @@ import com.yapp.ndgl.domain.place.entity.PlaceEntity;
 
 public interface PlaceRepository extends JpaRepository<PlaceEntity, Long> {
 
-	Optional<PlaceEntity> findByPlaceId(String placeId);
+	Optional<PlaceEntity> findByGooglePlaceId(final String googlePlaceId);
 
 }

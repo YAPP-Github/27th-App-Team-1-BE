@@ -20,21 +20,15 @@ public class PlacePhotoDomainService {
 
 	private final PlacePhotoRepository placePhotoRepository;
 
-	public List<PlacePhoto> findByPlaceId(final String placeId) {
-		return placePhotoRepository.findByPlaceId(placeId).stream()
+	@Transactional(readOnly = true)
+	public List<PlacePhoto> findByGooglePlaceId(final String googlePlaceId) {
+		return placePhotoRepository.findByGooglePlaceId(googlePlaceId).stream()
 			.map(PlacePhotoMapper::toDomain)
 			.toList();
 	}
 
 	public boolean existsByPhotoName(final String photoName) {
 		return placePhotoRepository.existsByPhotoName(photoName);
-	}
-
-	@Transactional
-	public PlacePhoto save(final PlacePhoto placePhoto) {
-		return PlacePhotoMapper.toDomain(
-			placePhotoRepository.save(PlacePhotoMapper.toEntity(placePhoto))
-		);
 	}
 
 	@Transactional

@@ -1,4 +1,4 @@
-package com.yapp.ndgl.application.domains.place.dto;
+package com.yapp.ndgl.application.domains.place.controller.response;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public record PlaceInfoResponse(
 			}
 
 			return new PlaceInfoResponse(
-				place.getPlaceId(),
+				place.getGooglePlaceId(),
 				place.getName(),
 				place.getThumbnail(),
 				place.getNationalPhoneNumber(),
@@ -63,7 +63,7 @@ public record PlaceInfoResponse(
 				photoMetas
 			);
 		} catch (Exception e) {
-			throw new RuntimeException("PlaceInfoResponse 변환 실패: placeId=" + place.getPlaceId(), e);
+			throw new RuntimeException("PlaceInfoResponse 변환 실패: googlePlaceId=" + place.getGooglePlaceId(), e);
 		}
 	}
 

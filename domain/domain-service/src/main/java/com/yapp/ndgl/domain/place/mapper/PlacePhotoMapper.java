@@ -7,7 +7,7 @@ public class PlacePhotoMapper {
 
 	public static PlacePhotoEntity toEntity(final PlacePhoto placePhoto) {
 		return PlacePhotoEntity.builder()
-			.placeId(placePhoto.getPlaceId())
+			.googlePlaceId(placePhoto.getGooglePlaceId())
 			.photoName(placePhoto.getPhotoName())
 			.photoUri(placePhoto.getPhotoUri())
 			.widthPx(placePhoto.getWidthPx())
@@ -18,7 +18,7 @@ public class PlacePhotoMapper {
 	public static PlacePhoto toDomain(final PlacePhotoEntity entity) {
 		return PlacePhoto.builder()
 			.id(entity.getId())
-			.placeId(entity.getPlaceId())
+			.googlePlaceId(entity.getGooglePlaceId())
 			.photoName(entity.getPhotoName())
 			.photoUri(entity.getPhotoUri())
 			.widthPx(entity.getWidthPx())

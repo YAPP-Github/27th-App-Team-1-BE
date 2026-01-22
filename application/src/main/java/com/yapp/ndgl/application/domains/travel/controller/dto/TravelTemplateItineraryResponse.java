@@ -60,8 +60,8 @@ public record TravelTemplateItineraryResponse(
     }
 
     public record PlaceInfo(
-        @Schema(description = "장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", requiredMode = Schema.RequiredMode.REQUIRED)
-        String placeId,
+        @Schema(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", requiredMode = Schema.RequiredMode.REQUIRED)
+        String googlePlaceId,
         @Schema(description = "위도", example = "35.6762", requiredMode = Schema.RequiredMode.REQUIRED)
         Double latitude,
         @Schema(description = "경도", example = "139.6503", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -76,7 +76,7 @@ public record TravelTemplateItineraryResponse(
             String todayOpeningHours = parseTodayOpeningHours(place.getRegularOpeningHours(), objectMapper);
 
             return new PlaceInfo(
-                place.getPlaceId(),
+                place.getGooglePlaceId(),
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getName(),

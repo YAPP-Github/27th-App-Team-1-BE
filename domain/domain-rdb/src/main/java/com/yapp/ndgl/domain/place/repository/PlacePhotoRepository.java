@@ -9,11 +9,11 @@ import com.yapp.ndgl.domain.place.entity.PlacePhotoEntity;
 
 public interface PlacePhotoRepository extends JpaRepository<PlacePhotoEntity, Long> {
 
-	List<PlacePhotoEntity> findByPlaceId(String placeId);
+	List<PlacePhotoEntity> findByGooglePlaceId(String googlePlaceId);
 
-	Optional<PlacePhotoEntity> findByPlaceIdAndPhotoName(String placeId, String photoName);
+	Optional<PlacePhotoEntity> findByGooglePlaceIdAndPhotoName(String googlePlaceId, String photoName);
 
-	boolean existsByPlaceIdAndPhotoName(String placeId, String photoName);
+	boolean existsByGooglePlaceIdAndPhotoName(String googlePlaceId, String photoName);
 
 	boolean existsByPhotoName(String photoName);
 
