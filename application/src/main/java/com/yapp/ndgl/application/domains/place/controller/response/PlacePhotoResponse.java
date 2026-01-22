@@ -21,6 +21,10 @@ public record PlacePhotoResponse(
 
 	public static PlacePhotoResponse toResponse(final List<PlacePhoto> photos) {
 
+		if (photos == null || photos.isEmpty()) {
+			return empty();
+		}
+
 		List<PlacePhotoResponse.PhotoUri> photoUris = photos.stream()
 			.map(photo -> PlacePhotoResponse.PhotoUri.of(
 				photo.getPhotoUri(),
