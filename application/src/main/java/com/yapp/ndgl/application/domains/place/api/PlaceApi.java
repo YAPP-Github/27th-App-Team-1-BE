@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
-import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoUrisResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -169,7 +169,7 @@ public interface PlaceApi {
 	@GetMapping("/detail")
 	ResponseEntity<?> readPlaceDetail(
 		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
-		@RequestParam("googlePlaceId") final String googlePlaceId
+		@RequestParam("placeID") final String googlePlaceId
 	);
 
 	@Operation(
@@ -181,7 +181,7 @@ public interface PlaceApi {
 			responseCode = "200",
 			description = "성공",
 			content = @Content(
-				schema = @Schema(implementation = PlacePhotoUrisResponse.class),
+				schema = @Schema(implementation = PlacePhotoResponse.class),
 				examples = @ExampleObject(
 					name = "SUCCESS",
 					value = """
@@ -189,14 +189,17 @@ public interface PlaceApi {
 						    "code": "2000",
 						    "message": "요청에 성공하였습니다.",
 						    "data": {
-						        "photoUris": [
-						            {
-						                "name": "CnRnAAAA9R9x6V5z5J8aA3H",
-						                "widthPx": 4032,
-						                "heightPx": 3024,
-						                "photoUri": "https://lh3.googleusercontent.com/places/ANXAkqGbrXxA6_1tCvdNIB0BxCAB1ovsQH2KHOY5sBZEDZ8MI86hg5WIjXA0Ts_l3lKhJre-RpTvHVSMKusLWnwsDCW3HbqOAx6l3D0=s4800-w4800-h3200"
-						            }
-						        ]
+						        "photos": [
+						                    {
+						                        "photoUri": "https://lh3.googleusercontent.com/places/ANXAkqGbrXxA6_1tCvdNIB0BxCAB1ovsQH2KHOY5sBZEDZ8MI86hg5WIjXA0Ts_l3lKhJre-RpTvHVSMKusLWnwsDCW3HbqOAx6l3D0=s4800-w4800-h3200",
+						                        "widthPx": 4800,
+						                        "heightPx": 3200
+						                    },
+						                    {
+						                        "photoUri": "https://lh3.googleusercontent.com/places/ANXAkqEMPzXk9awDHM_DUUM4AIZhI517Gt5aXJbgunsMGjYHF0nfPn-GnmmXQkYD_b8oa05FSBFdjZ3F0a0hI8efpSbuGppnuIktE0I=s4800-w4800-h3199",
+						                        "widthPx": 4800,
+						                        "heightPx": 3199
+						                    },
 						    }
 						}
 						"""

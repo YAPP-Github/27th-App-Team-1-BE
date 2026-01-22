@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceInfoResponse;
-import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoUrisResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.domain.place.PlacePhoto;
@@ -68,16 +68,13 @@ public class PlacePhotoService {
 		}
 	}
 
-	private PlacePhotoUrisResponse toResponse(final List<PlacePhoto> placePhotos) {
-		List<PlacePhotoUrisResponse.PhotoUri> photoUris = placePhotos.stream()
-			.map(photo -> PlacePhotoUrisResponse.PhotoUri.of(
-				photo.getPhotoName(),
-				photo.getWidthPx(),
-				photo.getHeightPx(),
-				photo.getPhotoUri()
-			))
-			.toList();
-		return PlacePhotoUrisResponse.from(photoUris);
+	public PlacePhotoResponse readPlacePhotoUris(final String googlePlaceId) {
+		List<PlacePhoto> photos = placePhotoDomainService.findByGooglePlaceId(googlePlaceId);
+		if (photos.isEmpty()) {
+			return PlacePhotoResponse.empty();
+		}
+
+		return PlacePhotoResponse.toResponse(photos);
 	}
 
 	private String fetchPhotoUri(final PlaceInfoResponse.PhotoMeta meta) {
