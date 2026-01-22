@@ -12,7 +12,7 @@ import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record TravelTemplateItineraryResponse(
-	@Schema(description = "여행 장소 목록")
+	@Schema(description = "여행 장소 목록", requiredMode = Schema.RequiredMode.REQUIRED)
 	List<ItineraryPlaceResponse> places
 ) {
     public static TravelTemplateItineraryResponse of(

@@ -53,16 +53,16 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(name = "budget_per_person")
     private Integer budgetPerPerson;
 
-    @Column(name = "summary", length = 2000)
+    @Column(nullable = false, name = "summary", length = 2000)
     private String summary;
 
-    @Column(name = "title", length = 500)
+    @Column(nullable = false, name = "title", length = 500)
     private String title;
 
-    @Column(name = "nights")
+    @Column(nullable = false, name = "nights")
     private Integer nights;
 
-    @Column(name = "days")
+    @Column(nullable = false, name = "days")
     private Integer days;
 
     @Column(length = 1000)

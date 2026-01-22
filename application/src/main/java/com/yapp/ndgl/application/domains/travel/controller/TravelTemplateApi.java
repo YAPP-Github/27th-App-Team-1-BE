@@ -270,7 +270,7 @@ public interface TravelTemplateApi {
 	ResponseEntity<SuccessResponse<TravelTemplateItineraryResponse>> readTravelTemplateItinerary(
 		@Parameter(description = "여행 템플릿 ID", example = "1", required = true)
 		@PathVariable("id") final Long id,
-		@Parameter(description = "조회할 일차 (1부터 시작, 지정하지 않으면 모든 일정 조회)", example = "1", required = false)
+		@Parameter(description = "조회할 일차 (default = 1)", example = "1", required = false)
 		@RequestParam(value = "day", required = false)
 		@Min(value = 1, message = "day는 항상 1 이상 입니다.") final Integer day
 	);

@@ -31,10 +31,10 @@ public class PlacePhotoEntity extends BaseEntity {
 	@Column(nullable = false, length = 2000)
 	private String photoUri;
 
-	@Column
+	@Column(nullable = false)
 	private Integer widthPx;
 
-	@Column
+	@Column(nullable = false)
 	private Integer heightPx;
 
 	@Builder
