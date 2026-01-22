@@ -41,7 +41,6 @@ public class PlacePhotoService {
 		// 1. DB에서 기존 photo 조회
 		List<PlacePhoto> existingPhotos = placePhotoDomainService.findByGooglePlaceId(googlePlaceId);
 
-		log.info("existingPhotos = {}", existingPhotos);
 		Map<String, PlacePhoto> existingPhotoMap = existingPhotos.stream()
 			.collect(Collectors.toMap(PlacePhoto::getPhotoName, p -> p));
 
