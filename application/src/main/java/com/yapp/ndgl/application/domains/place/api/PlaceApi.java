@@ -169,7 +169,7 @@ public interface PlaceApi {
 	@GetMapping("/detail")
 	ResponseEntity<?> readPlaceDetail(
 		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
-		@RequestParam("placeID") final String googlePlaceId
+		@RequestParam("placeId") final String googlePlaceId
 	);
 
 	@Operation(
