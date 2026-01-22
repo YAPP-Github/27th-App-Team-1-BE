@@ -82,7 +82,7 @@ INSERT INTO places (
     10000,
     'Tokyo Tower',
     'https://example.com/thumbnail/tokyo-tower.jpg',
-    '{"weekdayDescriptions":["월요일: 09:00~23:00","화요일: 09:00~23:00","수요일: 09:00~23:00","목요일: 09:00~23:00","금요일: 09:00~23:00","토요일: 09:00~23:00","일요일: 09:00~23:00"]}',
+    '["월요일: AM 9:00 ~ PM 11:00","화요일: AM 9:00 ~ PM 11:00","수요일: AM 9:00 ~ PM 11:00","목요일: AM 9:00 ~ PM 11:00","금요일: AM 9:00 ~ PM 11:00","토요일: AM 9:00 ~ PM 11:00","일요일: AM 9:00 ~ PM 11:00"]',
     '[{"photoReference":"photo1","width":1920,"height":1080}]',
     NOW(),
     NOW()
@@ -100,7 +100,7 @@ INSERT INTO places (
     15000,
     'Meiji Jingu',
     'https://example.com/thumbnail/meiji-jingu.jpg',
-    '{"weekdayDescriptions":["월요일: 06:00~18:00","화요일: 06:00~18:00","수요일: 06:00~18:00","목요일: 06:00~18:00","금요일: 06:00~18:00","토요일: 06:00~18:00","일요일: 06:00~18:00"]}',
+    '["월요일: AM 6:00 ~ PM 6:00","화요일: AM 6:00 ~ PM 6:00","수요일: AM 6:00 ~ PM 6:00","목요일: AM 6:00 ~ PM 6:00","금요일: AM 6:00 ~ PM 6:00","토요일: AM 6:00 ~ PM 6:00","일요일: AM 6:00 ~ PM 6:00"]',
     '[{"photoReference":"photo2","width":1920,"height":1080}]',
     NOW(),
     NOW()
@@ -118,7 +118,7 @@ INSERT INTO places (
     8000,
     'Shibuya Scramble Square',
     'https://example.com/thumbnail/shibuya-scramble.jpg',
-    '{"weekdayDescriptions":["월요일: 10:00~21:00","화요일: 10:00~21:00","수요일: 10:00~21:00","목요일: 10:00~21:00","금요일: 10:00~21:00","토요일: 10:00~21:00","일요일: 10:00~21:00"]}',
+    '["월요일: AM 10:00 ~ PM 9:00","화요일: AM 10:00 ~ PM 9:00","수요일: AM 10:00 ~ PM 9:00","목요일: AM 10:00 ~ PM 9:00","금요일: AM 10:00 ~ PM 9:00","토요일: AM 10:00 ~ PM 9:00","일요일: AM 10:00 ~ PM 9:00"]',
     '[{"photoReference":"photo3","width":1920,"height":1080}]',
     NOW(),
     NOW()

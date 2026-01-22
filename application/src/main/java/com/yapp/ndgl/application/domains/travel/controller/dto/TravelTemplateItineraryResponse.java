@@ -1,7 +1,6 @@
 package com.yapp.ndgl.application.domains.travel.controller.dto;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -91,11 +90,10 @@ public record TravelTemplateItineraryResponse(
             }
 
             try {
-                Map<String, List<String>> openingHoursMap = objectMapper.readValue(
+                List<String> weekdayDescriptions = objectMapper.readValue(
                     regularOpeningHoursJson,
                     new TypeReference<>() {}
                 );
-                List<String> weekdayDescriptions = openingHoursMap.getOrDefault("weekdayDescriptions", Collections.emptyList());
 
                 if (weekdayDescriptions.isEmpty()) {
                     return null;
@@ -104,11 +102,18 @@ public record TravelTemplateItineraryResponse(
                 // 오늘 요일 index 계산 (0: 월요일, 1: 화요일, ..., 6: 일요일)
                 int todayIndex = LocalDate.now().getDayOfWeek().getValue() - 1;
 
-                if (todayIndex >= 0 && todayIndex < weekdayDescriptions.size()) {
-                    return weekdayDescriptions.get(todayIndex).split(" ")[1];
+                if (todayIndex < 0 || todayIndex >= weekdayDescriptions.size()) {
+                    return null;
                 }
 
-                return null;
+                String todayDescription = weekdayDescriptions.get(todayIndex);
+                int colonIndex = todayDescription.indexOf(':');
+                if (colonIndex < 0) {
+                    return todayDescription;
+                }
+
+                String openingHours = todayDescription.substring(colonIndex + 1).trim();
+                return openingHours.isEmpty() ? null : openingHours;
             } catch (Exception e) {
                 return null;
             }
