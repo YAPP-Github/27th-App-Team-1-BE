@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.yapp.ndgl.application.domains.place.dto.PlaceInfoResponse;
-import com.yapp.ndgl.application.domains.place.dto.PlacePhotoUrisResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceInfoResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoUrisResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.domain.place.PlacePhoto;

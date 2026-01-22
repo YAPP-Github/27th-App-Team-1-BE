@@ -1,8 +1,8 @@
 package com.yapp.ndgl.application.domains.place.facade;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
-import com.yapp.ndgl.application.domains.place.dto.PlaceDetailResponse;
-import com.yapp.ndgl.application.domains.place.dto.PlaceInfoResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceInfoResponse;
 import com.yapp.ndgl.application.domains.place.service.PlaceDetailService;
 import com.yapp.ndgl.application.domains.place.service.PlacePhotoService;
 

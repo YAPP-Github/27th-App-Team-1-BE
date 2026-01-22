@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yapp.ndgl.application.domains.place.api.PlaceApi;
-import com.yapp.ndgl.application.domains.place.dto.PlaceDetailResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
 import com.yapp.ndgl.application.domains.place.facade.PlaceDetailFacade;
 import com.yapp.ndgl.common.response.SuccessResponse;
 

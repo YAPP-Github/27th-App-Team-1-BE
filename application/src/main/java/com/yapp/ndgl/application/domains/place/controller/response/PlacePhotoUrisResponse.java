@@ -1,4 +1,4 @@
-package com.yapp.ndgl.application.domains.place.dto;
+package com.yapp.ndgl.application.domains.place.controller.response;
 
 import java.util.List;
 
