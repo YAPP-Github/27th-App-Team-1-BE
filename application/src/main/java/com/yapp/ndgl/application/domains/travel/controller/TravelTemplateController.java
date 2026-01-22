@@ -1,6 +1,7 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import com.yapp.ndgl.common.response.SuccessResponse;
 
 import lombok.RequiredArgsConstructor;
 
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/travel-templates")
 @RestController

@@ -102,9 +102,7 @@ public class TravelTemplateService {
     @Transactional(readOnly = true)
     public TravelTemplateItineraryResponse readTravelTemplateItinerary(final Long travelTemplateId, final Integer day) {
         // 여행 템플릿 장소 목록 조회 (day 파라미터에 따라 DB에서 필터링)
-        List<TravelTemplatePlace> travelTemplatePlaces = day != null
-            ? travelTemplatePlaceDomainService.findPlacesByTravelTemplateIdAndDay(travelTemplateId, day)
-            : travelTemplatePlaceDomainService.findPlacesByTravelTemplateId(travelTemplateId);
+        List<TravelTemplatePlace> travelTemplatePlaces = travelTemplatePlaceDomainService.findPlacesByTravelTemplateIdAndDay(travelTemplateId, day);
 
         // placeId 목록 추출
         List<Long> placeIds = travelTemplatePlaces.stream()
