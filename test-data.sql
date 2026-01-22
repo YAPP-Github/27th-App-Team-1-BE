@@ -3,7 +3,7 @@ DELETE FROM travel_template_places WHERE travel_template_id IN (
     SELECT id FROM travel_templates WHERE travel_id = 'TRAVEL_001'
 );
 DELETE FROM travel_templates WHERE travel_id = 'TRAVEL_001';
-DELETE FROM places WHERE place_id IN (
+DELETE FROM places WHERE google_place_id IN (
     'ChIJSc8jdZORQTURu6BMwxrKbGg',
     'ChIJN1t_tDeuEmsRUsoyG83frY4',
     'ChIJ_xkgOmOuEmsR8FhZz3qJN1I'
@@ -52,7 +52,7 @@ INSERT INTO travel_templates (
 
 -- 테스트용 Place 데이터 삽입 (3개)
 INSERT INTO places (
-    place_id,
+    google_place_id,
     formatted_address,
     latitude,
     longitude,
@@ -140,7 +140,7 @@ INSERT INTO travel_template_places (
     updated_at
 ) VALUES (
     (SELECT id FROM travel_templates WHERE travel_id = 'TRAVEL_001'),
-    (SELECT id FROM places WHERE place_id = 'ChIJSc8jdZORQTURu6BMwxrKbGg'),
+    (SELECT id FROM places WHERE google_place_id = 'ChIJSc8jdZORQTURu6BMwxrKbGg'),
     1,
     1,
     '도쿄 타워는 저녁 시간대 방문하는 것이 좋습니다. 야경이 아름답습니다.',
@@ -161,7 +161,7 @@ INSERT INTO travel_template_places (
     updated_at
 ) VALUES (
     (SELECT id FROM travel_templates WHERE travel_id = 'TRAVEL_001'),
-    (SELECT id FROM places WHERE place_id = 'ChIJN1t_tDeuEmsRUsoyG83frY4'),
+    (SELECT id FROM places WHERE google_place_id = 'ChIJN1t_tDeuEmsRUsoyG83frY4'),
     2,
     1,
     '메이지 신궁은 조용한 분위기로 유명합니다. 아침 일찍 방문하면 더욱 좋습니다.',
@@ -182,7 +182,7 @@ INSERT INTO travel_template_places (
     updated_at
 ) VALUES (
     (SELECT id FROM travel_templates WHERE travel_id = 'TRAVEL_001'),
-    (SELECT id FROM places WHERE place_id = 'ChIJ_xkgOmOuEmsR8FhZz3qJN1I'),
+    (SELECT id FROM places WHERE google_place_id = 'ChIJ_xkgOmOuEmsR8FhZz3qJN1I'),
     1,
     2,
     '시부야 스크램블 스퀘어는 쇼핑과 식사 모두 즐길 수 있는 곳입니다. 옥상 전망대도 추천합니다.',

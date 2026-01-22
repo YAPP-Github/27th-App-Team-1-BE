@@ -59,7 +59,7 @@ class GoogleMapsClientTest {
 			.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
 		PlaceDetailsRequest request = PlaceDetailsRequest.builder()
-			.placeId("ChIJN1t_tDeuEmsRUsoyG83frY4")
+			.googlePlaceId("ChIJN1t_tDeuEmsRUsoyG83frY4")
 			.build();
 
 		// when
@@ -67,8 +67,8 @@ class GoogleMapsClientTest {
 
 		// then
 		assertThat(result.id()).isEqualTo("ChIJN1t_tDeuEmsRUsoyG83frY4");
-		assertThat(result.displayName()).isNotNull();
-		assertThat(result.displayName().text()).isEqualTo("Test Place");
+		assertThat(result.name()).isNotNull();
+		assertThat(result.name().text()).isEqualTo("Test Place");
 		assertThat(result.formattedAddress()).isEqualTo("123 Test Street, Test City");
 		assertThat(result.nationalPhoneNumber()).isEqualTo("050-0000-0000");
 		assertThat(result.internationalPhoneNumber()).isEqualTo("+81 50-0000-0000");
@@ -84,8 +84,6 @@ class GoogleMapsClientTest {
 		assertThat(result.photos().get(0).name()).isEqualTo("places/test/photos/1");
 		assertThat(result.photos().get(0).widthPx()).isEqualTo(3024);
 		assertThat(result.photos().get(0).heightPx()).isEqualTo(3024);
-		assertThat(result.photos().get(0).flagContentUri()).isEqualTo("https://www.google.com/local/imagery/report/?image_key=test");
-		assertThat(result.photos().get(0).googleMapsUri()).isEqualTo("https://www.google.com/maps/place/test");
 	}
 
 	@Test
@@ -97,7 +95,7 @@ class GoogleMapsClientTest {
 			.setBody("Internal Server Error"));
 
 		PlaceDetailsRequest request = PlaceDetailsRequest.builder()
-			.placeId("ChIJN1t_tDeuEmsRUsoyG83frY4")
+			.googlePlaceId("ChIJN1t_tDeuEmsRUsoyG83frY4")
 			.build();
 
 		// when & then
@@ -126,9 +124,7 @@ class GoogleMapsClientTest {
 		GooglePlaceDetailsResponse.PhotoMeta photo = new GooglePlaceDetailsResponse.PhotoMeta(
 			"places/test/photos/1",
 			3024,
-			3024,
-			"https://www.google.com/local/imagery/report/?image_key=test",
-			"https://www.google.com/maps/place/test"
+			3024
 		);
 
 		return new GooglePlaceDetailsResponse(

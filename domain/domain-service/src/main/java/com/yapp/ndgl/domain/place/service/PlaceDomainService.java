@@ -21,8 +21,8 @@ public class PlaceDomainService {
 
 	private final PlaceRepository placeRepository;
 
-	public Optional<Place> findByPlaceId(final String placeId) {
-		return placeRepository.findByPlaceId(placeId)
+	public Optional<Place> findByGooglePlaceId(final String googlePlaceId) {
+		return placeRepository.findByGooglePlaceId(googlePlaceId)
 			.map(PlaceMapper::toDomain);
 	}
 

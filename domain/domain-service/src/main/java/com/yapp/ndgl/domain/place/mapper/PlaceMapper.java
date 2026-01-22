@@ -7,7 +7,7 @@ public class PlaceMapper {
 
 	public static PlaceEntity toEntity(final Place place) {
 		return PlaceEntity.builder()
-			.placeId(place.getPlaceId())
+			.googlePlaceId(place.getGooglePlaceId())
 			.formattedAddress(place.getFormattedAddress())
 			.latitude(place.getLatitude())
 			.longitude(place.getLongitude())
@@ -27,7 +27,7 @@ public class PlaceMapper {
 	public static Place toDomain(final PlaceEntity entity) {
 		return Place.builder()
 			.id(entity.getId())
-			.placeId(entity.getPlaceId())
+			.googlePlaceId(entity.getGooglePlaceId())
 			.formattedAddress(entity.getFormattedAddress())
 			.latitude(entity.getLatitude())
 			.longitude(entity.getLongitude())

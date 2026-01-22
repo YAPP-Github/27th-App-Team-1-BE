@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlaceEntity extends BaseEntity {
 
-	@Column(nullable = false, unique = true, length = 255)
-	private String placeId;
+	@Column(name = "google_place_id", nullable = false, unique = true, length = 255)
+	private String googlePlaceId;
 
 	@Column(length = 1000)
 	private String formattedAddress;
@@ -64,7 +64,7 @@ public class PlaceEntity extends BaseEntity {
 
 	@Builder
 	public PlaceEntity(
-		final String placeId,
+		final String googlePlaceId,
 		final String formattedAddress,
 		final Double latitude,
 		final Double longitude,
@@ -79,7 +79,7 @@ public class PlaceEntity extends BaseEntity {
 		final String regularOpeningHours,
 		final String photosJson
 	) {
-		this.placeId = placeId;
+		this.googlePlaceId = googlePlaceId;
 		this.formattedAddress = formattedAddress;
 		this.latitude = latitude;
 		this.longitude = longitude;

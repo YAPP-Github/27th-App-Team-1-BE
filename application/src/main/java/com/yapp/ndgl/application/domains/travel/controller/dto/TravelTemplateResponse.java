@@ -49,8 +49,8 @@ public record TravelTemplateResponse(
     }
 
     public record PlaceResponse(
-        @Schema(description = "장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", requiredMode = Schema.RequiredMode.REQUIRED)
-        String placeId,
+        @Schema(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", requiredMode = Schema.RequiredMode.REQUIRED)
+        String googlePlaceId,
         @Schema(description = "주소", example = "123 Main St, Tokyo, Japan", nullable = true)
         String formattedAddress,
         @Schema(description = "위도", example = "35.6762", requiredMode = Schema.RequiredMode.REQUIRED)

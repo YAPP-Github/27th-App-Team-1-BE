@@ -27,20 +27,20 @@ public class PlaceDetailService {
 	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
 	private final ObjectMapper objectMapper;
 
-	public PlaceInfoResponse readPlaceDetail(final String placeId) {
-		log.info("[GetPlaceDetail] 장소 상세 조회 시작. placeId:{}", placeId);
+	public PlaceInfoResponse readPlaceDetail(final String googlePlaceId) {
+		log.info("[GetPlaceDetail] 장소 상세 조회 시작. googlePlaceId:{}", googlePlaceId);
 
 		// 1. DB 조회
-		Place place = placeDomainService.findByPlaceId(placeId).orElse(null);
+		Place place = placeDomainService.findByGooglePlaceId(googlePlaceId).orElse(null);
 
 		if (place != null) {
-			log.info("[GetPlaceDetail] DB 조회 성공 후 반환. placeId:{}, id:{}", placeId, place.getId());
+			log.info("[GetPlaceDetail] DB 조회 성공 후 반환. googlePlaceId:{}, id:{}", googlePlaceId, place.getId());
 			return PlaceInfoResponse.from(place, objectMapper);
 		}
 
 		// 2. 없으면 구글 조회
-		log.info("[GetPlaceDetail] DB에 데이터 없음. Google Maps API 호출 시작. placeId:{}", placeId);
-		PlaceDetailsRequest request = PlaceDetailsRequest.of(placeId, "ko");
+		log.info("[GetPlaceDetail] DB에 데이터 없음. Google Maps API 호출 시작. googlePlaceId:{}", googlePlaceId);
+		PlaceDetailsRequest request = PlaceDetailsRequest.of(googlePlaceId, "ko");
 		GooglePlaceDetailsResponse response = googleMapsPlaceDetailClient.readPlaceDetails(request);
 
 		String thumbnail = null;
@@ -54,7 +54,7 @@ public class PlaceDetailService {
 
 		// 3. 저장 후 반환
 		Place savedPlace = placeDomainService.save(toPlace(response, thumbnail));
-		log.info("[GetPlaceDetail] DB 저장 완료 후 반환. placeId:{}, id:{}", placeId, savedPlace.getId());
+		log.info("[GetPlaceDetail] DB 저장 완료 후 반환. googlePlaceId:{}, id:{}", googlePlaceId, savedPlace.getId());
 		return PlaceInfoResponse.from(savedPlace, objectMapper);
 	}
 
@@ -97,7 +97,7 @@ public class PlaceDetailService {
 				photosJson
 			);
 		} catch (Exception e) {
-			log.error("Place 변환 실패: placeId={}", response.id(), e);
+			log.error("Place 변환 실패: googlePlaceId={}", response.id(), e);
 			throw new GlobalException(GoogleMapsErrorCode.RESPONSE_PARSE_FAILED);
 		}
 	}
