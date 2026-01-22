@@ -28,7 +28,7 @@ public class PlaceController implements PlaceApi {
 	@Override
 	@GetMapping("/detail")
 	public ResponseEntity<?> readPlaceDetail(
-		final @RequestParam("placeId") String googlePlaceId
+		final @RequestParam("googlePlaceId") String googlePlaceId
 	) {
 		PlaceDetailResponse response = placeDetailFacade.readPlaceDetail(googlePlaceId);
 		return ResponseEntity.ok(SuccessResponse.success("place", response));
@@ -37,7 +37,7 @@ public class PlaceController implements PlaceApi {
 	@Override
 	@GetMapping("/photos")
 	public ResponseEntity<?> readPlacePhotos(
-		final @RequestParam("placeId") String googlePlaceId
+		final @RequestParam("googlePlaceId") String googlePlaceId
 	) {
 		PlacePhotoResponse response = placePhotoFacade.readPlacePhotos(googlePlaceId);
 		return ResponseEntity.ok(SuccessResponse.success(response));
