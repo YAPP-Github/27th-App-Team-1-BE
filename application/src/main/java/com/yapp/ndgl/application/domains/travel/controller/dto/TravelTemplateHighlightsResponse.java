@@ -50,11 +50,11 @@ public record TravelTemplateHighlightsResponse(
 		String title,
 		@Schema(description = "유튜버 이름", example = "빠니보틀", requiredMode = Schema.RequiredMode.REQUIRED)
 		String name,
-		@Schema(description = "유튜버 프로필 이미지 URL", example = "https://example.com/thumbnail/panibottle.jpg", requiredMode = Schema.RequiredMode.REQUIRED)
+		@Schema(description = "유튜버 프로필 이미지 URL", example = "https://example.com/thumbnail/panibottle.jpg", nullable = true)
 		String profileImage,
-		@Schema(description = "영상 썸네일 URL", example = "https://example.com/thumbnail/tokyo.jpg", requiredMode = Schema.RequiredMode.REQUIRED)
+		@Schema(description = "영상 썸네일 URL", example = "https://example.com/thumbnail/tokyo.jpg", nullable = true)
 		String thumbnail,
-		@Schema(description = "유튜브 링크", example = "https://www.youtube.com/watch?v=tokyo-travel", requiredMode = Schema.RequiredMode.REQUIRED)
+		@Schema(description = "유튜브 링크", example = "https://www.youtube.com/watch?v=tokyo-travel", nullable = true)
 		String link,
 		@Schema(description = "영상 요약", example = "도쿄 3박 4일 여행의 모든 것. 유튜버가 직접 다녀온 코스로 구성된 완벽한 가이드.", requiredMode = Schema.RequiredMode.REQUIRED)
 		String summary
