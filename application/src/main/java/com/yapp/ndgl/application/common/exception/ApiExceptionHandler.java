@@ -119,8 +119,12 @@ public class ApiExceptionHandler {
 			.stream()
 			.map(violation -> {
 				Map<String, String> errorMap = new HashMap<>();
-				String path = violation.getPropertyPath().toString();
-				String field = path.isEmpty() ? path : path.substring(path.lastIndexOf('.') + 1);
+				String field = "";
+				for (jakarta.validation.Path.Node node : violation.getPropertyPath()) {
+					if (node.getName() != null) {
+						field = node.getName();
+					}
+				}
 				errorMap.put("field", field);
 				errorMap.put("message", violation.getMessage());
 				return errorMap;

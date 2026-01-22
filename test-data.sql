@@ -42,7 +42,7 @@ INSERT INTO travel_templates (
     'https://www.youtube.com/watch?v=F2utz6L76D0',
     1200000,
     '빠니보틀은 주말을 이용해 직장인들도 충분히 다녀올 수 있는 ''금요일 퇴근 후 방콕 여행''의 가능성을 보여주며, 곽튜브와의 티격태격 케미를 통해 방콕의 매력을 소개합니다',
-    '도쿄 3박 4일 완벽 여행 가이드',
+    '방콕 풀코스, 동남아 안 가본 곽튜브와 함께 【방콕】',
     3,
     4,
     'https://i.ytimg.com/vi/F2utz6L76D0/mqdefault.jpg',
