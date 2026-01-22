@@ -23,10 +23,10 @@ public class PlaceEntity extends BaseEntity {
 	@Column(length = 1000)
 	private String formattedAddress;
 
-	@Column
+	@Column(nullable = false)
 	private Double latitude;
 
-	@Column
+	@Column(nullable = false)
 	private Double longitude;
 
 	@Column
@@ -48,7 +48,7 @@ public class PlaceEntity extends BaseEntity {
 	private Integer userRatingCount;
 
 	@Lob
-	@Column(length = 500)
+	@Column(nullable = false, length = 500)
 	private String name;
 
 	@Column(columnDefinition = "TEXT")
