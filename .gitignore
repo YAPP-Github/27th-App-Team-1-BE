@@ -49,6 +49,7 @@ application-*.yaml
 .claude/
 .codex/
 CLAUDE.md
+CODEX.md
 
 ### ENV File ###
 .env

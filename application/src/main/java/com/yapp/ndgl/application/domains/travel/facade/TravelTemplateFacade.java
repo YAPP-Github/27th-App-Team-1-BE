@@ -2,6 +2,7 @@ package com.yapp.ndgl.application.domains.travel.facade;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.service.TravelTemplateService;
 
@@ -20,7 +21,12 @@ public class TravelTemplateFacade {
     }
 
     public TravelTemplateHighlightsResponse readTravelTemplateHighlights(final Long id) {
-        log.info("여행 템플릿의 상단 내역을 조회합니다 template id = {}", id);
+        log.info("여행 템플릿의 상단 내역을 조회합니다. templateId = {}", id);
         return travelTemplateService.readTravelTemplateHighlights(id);
+    }
+
+    public TravelTemplateItineraryResponse readTravelTemplateItinerary(final Long id, final Integer day) {
+        log.info("여행 템플릿의 일정을 조회합니다. templateId = {}", id);
+        return travelTemplateService.readTravelTemplateItinerary(id, day);
     }
 }

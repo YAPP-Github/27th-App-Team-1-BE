@@ -9,4 +9,6 @@ public interface TravelTemplatePlaceRepository extends JpaRepository<TravelTempl
 
     List<TravelTemplatePlaceEntity> findByTravelTemplateIdOrderByDayAscSequenceAsc(Long travelTemplateId);
 
+    List<TravelTemplatePlaceEntity> findByTravelTemplateIdAndDayOrderBySequenceAsc(Long travelTemplateId, Integer day);
+
 }

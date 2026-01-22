@@ -20,6 +20,7 @@ import com.yapp.ndgl.common.exception.CommonErrorCode;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.response.ErrorResponse;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -107,6 +108,32 @@ public class ApiExceptionHandler {
 		return ResponseEntity
 			.status(HttpStatus.NOT_FOUND)
 			.body(ErrorResponse.error(CommonErrorCode.NOT_FOUND_URI));
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<ErrorResponse<?>> handleConstraintViolationException(
+		final ConstraintViolationException e) {
+		log.error("유효성 검증 실패", e);
+
+		List<Map<String, String>> errors = e.getConstraintViolations()
+			.stream()
+			.map(violation -> {
+				Map<String, String> errorMap = new HashMap<>();
+				String field = "";
+				for (jakarta.validation.Path.Node node : violation.getPropertyPath()) {
+					if (node.getName() != null) {
+						field = node.getName();
+					}
+				}
+				errorMap.put("field", field);
+				errorMap.put("message", violation.getMessage());
+				return errorMap;
+			})
+			.toList();
+
+		return ResponseEntity
+			.status(HttpStatus.UNPROCESSABLE_ENTITY)
+			.body(ErrorResponse.error(CommonErrorCode.VALIDATION_ERRORS_IN_REQUEST_DATA, errors));
 	}
 
 	@ExceptionHandler(Exception.class)

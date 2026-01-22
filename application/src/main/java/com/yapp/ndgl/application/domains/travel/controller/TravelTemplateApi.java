@@ -2,8 +2,10 @@ package com.yapp.ndgl.application.domains.travel.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
@@ -16,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 
 @Tag(name = "Travel Template", description = "여행 템플릿 관련 API")
 public interface TravelTemplateApi {
@@ -191,4 +194,83 @@ public interface TravelTemplateApi {
     ResponseEntity<SuccessResponse<TravelTemplateHighlightsResponse>> readTravelTemplateHighlights(
         @PathVariable("id") final Long id
     );
+
+	@Operation(
+		summary = "여행 템플릿 일정 조회",
+		description = "여행 템플릿의 일정(장소 목록)을 조회합니다. day 파라미터로 특정 일차의 일정만 필터링할 수 있습니다."
+	)
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(
+				schema = @Schema(implementation = TravelTemplateItineraryResponse.class),
+				examples = @ExampleObject(
+					name = "SUCCESS",
+					value = """
+						{
+							"code": "2000",
+							"message": "요청에 성공하였습니다.",
+							"data": {
+								"places": [
+									{
+										"id": 1,
+										"day": 1,
+										"sequence": 1,
+										"travelerTip": "도쿄 타워는 저녁 시간대 방문하는 것이 좋습니다. 야경이 아름답습니다.",
+										"estimatedDuration": 60,
+										"place": {
+											"placeId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
+											"latitude": 35.6585805,
+											"longitude": 139.7454329,
+											"name": "Tokyo Tower",
+											"regularOpeningHours": "09:00~23:00"
+										}
+									},
+									{
+										"id": 2,
+										"day": 1,
+										"sequence": 2,
+										"travelerTip": "메이지 신궁은 조용한 분위기로 유명합니다. 아침 일찍 방문하면 더욱 좋습니다.",
+										"estimatedDuration": 90,
+										"place": {
+											"placeId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+											"latitude": 35.6592606,
+											"longitude": 139.7002586,
+											"name": "Meiji Jingu",
+											"regularOpeningHours": "06:00~18:00"
+										}
+									}
+								]
+							}
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "404",
+			description = "여행 템플릿을 찾을 수 없음",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "NOT_FOUND_TRAVEL_TEMPLATE",
+					value = """
+						{
+							"code": "TRAVEL-02-001",
+							"message": "여행 템플릿을 찾을 수 없습니다",
+							"errors": []
+						}
+						"""
+				)
+			)
+		)
+	})
+	ResponseEntity<SuccessResponse<TravelTemplateItineraryResponse>> readTravelTemplateItinerary(
+		@Parameter(description = "여행 템플릿 ID", example = "1", required = true)
+		@PathVariable("id") final Long id,
+		@Parameter(description = "조회할 일차 (1부터 시작, 지정하지 않으면 모든 일정 조회)", example = "1", required = false)
+		@RequestParam(value = "day", required = false)
+		@Min(value = 1, message = "day는 항상 1 이상 입니다.") final Integer day
+	);
 }
