@@ -72,7 +72,7 @@ public record TravelTemplateItineraryResponse(
         String name,
         @Schema(description = "오늘의 영업시간 정보 (JSON 파싱 실패 시 null)", example = "09:00~23:00", nullable = true)
         String regularOpeningHours,
-        @Schema(description = "Google Maps URI", example = "https://maps.google.com/?cid=14776686710302251978", nullable = true)
+        @Schema(description = "Google Maps URI", example = "https://maps.google.com/?cid=14776686710302251978", requiredMode = Schema.RequiredMode.REQUIRED)
         String googleMapsUri
     ) {
 
