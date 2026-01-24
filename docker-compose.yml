@@ -1,7 +1,7 @@
-version: '3.8'
-
 services:
   application:
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
     image: ${IMAGE_NAME:-ndgl-application:local}
     build:
       context: .

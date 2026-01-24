@@ -2,11 +2,15 @@ version: '3.8'
 
 services:
   application:
+    environment:
+      - SPRING_PROFILES_ACTIVE=live
     image: ${IMAGE_NAME:-ghcr.io/owner/repo:latest}
     container_name: ndgl-application-live
     ports:
       - "6080:8080"
     env_file: .env
+    volumes:
+      - /home/huey/ndgl/live/logs:/app/logs
     networks:
       - backend
     restart: unless-stopped
