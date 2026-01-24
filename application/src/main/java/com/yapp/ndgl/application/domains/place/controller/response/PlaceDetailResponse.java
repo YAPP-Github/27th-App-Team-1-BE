@@ -2,6 +2,10 @@ package com.yapp.ndgl.application.domains.place.controller.response;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.domain.place.Place;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -68,26 +72,34 @@ public record PlaceDetailResponse(
 		}
 	}
 
-	public static PlaceDetailResponse from(
-		final PlaceInfoResponse placeInfoResponse
-	) {
+	public static PlaceDetailResponse toResponse(final Place place, final ObjectMapper objectMapper) {
+		try {
+			Location location = Location.of(place.getLatitude(), place.getLongitude());
 
-		Location location = Location.of(placeInfoResponse.location().latitude(),
-			placeInfoResponse.location().longitude());
+			List<String> regularOpeningHours = null;
+			if (place.getRegularOpeningHours() != null) {
+				regularOpeningHours = objectMapper.readValue(
+					place.getRegularOpeningHours(),
+					new TypeReference<>() {}
+				);
+			}
 
-		return new PlaceDetailResponse(
-			placeInfoResponse.id(),
-			placeInfoResponse.name(),
-			placeInfoResponse.thumbnail(),
-			placeInfoResponse.nationalPhoneNumber(),
-			placeInfoResponse.internationalPhoneNumber(),
-			placeInfoResponse.formattedAddress(),
-			location,
-			placeInfoResponse.userRatingCount(),
-			placeInfoResponse.rating(),
-			placeInfoResponse.regularOpeningHours(),
-			placeInfoResponse.googleMapsUri(),
-			placeInfoResponse.websiteUri()
-		);
+			return new PlaceDetailResponse(
+				place.getGooglePlaceId(),
+				place.getName(),
+				place.getThumbnail(),
+				place.getNationalPhoneNumber(),
+				place.getInternationalPhoneNumber(),
+				place.getFormattedAddress(),
+				location,
+				place.getUserRatingCount(),
+				place.getRating(),
+				regularOpeningHours,
+				place.getGoogleMapsUri(),
+				place.getWebsiteUri()
+			);
+		} catch (Exception e) {
+			throw new RuntimeException("PlaceDetailResponse 변환 실패: googlePlaceId=" + place.getGooglePlaceId(), e);
+		}
 	}
 }
