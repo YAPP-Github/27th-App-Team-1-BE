@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="ndgl"/>
+    <springProperty scope="context" name="LOG_PATH" source="LOG_PATH" defaultValue="logs"/>
+
+    <property name="CONSOLE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <jsonGeneratorDecorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <version>[ignore]</version>
+                <level>level</level>
+                <levelValue>[ignore]</levelValue>
+                <thread>thread</thread>
+                <logger>logger</logger>
+                <message>message</message>
+            </fieldNames>
+            <includeMdc>true</includeMdc>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <version>[ignore]</version>
+                <level>level</level>
+                <levelValue>[ignore]</levelValue>
+                <thread>thread</thread>
+                <logger>logger</logger>
+                <message>message</message>
+            </fieldNames>
+            <includeMdc>true</includeMdc>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>false</neverBlock>
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <logger name="com.yapp.ndgl" level="DEBUG"/>
+        <logger name="com.yapp.ndgl.application.common.logging.RequestResponseLoggingFilter" level="DEBUG" additivity="false">
+            <appender-ref ref="JSON_CONSOLE"/>
+            <appender-ref ref="ASYNC_FILE"/>
+        </logger>
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+        <logger name="org.hibernate.orm.sql.ast" level="INFO"/>
+        <logger name="org.hibernate.orm.results" level="INFO"/>
+        <logger name="org.hibernate.engine.transaction" level="INFO"/>
+        <logger name="org.hibernate.query.sqm.sql" level="INFO"/>
+        <logger name="org.hibernate.orm.sql.exec" level="INFO"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="com.zaxxer.hikari" level="INFO"/>
+    </springProfile>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_FILE"/>
+        </root>
+        <logger name="com.yapp.ndgl" level="DEBUG"/>
+        <logger name="com.yapp.ndgl.application.common.logging.RequestResponseLoggingFilter" level="DEBUG" additivity="false">
+            <appender-ref ref="JSON_CONSOLE"/>
+            <appender-ref ref="ASYNC_FILE"/>
+        </logger>
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+        <logger name="org.hibernate.orm.sql.ast" level="INFO"/>
+        <logger name="org.hibernate.orm.results" level="INFO"/>
+        <logger name="org.hibernate.engine.transaction" level="INFO"/>
+        <logger name="org.hibernate.query.sqm.sql" level="INFO"/>
+        <logger name="org.hibernate.orm.sql.exec" level="INFO"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="com.zaxxer.hikari" level="INFO"/>
+    </springProfile>
+
+    <springProfile name="live">
+        <root level="INFO">
+            <appender-ref ref="ASYNC_FILE"/>
+        </root>
+        <logger name="com.yapp.ndgl.application.common.logging.RequestResponseLoggingFilter" level="INFO" additivity="false">
+            <appender-ref ref="ASYNC_FILE"/>
+        </logger>
+    </springProfile>
+</configuration>
