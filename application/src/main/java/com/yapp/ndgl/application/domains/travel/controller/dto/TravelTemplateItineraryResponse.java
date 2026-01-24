@@ -12,8 +12,8 @@ import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record TravelTemplateItineraryResponse(
-	@Schema(description = "여행 장소 목록", requiredMode = Schema.RequiredMode.REQUIRED)
-	List<ItineraryPlaceResponse> places
+	@Schema(description = "여행 여정 목록", requiredMode = Schema.RequiredMode.REQUIRED)
+	List<ItineraryPlaceResponse> itineraries
 ) {
     public static TravelTemplateItineraryResponse of(
         final List<TravelTemplatePlace> travelTemplatePlaces,
@@ -62,6 +62,8 @@ public record TravelTemplateItineraryResponse(
     public record PlaceInfo(
         @Schema(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", requiredMode = Schema.RequiredMode.REQUIRED)
         String googlePlaceId,
+        @Schema(description = "장소 썸네일", example = "https://lh3.googleusercontent.com/place-photos/AEkURDym40I4XyqXUosRz8bTu9aPvDUklxkfM79KCa03C0SQTnDaTu_RXXiWQjCRZ3-yK4dTbzoySqMrucj1ubPQNUZ5yKseTRfmaME5C--5jLYB0rU-MLXqUabNEk3myTWywzIuEHcKz_I-H4Xtdg=s4800-w4800-h3600", nullable = true)
+        String thumbnail,
         @Schema(description = "위도", example = "35.6762", requiredMode = Schema.RequiredMode.REQUIRED)
         Double latitude,
         @Schema(description = "경도", example = "139.6503", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -77,6 +79,7 @@ public record TravelTemplateItineraryResponse(
 
             return new PlaceInfo(
                 place.getGooglePlaceId(),
+                place.getThumbnail(),
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getName(),

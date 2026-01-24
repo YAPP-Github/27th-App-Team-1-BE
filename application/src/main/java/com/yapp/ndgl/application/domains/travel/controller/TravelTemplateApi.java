@@ -138,7 +138,7 @@ public interface TravelTemplateApi {
     );
 
     @Operation(
-        summary = "여행 템플릿 상세 조회",
+        summary = "여행 템플릿 영상 정보 조회",
         description = "ID로 여행 템플릿 상세 정보를 조회합니다."
     )
     @ApiResponses({
