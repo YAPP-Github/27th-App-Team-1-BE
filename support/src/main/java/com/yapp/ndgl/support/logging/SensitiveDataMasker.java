@@ -1,4 +1,4 @@
-package com.yapp.ndgl.application.common.logging;
+package com.yapp.ndgl.support.logging;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-final class SensitiveDataMasker {
+public final class SensitiveDataMasker {
 
     private static final String FULL_MASK = "***";
 
@@ -25,7 +25,7 @@ final class SensitiveDataMasker {
     private SensitiveDataMasker() {
     }
 
-    static Map<String, String> maskHeaders(Map<String, String> headers) {
+    public static Map<String, String> maskHeaders(Map<String, String> headers) {
         Map<String, String> masked = new LinkedHashMap<>();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             String name = entry.getKey();
@@ -39,7 +39,7 @@ final class SensitiveDataMasker {
         return masked;
     }
 
-    static String maskBody(String body) {
+    public static String maskBody(String body) {
         if (body == null || body.isBlank()) {
             return body;
         }

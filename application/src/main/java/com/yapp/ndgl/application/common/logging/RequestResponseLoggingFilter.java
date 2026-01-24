@@ -21,6 +21,7 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.support.logging.SensitiveDataMasker;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -192,7 +193,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
             if (content.length == 0) {
                 return null;
             }
-            if (!isTextualContent(wrapper.getContentType())) {
+            if (isBinaryContent(wrapper.getContentType())) {
                 return "[non-text request body omitted]";
             }
             return new String(content, resolveCharset(wrapper.getContentType(), wrapper.getCharacterEncoding()));
@@ -205,7 +206,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
         if (content.length == 0) {
             return null;
         }
-        if (!isTextualContent(response.getContentType())) {
+        if (isBinaryContent(response.getContentType())) {
             return "[non-text response body omitted]";
         }
         return new String(content, resolveCharset(response.getContentType(), response.getCharacterEncoding()));
@@ -231,16 +232,16 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean isTextualContent(String contentType) {
+    private boolean isBinaryContent(String contentType) {
         if (!StringUtils.hasText(contentType)) {
-            return true;
+            return false;
         }
         String lower = contentType.toLowerCase(Locale.ROOT);
-        return lower.startsWith("text/")
+        return !(lower.startsWith("text/")
             || lower.contains("json")
             || lower.contains("xml")
             || lower.contains("javascript")
-            || lower.contains("html");
+            || lower.contains("html"));
     }
 
     private boolean isJsonContent(String contentType) {
