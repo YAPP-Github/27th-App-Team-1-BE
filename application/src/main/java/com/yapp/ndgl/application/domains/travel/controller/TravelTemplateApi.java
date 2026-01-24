@@ -213,7 +213,7 @@ public interface TravelTemplateApi {
 							"code": "2000",
 							"message": "요청에 성공하였습니다.",
 							"data": {
-								"places": [
+								"itineraries": [
 									{
 										"id": 1,
 										"day": 1,
@@ -222,6 +222,7 @@ public interface TravelTemplateApi {
 										"estimatedDuration": 60,
 										"place": {
 											"googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
+											"thumbnail": "https://lh3.googleusercontent.com/place-photos/AEkURDym40I4XyqXUosRz8bTu9aPvDUklxkfM79KCa03C0SQTnDaTu_RXXiWQjCRZ3-yK4dTbzoySqMrucj1ubPQNUZ5yKseTRfmaME5C--5jLYB0rU-MLXqUabNEk3myTWywzIuEHcKz_I-H4Xtdg=s4800-w4800-h3600",
 											"latitude": 35.6585805,
 											"longitude": 139.7454329,
 											"name": "Tokyo Tower",
@@ -236,6 +237,7 @@ public interface TravelTemplateApi {
 										"estimatedDuration": 90,
 										"place": {
 											"googlePlaceId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+											"thumbnail": "https://lh3.googleusercontent.com/place-photos/AEkURDym40I4XyqXUosRz8bTu9aPvDUklxkfM79KCa03C0SQTnDaTu_RXXiWQjCRZ3-yK4dTbzoySqMrucj1ubPQNUZ5yKseTRfmaME5C--5jLYB0rU-MLXqUabNEk3myTWywzIuEHcKz_I-H4Xtdg=s4800-w4800-h3600",
 											"latitude": 35.6592606,
 											"longitude": 139.7002586,
 											"name": "Meiji Jingu",
