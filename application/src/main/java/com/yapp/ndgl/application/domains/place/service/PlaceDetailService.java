@@ -45,6 +45,9 @@ public class PlaceDetailService {
 	public GooglePlaceDetailsResponse searchAndSavePlaceFromGoogleMaps(final String googlePlaceId) {
 		log.info("[SearchAndSavePlace] Google Maps API 호출 시작. googlePlaceId:{}", googlePlaceId);
 
+		// 이미 존재하면 Google API 호출 전에 차단
+		placeDomainService.validateNotExistsByGooglePlaceId(googlePlaceId);
+
 		// 1. Google Maps API 호출
 		PlaceDetailsRequest request = PlaceDetailsRequest.of(googlePlaceId, "ko");
 		return googleMapsPlaceDetailClient.readPlaceDetails(request);
