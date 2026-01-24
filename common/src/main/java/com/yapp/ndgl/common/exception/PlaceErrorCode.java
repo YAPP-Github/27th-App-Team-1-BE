@@ -11,7 +11,14 @@ public enum PlaceErrorCode implements BaseErrorCode {
 	 * RESOURCE_NOT_FOUND
 	 */
 	NOT_FOUND_PLACE(StatusCode.NOT_FOUND, DomainCode.PLACE,
-		CategoryCode.RESOURCE_NOT_FOUND, "001", "장소를 찾을 수 없습니다");
+		CategoryCode.RESOURCE_NOT_FOUND, "001", "장소를 찾을 수 없습니다"),
+
+	/**
+	 * PLACE-03-xxx
+	 * RESOURCE_CONFLICT
+	 */
+	ALREADY_EXISTS_PLACE(StatusCode.CONFLICT, DomainCode.PLACE,
+		CategoryCode.RESOURCE_CONFLICT, "001", "이미 존재하는 장소입니다");
 
 	private final StatusCode statusCode;
 	private final DomainCode domainCode;

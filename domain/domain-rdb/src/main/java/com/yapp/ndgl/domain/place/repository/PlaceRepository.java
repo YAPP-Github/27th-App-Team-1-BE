@@ -10,4 +10,6 @@ public interface PlaceRepository extends JpaRepository<PlaceEntity, Long> {
 
 	Optional<PlaceEntity> findByGooglePlaceId(final String googlePlaceId);
 
+	boolean existsByGooglePlaceId(final String googlePlaceId);
+
 }

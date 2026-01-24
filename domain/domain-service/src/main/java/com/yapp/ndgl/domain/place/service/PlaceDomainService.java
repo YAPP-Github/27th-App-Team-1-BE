@@ -45,6 +45,12 @@ public class PlaceDomainService {
 
 	@Transactional
 	public Place save(final Place place) {
+		String googlePlaceId = place.getGooglePlaceId();
+		if (googlePlaceId != null && placeRepository.existsByGooglePlaceId(googlePlaceId)) {
+			log.warn("[PlaceDomainService] 이미 존재하는 장소. googlePlaceId={}", googlePlaceId);
+			throw new GlobalException(PlaceErrorCode.ALREADY_EXISTS_PLACE);
+		}
+
 		PlaceEntity savedEntity = placeRepository.save(PlaceMapper.toEntity(place));
 		return PlaceMapper.toDomain(savedEntity);
 	}
