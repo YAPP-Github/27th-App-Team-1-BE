@@ -71,7 +71,9 @@ public record TravelTemplateItineraryResponse(
         @Schema(description = "장소 이름", example = "도쿄타워", requiredMode = Schema.RequiredMode.REQUIRED)
         String name,
         @Schema(description = "오늘의 영업시간 정보 (JSON 파싱 실패 시 null)", example = "09:00~23:00", nullable = true)
-        String regularOpeningHours
+        String regularOpeningHours,
+        @Schema(description = "Google Maps URI", example = "https://maps.google.com/?cid=14776686710302251978", nullable = true)
+        String googleMapsUri
     ) {
 
         public static PlaceInfo from(final Place place, final ObjectMapper objectMapper) {
@@ -83,7 +85,8 @@ public record TravelTemplateItineraryResponse(
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getName(),
-                todayOpeningHours
+                todayOpeningHours,
+                place.getGoogleMapsUri()
             );
         }
 
