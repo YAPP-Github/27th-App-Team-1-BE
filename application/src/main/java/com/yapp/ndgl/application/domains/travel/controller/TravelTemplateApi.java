@@ -241,7 +241,8 @@ public interface TravelTemplateApi {
 											"latitude": 35.6592606,
 											"longitude": 139.7002586,
 											"name": "Meiji Jingu",
-											"regularOpeningHours": "06:00~18:00"
+											"regularOpeningHours": "06:00~18:00",
+											" "googleMapsUri": "https://maps.google.com/?cid=10361244767556222835&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA"
 										}
 									}
 								]

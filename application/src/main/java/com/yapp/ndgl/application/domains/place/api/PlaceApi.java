@@ -2,9 +2,11 @@ package com.yapp.ndgl.application.domains.place.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.yapp.ndgl.application.domains.place.controller.request.SearchPlaceRequest;
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
 import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
@@ -16,13 +18,103 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
-@RequestMapping("/api/v1/places")
+@Tag(name = "장소 API")
 public interface PlaceApi {
 
 	@Operation(
-		summary = "장소 상세 조회",
-		description = "googlePlaceId로 Google Places 상세 정보를 조회한다."
+		summary = "장소 상세 조회 (DB)",
+		description = "DB에 저장된 장소 상세 정보를 조회합니다. DB에 없으면 404를 반환합니다."
+	)
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(
+				schema = @Schema(implementation = PlaceDetailResponse.class),
+				examples = @ExampleObject(
+					name = "SUCCESS",
+					value = """
+						{
+						    "code": "2000",
+						    "message": "요청에 성공하였습니다.",
+						    "data": {
+						        "place": {
+						            "id": "ChIJPR5EUkCNGGARyhvN1EVWEc0",
+						            "name": "규카츠 모토무라 신주쿠 본점",
+						            "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqGbrXxA6_1tCvdNIB0BxCAB1ovsQH2KHOY5sBZEDZ8MI86hg5WIjXA0Ts_l3lKhJre-RpTvHVSMKusLWnwsDCW3HbqOAx6l3D0=s4800-w4800-h3200",
+						            "nationalPhoneNumber": "050-1722-2861",
+						            "internationalPhoneNumber": "+81 50-1722-2861",
+						            "formattedAddress": "일본 〒160-0021 Tokyo, Shinjuku City, Kabukichō, 1-chōme−２５−３ WaMall, B2F 西武新宿駅前ビル",
+						            "location": {
+						                "latitude": 35.6946268,
+						                "longitude": 139.7016497
+						            },
+						            "userRatingCount": 7306,
+						            "rating": 4.9,
+						            "regularOpeningHours": [
+						                "월요일: AM 11:00 ~ PM 10:00",
+						                "화요일: AM 11:00 ~ PM 10:00",
+						                "수요일: AM 11:00 ~ PM 10:00",
+						                "목요일: AM 11:00 ~ PM 10:00",
+						                "금요일: AM 11:00 ~ PM 10:00",
+						                "토요일: AM 11:00 ~ PM 10:00",
+						                "일요일: AM 11:00 ~ PM 10:00"
+						            ],
+						            "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						            "websiteUri": "https://www.gyukatsu-motomura.com/shop/shinjukuhonten"
+						        }
+						    }
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "400",
+			description = "잘못된 요청",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "MISSING_REQUEST_PARAMETER",
+					value = """
+						{
+						  "code": "COMM-01-006",
+						  "message": "필수 요청 파라미터가 존재하지 않습니다",
+						  "errors": []
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "404",
+			description = "장소를 찾을 수 없음",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "NOT_FOUND",
+					value = """
+						{
+						  "code": "COMM-02-001",
+						  "message": "요청하신 URI를 찾을 수 없습니다",
+						  "errors": []
+						}
+						"""
+				)
+			)
+		)
+	})
+	ResponseEntity<?> getPlaceDetail(
+		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
+		@RequestParam("googlePlaceId") final String googlePlaceId
+	);
+
+	@Operation(
+		summary = "장소 검색 및 저장",
+		description = "Google Maps API에서 장소를 검색하여 DB에 저장합니다."
 	)
 	@ApiResponses({
 		@ApiResponse(
@@ -75,11 +167,11 @@ public interface PlaceApi {
 				schema = @Schema(implementation = ErrorResponse.class),
 				examples = {
 					@ExampleObject(
-						name = "MISSING_REQUEST_PARAMETER",
+						name = "VALIDATION_ERROR",
 						value = """
 							{
-							  "code": "COMM-01-006",
-							  "message": "필수 요청 파라미터가 존재하지 않습니다",
+							  "code": "COMM-01-005",
+							  "message": "유효성 검증에 실패하였습니다",
 							  "errors": []
 							}
 							"""
@@ -90,16 +182,6 @@ public interface PlaceApi {
 							{
 							  "code": "GMAP_PLACE-07-003",
 							  "message": "유효하지 않은 Place ID 입니다",
-							  "errors": []
-							}
-							"""
-					),
-					@ExampleObject(
-						name = "INVALID_PHOTO_NAME",
-						value = """
-							{
-							  "code": "GMAP_PLACE-07-005",
-							  "message": "유효하지 않은 Photo Name 입니다",
 							  "errors": []
 							}
 							"""
@@ -166,10 +248,10 @@ public interface PlaceApi {
 			)
 		)
 	})
-	@GetMapping("/detail")
-	ResponseEntity<?> readPlaceDetail(
-		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
-		@RequestParam("googlePlaceId") final String googlePlaceId
+	@PostMapping
+	ResponseEntity<?> searchAndSavePlace(
+		@Parameter(description = "장소 검색 요청", required = true)
+		@Valid @RequestBody SearchPlaceRequest request
 	);
 
 	@Operation(

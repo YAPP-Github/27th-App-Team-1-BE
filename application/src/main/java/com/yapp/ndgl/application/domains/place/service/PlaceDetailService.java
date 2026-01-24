@@ -3,7 +3,7 @@ package com.yapp.ndgl.application.domains.place.service;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yapp.ndgl.application.domains.place.controller.response.PlaceInfoResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
@@ -27,24 +27,33 @@ public class PlaceDetailService {
 	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
 	private final ObjectMapper objectMapper;
 
-	public PlaceInfoResponse readPlaceDetail(final String googlePlaceId) {
-		log.info("[GetPlaceDetail] 장소 상세 조회 시작. googlePlaceId:{}", googlePlaceId);
+	/**
+	 * DB에서 장소 정보 조회 (조회만 수행, 부수효과 없음)
+	 */
+	public PlaceDetailResponse readPlaceDetailFromDB(final String googlePlaceId) {
+		log.info("[GetPlaceDetailFromDb] DB에서 장소 조회 시작. googlePlaceId:{}", googlePlaceId);
 
-		// 1. DB 조회
-		Place place = placeDomainService.findByGooglePlaceId(googlePlaceId).orElse(null);
+		Place place = placeDomainService.readPlaceDetailByGooglePLaceId(googlePlaceId);
 
-		if (place != null) {
-			log.info("[GetPlaceDetail] DB 조회 성공 후 반환. googlePlaceId:{}, id:{}", googlePlaceId, place.getId());
-			return PlaceInfoResponse.from(place, objectMapper);
-		}
+		log.info("[GetPlaceDetailFromDb] DB 조회 성공. googlePlaceId:{}, id:{}", googlePlaceId, place.getId());
+		return PlaceDetailResponse.toResponse(place, objectMapper);
+	}
 
-		// 2. 없으면 구글 조회
-		log.info("[GetPlaceDetail] DB에 데이터 없음. Google Maps API 호출 시작. googlePlaceId:{}", googlePlaceId);
+	/**
+	 * Google Maps API에서 장소 검색 후 DB에 저장
+	 */
+	public GooglePlaceDetailsResponse searchAndSavePlaceFromGoogleMaps(final String googlePlaceId) {
+		log.info("[SearchAndSavePlace] Google Maps API 호출 시작. googlePlaceId:{}", googlePlaceId);
+
+		// 1. Google Maps API 호출
 		PlaceDetailsRequest request = PlaceDetailsRequest.of(googlePlaceId, "ko");
-		GooglePlaceDetailsResponse response = googleMapsPlaceDetailClient.readPlaceDetails(request);
+		return googleMapsPlaceDetailClient.readPlaceDetails(request);
 
+	}
+
+	public PlaceDetailResponse savePlace(final GooglePlaceDetailsResponse response) {
+		// 2. 썸네일 조회
 		String thumbnail = null;
-
 		if (response.photos() != null && !response.photos().isEmpty()) {
 			GooglePlaceDetailsResponse.PhotoMeta photoMeta = response.photos().get(0);
 			PlacePhotoRequest photoRequest = PlacePhotoRequest.of(photoMeta.name(), photoMeta.heightPx(),
@@ -52,10 +61,10 @@ public class PlaceDetailService {
 			thumbnail = googleMapsPlacePhotoClient.getPhotoUri(photoRequest).uri();
 		}
 
-		// 3. 저장 후 반환
+		// 3. DB 저장 후 반환
 		Place savedPlace = placeDomainService.save(toPlace(response, thumbnail));
-		log.info("[GetPlaceDetail] DB 저장 완료 후 반환. googlePlaceId:{}, id:{}", googlePlaceId, savedPlace.getId());
-		return PlaceInfoResponse.from(savedPlace, objectMapper);
+		log.info("[SearchAndSavePlace] DB 저장 완료. googlePlaceId:{}, id:{}", response.id(), savedPlace.getId());
+		return PlaceDetailResponse.toResponse(savedPlace, objectMapper);
 	}
 
 	private Place toPlace(final GooglePlaceDetailsResponse response, final String thumbnail) {
