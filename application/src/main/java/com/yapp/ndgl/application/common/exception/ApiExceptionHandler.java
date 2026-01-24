@@ -16,9 +16,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.yapp.ndgl.common.exception.BaseErrorCode;
+import com.yapp.ndgl.common.exception.CategoryCode;
 import com.yapp.ndgl.common.exception.CommonErrorCode;
+import com.yapp.ndgl.common.exception.ErrorCausedBy;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.response.ErrorResponse;
+
+import static net.logstash.logback.argument.StructuredArguments.kv;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +34,7 @@ public class ApiExceptionHandler {
 
 	@ExceptionHandler(GlobalException.class)
 	public ResponseEntity<ErrorResponse<?>> handleGlobalException(final GlobalException e) {
-		log.error("비즈니스 예외 발생: {}", e.getErrorMessage(), e);
+		logByErrorCode(e.getBaseErrorCode(), "비즈니스 예외 발생", e, null);
 		return ResponseEntity
 			.status(e.getStatusCode().getCode())
 			.body(ErrorResponse.error(e.getBaseErrorCode()));
@@ -38,7 +43,7 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse<?>> handleValidationException(
 		final MethodArgumentNotValidException e) {
-		log.error("유효성 검증 실패", e);
+		BaseErrorCode errorCode = CommonErrorCode.VALIDATION_ERRORS_IN_REQUEST_DATA;
 
 		List<Map<String, String>> errors = e.getBindingResult()
 			.getFieldErrors()
@@ -51,69 +56,77 @@ public class ApiExceptionHandler {
 			})
 			.toList();
 
+		logByErrorCode(errorCode, "유효성 검증 실패", e, errors);
+
 		return ResponseEntity
 			.status(HttpStatus.UNPROCESSABLE_ENTITY)
-			.body(ErrorResponse.error(CommonErrorCode.VALIDATION_ERRORS_IN_REQUEST_DATA, errors));
+			.body(ErrorResponse.error(errorCode, errors));
 	}
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<ErrorResponse<?>> handleMethodNotSupportedException(
 		final HttpRequestMethodNotSupportedException e) {
-		log.error("지원하지 않는 HTTP 메서드: {}", e.getMethod(), e);
+		BaseErrorCode errorCode = CommonErrorCode.METHOD_NOT_ALLOWED;
+		logByErrorCode(errorCode, "지원하지 않는 HTTP 메서드", e, kv("method", e.getMethod()));
 		return ResponseEntity
 			.status(HttpStatus.METHOD_NOT_ALLOWED)
-			.body(ErrorResponse.error(CommonErrorCode.METHOD_NOT_ALLOWED));
+			.body(ErrorResponse.error(errorCode));
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponse<?>> handleHttpMessageNotReadableException(
 		final HttpMessageNotReadableException e) {
-		log.error("요청 본문을 읽을 수 없거나 형식이 올바르지 않음", e);
+		BaseErrorCode errorCode = CommonErrorCode.INVALID_REQUEST_BODY;
+		logByErrorCode(errorCode, "요청 본문을 읽을 수 없거나 형식이 올바르지 않음", e, null);
 		return ResponseEntity
 			.status(HttpStatus.BAD_REQUEST)
-			.body(ErrorResponse.error(CommonErrorCode.INVALID_REQUEST_BODY));
+			.body(ErrorResponse.error(errorCode));
 	}
 
 	@ExceptionHandler(MissingRequestHeaderException.class)
 	public ResponseEntity<ErrorResponse<?>> handleMissingRequestHeaderException(
 		final MissingRequestHeaderException e) {
-		log.error("필수 헤더 누락: {}", e.getHeaderName(), e);
+		BaseErrorCode errorCode = CommonErrorCode.MISSING_REQUEST_HEADER;
+		logByErrorCode(errorCode, "필수 헤더 누락", e, kv("headerName", e.getHeaderName()));
 		return ResponseEntity
 			.status(HttpStatus.BAD_REQUEST)
-			.body(ErrorResponse.error(CommonErrorCode.MISSING_REQUEST_HEADER));
+			.body(ErrorResponse.error(errorCode));
 	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<ErrorResponse<?>> handleMethodArgumentTypeMismatchException(
 		final MethodArgumentTypeMismatchException e) {
-		log.error("파라미터 타입 불일치: {}", e.getName(), e);
+		BaseErrorCode errorCode = CommonErrorCode.TYPE_MISS_MATCH_ERRORS_IN_REQUEST_PARAM_DATA;
+		logByErrorCode(errorCode, "파라미터 타입 불일치", e, kv("parameterName", e.getName()));
 		return ResponseEntity
 			.status(HttpStatus.BAD_REQUEST)
-			.body(ErrorResponse.error(CommonErrorCode.TYPE_MISS_MATCH_ERRORS_IN_REQUEST_PARAM_DATA));
+			.body(ErrorResponse.error(errorCode));
 	}
 
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<ErrorResponse<?>> handleMissingServletRequestParameterException(
 		final MissingServletRequestParameterException e) {
-		log.error("필수 요청 파라미터 누락: {}", e.getParameterName(), e);
+		BaseErrorCode errorCode = CommonErrorCode.MISSING_REQUEST_PARAMETER;
+		logByErrorCode(errorCode, "필수 요청 파라미터 누락", e, kv("parameterName", e.getParameterName()));
 		return ResponseEntity
 			.status(HttpStatus.BAD_REQUEST)
-			.body(ErrorResponse.error(CommonErrorCode.MISSING_REQUEST_PARAMETER));
+			.body(ErrorResponse.error(errorCode));
 	}
 
 	@ExceptionHandler(NoResourceFoundException.class)
 	public ResponseEntity<ErrorResponse<?>> handleNoResourceFoundException(
 		final NoResourceFoundException e) {
-		log.error("존재하지 않는 URI 요청: {}", e.getResourcePath(), e);
+		BaseErrorCode errorCode = CommonErrorCode.NOT_FOUND_URI;
+		logByErrorCode(errorCode, "존재하지 않는 URI 요청", e, kv("resourcePath", e.getResourcePath()));
 		return ResponseEntity
 			.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.error(CommonErrorCode.NOT_FOUND_URI));
+			.body(ErrorResponse.error(errorCode));
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<ErrorResponse<?>> handleConstraintViolationException(
 		final ConstraintViolationException e) {
-		log.error("유효성 검증 실패", e);
+		BaseErrorCode errorCode = CommonErrorCode.VALIDATION_ERRORS_IN_REQUEST_DATA;
 
 		List<Map<String, String>> errors = e.getConstraintViolations()
 			.stream()
@@ -131,16 +144,53 @@ public class ApiExceptionHandler {
 			})
 			.toList();
 
+		logByErrorCode(errorCode, "유효성 검증 실패", e, errors);
+
 		return ResponseEntity
 			.status(HttpStatus.UNPROCESSABLE_ENTITY)
-			.body(ErrorResponse.error(CommonErrorCode.VALIDATION_ERRORS_IN_REQUEST_DATA, errors));
+			.body(ErrorResponse.error(errorCode, errors));
 	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse<?>> handleUnexpectedException(final Exception e) {
-		log.error("예상치 못한 예외 발생", e);
+		BaseErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
+		logByErrorCode(errorCode, "예상치 못한 예외 발생", e, null);
 		return ResponseEntity
 			.status(HttpStatus.INTERNAL_SERVER_ERROR)
-			.body(ErrorResponse.error(CommonErrorCode.INTERNAL_SERVER_ERROR));
+			.body(ErrorResponse.error(errorCode));
+	}
+
+	private void logByErrorCode(BaseErrorCode errorCode, String message, Exception exception, Object extra) {
+		ErrorCausedBy causedBy = errorCode.errorCausedBy();
+		String fullCode = causedBy.getErrorCode();
+		int status = errorCode.getStatusCode().getCode();
+		CategoryCode category = causedBy.categoryCode();
+
+		if (isErrorLevel(category)) {
+			if (extra == null) {
+				log.error(message, kv("errorCode", fullCode), kv("status", status), kv("category", category.name()), exception);
+			} else if (extra instanceof Map<?, ?> map) {
+				log.error(message, kv("errorCode", fullCode), kv("status", status), kv("category", category.name()), kv("errors", map), exception);
+			} else if (extra instanceof List<?> list) {
+				log.error(message, kv("errorCode", fullCode), kv("status", status), kv("category", category.name()), kv("errors", list), exception);
+			} else {
+				log.error(message, kv("errorCode", fullCode), kv("status", status), kv("category", category.name()), extra, exception);
+			}
+			return;
+		}
+
+		if (extra == null) {
+			log.warn(message, kv("errorCode", fullCode), kv("status", status), kv("category", category.name()));
+		} else if (extra instanceof Map<?, ?> map) {
+			log.warn(message, kv("errorCode", fullCode), kv("status", status), kv("category", category.name()), kv("errors", map));
+		} else if (extra instanceof List<?> list) {
+			log.warn(message, kv("errorCode", fullCode), kv("status", status), kv("category", category.name()), kv("errors", list));
+		} else {
+			log.warn(message, kv("errorCode", fullCode), kv("status", status), kv("category", category.name()), extra);
+		}
+	}
+
+	private boolean isErrorLevel(CategoryCode category) {
+		return category == CategoryCode.EXTERNAL_SERVICE || category == CategoryCode.INTERNAL_SYSTEM;
 	}
 }
