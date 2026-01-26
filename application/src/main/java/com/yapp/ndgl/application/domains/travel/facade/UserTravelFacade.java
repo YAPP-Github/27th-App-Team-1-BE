@@ -2,7 +2,6 @@ package com.yapp.ndgl.application.domains.travel.facade;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
-import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelIdResponse;
 import com.yapp.ndgl.application.domains.travel.service.UserTravelService;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,7 @@ public class UserTravelFacade {
 
     private final UserTravelService userTravelService;
 
-    public UserTravelIdResponse createUserTravel(final String uuid, final CreateUserTravelRequest request) {
+    public Long createUserTravel(final String uuid, final CreateUserTravelRequest request) {
         log.info("템플릿으로 사용자 여행을 생성합니다. uuid = {}, templateId = {}", uuid, request.templateId());
         return userTravelService.createUserTravel(uuid, request);
     }

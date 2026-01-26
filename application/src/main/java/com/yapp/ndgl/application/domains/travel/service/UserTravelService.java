@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
-import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelIdResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
@@ -31,7 +30,7 @@ public class UserTravelService {
 	private final UserDomainService userDomainService;
 
 	@Transactional
-	public UserTravelIdResponse createUserTravel(final String uuid, final CreateUserTravelRequest request) {
+	public Long createUserTravel(final String uuid, final CreateUserTravelRequest request) {
 		User user = userDomainService.findByUuid(uuid);
 
 		TravelTemplate template = travelTemplateDomainService.findById(request.templateId());
@@ -52,6 +51,6 @@ public class UserTravelService {
 
         userTravelPlaceDomainService.createUserTravelPlaces(templatePlaces, userTravel.getTemplateId());
 
-		return new UserTravelIdResponse(userTravel.getId());
+		return userTravel.getId();
 	}
 }
