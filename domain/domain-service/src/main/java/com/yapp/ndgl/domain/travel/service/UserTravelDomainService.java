@@ -1,14 +1,19 @@
 package com.yapp.ndgl.domain.travel.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yapp.ndgl.domain.travel.TravelTemplate;
+import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.UserTravel;
+import com.yapp.ndgl.domain.travel.UserTravelPlace;
 import com.yapp.ndgl.domain.travel.entity.UserTravelEntity;
+import com.yapp.ndgl.domain.travel.entity.UserTravelPlaceEntity;
 import com.yapp.ndgl.domain.travel.mapper.UserTravelMapper;
+import com.yapp.ndgl.domain.travel.repository.UserTravelPlaceRepository;
 import com.yapp.ndgl.domain.travel.repository.UserTravelRepository;
 import com.yapp.ndgl.domain.user.User;
 
@@ -21,15 +26,17 @@ import lombok.extern.slf4j.Slf4j;
 public class UserTravelDomainService {
 
 	private final UserTravelRepository userTravelRepository;
+	private final UserTravelPlaceRepository userTravelPlaceRepository;
 
 	@Transactional
-	public UserTravel createUserTravel(
-        final User user,
-        final TravelTemplate template,
-        final LocalDate startDate,
+	public UserTravel createUserTravelWithPlaces(
+		final User user,
+		final TravelTemplate template,
+		final List<TravelTemplatePlace> templatePlaces,
+		final LocalDate startDate,
 		final LocalDate endDate,
-        final int nights,
-        final int days) {
+		final int nights,
+		final int days) {
 
 		UserTravel userTravel = UserTravel.create(
 			user.getId(),
@@ -38,12 +45,38 @@ public class UserTravelDomainService {
 			template.getCountry(),
 			template.getCity(),
 			startDate,
-            endDate,
+			endDate,
 			nights,
 			days
 		);
 
 		UserTravelEntity savedUserTravelEntity = userTravelRepository.save(UserTravelMapper.toEntity(userTravel));
-		return UserTravelMapper.toDomain(savedUserTravelEntity);
+		UserTravel savedUserTravel = UserTravelMapper.toDomain(savedUserTravelEntity);
+
+		List<UserTravelPlace> userTravelPlaces = templatePlaces.stream()
+			.map(templatePlace -> UserTravelPlace.create(
+				savedUserTravel.getId(),
+				templatePlace.getPlaceId(),
+				templatePlace.getDay(),
+				templatePlace.getSequence(),
+				templatePlace.getTravelerTip(),
+				templatePlace.getEstimatedDuration()
+			))
+			.toList();
+
+		List<UserTravelPlaceEntity> entities = userTravelPlaces.stream()
+			.map(place -> UserTravelPlaceEntity.builder()
+				.userTravelId(place.getUserTravelId())
+				.placeId(place.getPlaceId())
+				.day(place.getDay())
+				.sequence(place.getSequence())
+				.travelerTip(place.getTravelerTip())
+				.estimatedDuration(place.getEstimatedDuration())
+				.build())
+			.toList();
+
+		userTravelPlaceRepository.saveAll(entities);
+
+		return savedUserTravel;
 	}
 }

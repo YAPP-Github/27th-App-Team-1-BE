@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
@@ -25,12 +26,14 @@ public class TravelTemplateDomainService {
     private final TravelTemplateRepository travelTemplateRepository;
     private final TravelTemplatePlaceRepository travelTemplatePlaceRepository;
 
+    @Transactional(readOnly = true)
     public TravelTemplate findById(final Long id) {
         return travelTemplateRepository.findById(id)
             .map(TravelTemplateMapper::toDomain)
             .orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_TRAVEL_TEMPLATE));
     }
 
+    @Transactional(readOnly = true)
     public List<TravelTemplatePlace> findPlacesByTravelTemplateId(final Long travelTemplateId) {
         List<TravelTemplatePlaceEntity> placeEntities = travelTemplatePlaceRepository
             .findByTravelTemplateIdOrderByDayAscSequenceAsc(travelTemplateId);
