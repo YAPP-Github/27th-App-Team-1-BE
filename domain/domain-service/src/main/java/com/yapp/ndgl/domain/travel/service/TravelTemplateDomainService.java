@@ -1,7 +1,6 @@
 package com.yapp.ndgl.domain.travel.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
-import com.yapp.ndgl.domain.travel.mapper.TravelTemplateMapper;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplatePlaceEntity;
+import com.yapp.ndgl.domain.travel.mapper.TravelTemplateMapper;
 import com.yapp.ndgl.domain.travel.repository.TravelTemplatePlaceRepository;
 import com.yapp.ndgl.domain.travel.repository.TravelTemplateRepository;
 
@@ -41,11 +40,13 @@ public class TravelTemplateDomainService {
         return placeEntities.stream()
             .map(entity -> TravelTemplatePlace.builder()
                 .id(entity.getId())
+                .travelTemplateId(entity.getTravelTemplateId())
                 .sequence(entity.getSequence())
                 .day(entity.getDay())
                 .travelerTip(entity.getTravelerTip())
                 .placeId(entity.getPlaceId())
+                .estimatedDuration(entity.getEstimatedDuration())
                 .build())
-            .collect(Collectors.toList());
+            .toList();
     }
 }
