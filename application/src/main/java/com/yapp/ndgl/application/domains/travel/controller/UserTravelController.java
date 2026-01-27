@@ -30,6 +30,6 @@ public class UserTravelController implements UserTravelApi {
         @Valid @RequestBody CreateUserTravelRequest request
     ) {
         Long userTravelId = userTravelFacade.createUserTravel(uuid, request);
-        return ResponseEntity.ok(SuccessResponse.success(userTravelId));
+        return ResponseEntity.ok(SuccessResponse.success("userTravelId", userTravelId));
     }
 }

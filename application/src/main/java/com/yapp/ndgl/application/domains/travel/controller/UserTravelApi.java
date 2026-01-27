@@ -42,7 +42,7 @@ public interface UserTravelApi {
                           "code": "2000",
                           "message": "요청에 성공하였습니다.",
                           "data": {
-                            "id": 1
+                            "userTravelId": 1
                           }
                         }
                         """
