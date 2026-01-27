@@ -1,6 +1,7 @@
 package com.yapp.ndgl.domain.user.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.UserErrorCode;
@@ -41,6 +42,7 @@ public class UserDomainService {
         return UserMapper.toDomain(savedUserEntity);
     }
 
+    @Transactional(readOnly = true)
     public User findByUuid(final String uuid) {
         return userRepository.findByUuid(uuid)
             .map(UserMapper::toDomain)

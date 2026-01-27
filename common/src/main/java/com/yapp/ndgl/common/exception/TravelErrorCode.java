@@ -11,7 +11,14 @@ public enum TravelErrorCode implements BaseErrorCode {
      * RESOURCE_NOT_FOUND
      */
     NOT_FOUND_TRAVEL_TEMPLATE(StatusCode.NOT_FOUND, DomainCode.TRAVEL,
-        CategoryCode.RESOURCE_NOT_FOUND, "001", "여행 템플릿을 찾을 수 없습니다");
+        CategoryCode.RESOURCE_NOT_FOUND, "001", "여행 템플릿을 찾을 수 없습니다"),
+
+    /**
+     * TRAVEL-04-xxx
+     * BUSINESS_RULE_VIOLATION
+     */
+    INVALID_DATE_ORDER(StatusCode.BAD_REQUEST, DomainCode.TRAVEL,
+        CategoryCode.BUSINESS_RULE_VIOLATION, "001", "여행 종료일이 시작일보다 앞설 수 없습니다");
 
     private final StatusCode statusCode;
     private final DomainCode domainCode;
