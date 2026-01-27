@@ -11,10 +11,8 @@ import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
-import com.yapp.ndgl.domain.travel.UserTravel;
 import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 import com.yapp.ndgl.domain.travel.service.UserTravelDomainService;
-import com.yapp.ndgl.domain.travel.service.UserTravelPlaceDomainService;
 import com.yapp.ndgl.domain.user.User;
 import com.yapp.ndgl.domain.user.service.UserDomainService;
 
@@ -26,7 +24,6 @@ public class UserTravelService {
 
 	private final UserTravelDomainService userTravelDomainService;
 	private final TravelTemplateDomainService travelTemplateDomainService;
-    private final UserTravelPlaceDomainService userTravelPlaceDomainService;
 	private final UserDomainService userDomainService;
 
 	@Transactional
@@ -34,6 +31,10 @@ public class UserTravelService {
 		User user = userDomainService.findByUuid(uuid);
 
 		TravelTemplate template = travelTemplateDomainService.findById(request.templateId());
+
+		if (request.endDate().isBefore(request.startDate())) {
+			throw new GlobalException(TravelErrorCode.INVALID_DATE_ORDER);
+		}
 
 		long daysBetween = ChronoUnit.DAYS.between(request.startDate(), request.endDate());
 		int nights = (int)daysBetween;
@@ -43,14 +44,17 @@ public class UserTravelService {
 			throw new GlobalException(TravelErrorCode.INVALID_TRAVEL_DATE_RANGE);
 		}
 
-        UserTravel userTravel = userTravelDomainService.createUserTravel(user, template, request.startDate(),
-            request.endDate(), nights, days);
-
-        List<TravelTemplatePlace> templatePlaces = travelTemplateDomainService.findPlacesByTravelTemplateId(
+		List<TravelTemplatePlace> templatePlaces = travelTemplateDomainService.findPlacesByTravelTemplateId(
 			template.getId());
 
-        userTravelPlaceDomainService.createUserTravelPlaces(templatePlaces, userTravel.getTemplateId());
-
-		return userTravel.getId();
+		return userTravelDomainService.createUserTravelWithPlaces(
+			user,
+			template,
+			templatePlaces,
+			request.startDate(),
+			request.endDate(),
+			nights,
+			days
+		).getId();
 	}
 }

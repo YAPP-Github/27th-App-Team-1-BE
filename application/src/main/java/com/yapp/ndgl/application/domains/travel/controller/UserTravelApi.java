@@ -51,6 +51,23 @@ public interface UserTravelApi {
         ),
         @ApiResponse(
             responseCode = "400",
+            description = "여행 종료일이 시작일보다 앞설 수 없음",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "INVALID_DATE_ORDER",
+                    value = """
+                        {
+                          "code": "TRAVEL-04-001",
+                          "message": "여행 종료일이 시작일보다 앞설 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
             description = "여행 일정이 템플릿의 최소 일정보다 짧음",
             content = @Content(
                 schema = @Schema(implementation = ErrorResponse.class),
@@ -58,7 +75,7 @@ public interface UserTravelApi {
                     name = "INVALID_TRAVEL_DATE_RANGE",
                     value = """
                         {
-                          "code": "TRAVEL-04-001",
+                          "code": "TRAVEL-04-002",
                           "message": "여행 일정이 템플릿의 최소 일정보다 짧습니다",
                           "errors": []
                         }
