@@ -26,7 +26,7 @@ public interface UserTravelApi {
 
     @Operation(
         summary = "템플릿으로 내 여행 생성",
-        description = "여행 템플릿을 기반으로 사용자의 여행을 생성합니다. 템플릿의 모든 일정이 복사되며, 사용자가 선택한 날짜로 여행이 생성됩니다.",
+        description = "여행 템플릿을 기반으로 사용자의 여행을 생성합니다. 사용자가 선택한 날짜 범위 내의 일정만 복사됩니다.",
         security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
@@ -60,23 +60,6 @@ public interface UserTravelApi {
                         {
                           "code": "TRAVEL-04-001",
                           "message": "여행 종료일이 시작일보다 앞설 수 없습니다",
-                          "errors": []
-                        }
-                        """
-                )
-            )
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "여행 일정이 템플릿의 최소 일정보다 짧음",
-            content = @Content(
-                schema = @Schema(implementation = ErrorResponse.class),
-                examples = @ExampleObject(
-                    name = "INVALID_TRAVEL_DATE_RANGE",
-                    value = """
-                        {
-                          "code": "TRAVEL-04-002",
-                          "message": "여행 일정이 템플릿의 최소 일정보다 짧습니다",
                           "errors": []
                         }
                         """

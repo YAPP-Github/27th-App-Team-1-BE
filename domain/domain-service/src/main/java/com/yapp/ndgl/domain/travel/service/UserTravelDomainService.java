@@ -54,6 +54,7 @@ public class UserTravelDomainService {
 		UserTravel savedUserTravel = UserTravelMapper.toDomain(savedUserTravelEntity);
 
 		List<UserTravelPlace> userTravelPlaces = templatePlaces.stream()
+			.filter(templatePlace -> templatePlace.getDay() <= days)
 			.map(templatePlace -> UserTravelPlace.create(
 				savedUserTravel.getId(),
 				templatePlace.getPlaceId(),

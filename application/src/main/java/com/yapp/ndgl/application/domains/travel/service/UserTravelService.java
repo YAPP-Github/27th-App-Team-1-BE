@@ -40,10 +40,6 @@ public class UserTravelService {
 		int nights = (int)daysBetween;
 		int days = nights + 1;
 
-		if (nights < template.getNights() || days < template.getDays()) {
-			throw new GlobalException(TravelErrorCode.INVALID_TRAVEL_DATE_RANGE);
-		}
-
 		List<TravelTemplatePlace> templatePlaces = travelTemplateDomainService.findPlacesByTravelTemplateId(
 			template.getId());
 
