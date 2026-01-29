@@ -98,10 +98,10 @@ public interface PlaceApi {
 					name = "NOT_FOUND",
 					value = """
 						{
-						  "code": "COMM-02-001",
-						  "message": "요청하신 URI를 찾을 수 없습니다",
-						  "errors": []
-						}
+						   "code": "PLACE-02-001",
+						   "message": "장소를 찾을 수 없습니다",
+						   "errors": []
+						 }
 						"""
 				)
 			)
