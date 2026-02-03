@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@Tag(name = "장소 API")
+@Tag(name = "Place", description = "장소 관련 API")
 public interface PlaceApi {
 
 	@Operation(
