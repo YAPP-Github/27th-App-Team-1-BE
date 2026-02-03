@@ -1,6 +1,5 @@
 package com.yapp.ndgl.application.domains.auth.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @Tag(name = "Auth", description = "인증 관련 API")
@@ -132,7 +132,7 @@ public interface AuthApi {
                     name = "USER_NOT_FOUND",
                     value = """
                         {
-                          "code": "COMM-02-002",
+                          "code": "USER-02-001",
                           "message": "유저를 찾을 수 없습니다",
                           "errors": []
                         }
