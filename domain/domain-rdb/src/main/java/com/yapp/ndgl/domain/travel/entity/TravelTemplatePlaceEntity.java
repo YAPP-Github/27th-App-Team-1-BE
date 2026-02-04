@@ -3,6 +3,7 @@ package com.yapp.ndgl.domain.travel.entity;
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -36,8 +37,20 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
     @Column(name = "day", nullable = false)
     private int day;
 
-    @Column(name = "traveler_tip", length = 1000)
-    private String travelerTip;
+    @Column(name = "distance_km")
+    private Double distanceKm;
+
+    @Lob
+    @Column(name = "transportation_json", columnDefinition = "JSON")
+    private String transportationJson;
+
+    @Lob
+    @Column(name = "youtube_tips_json", columnDefinition = "JSON")
+    private String youtubeTipsJson;
+
+    @Lob
+    @Column(name = "plan_b_json", columnDefinition = "JSON")
+    private String planBJson;
 
     @Column(name = "estimated_duration")
     private Integer estimatedDuration;
@@ -48,14 +61,20 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
         final Long placeId,
         final int sequence,
         final int day,
-        final String travelerTip,
+        final Double distanceKm,
+        final String transportationJson,
+        final String youtubeTipsJson,
+        final String planBJson,
         final Integer estimatedDuration
     ) {
         this.travelTemplateId = travelTemplateId;
         this.placeId = placeId;
         this.sequence = sequence;
         this.day = day;
-        this.travelerTip = travelerTip;
+        this.distanceKm = distanceKm;
+        this.transportationJson = transportationJson;
+        this.youtubeTipsJson = youtubeTipsJson;
+        this.planBJson = planBJson;
         this.estimatedDuration = estimatedDuration;
     }
 }
