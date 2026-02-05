@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.facade.TravelTemplateFacade;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +51,18 @@ public class TravelTemplateController implements TravelTemplateApi {
         @RequestParam(value = "day", required = false) final Integer day
     ) {
         TravelTemplateItineraryResponse response = travelTemplateFacade.readTravelTemplateItinerary(id, day);
+        return ResponseEntity.ok(SuccessResponse.success(response));
+    }
+
+    @Override
+    @GetMapping("/popular")
+    public ResponseEntity<SuccessResponse<SliceResponse<TravelTemplatePopularResponse>>> readPopularTravelTemplates(
+        @RequestParam(value = "travelProgramId", required = false) final Long travelProgramId,
+        @RequestParam(value = "page", defaultValue = "0") final int page,
+        @RequestParam(value = "size", defaultValue = "20") final int size
+    ) {
+        SliceResponse<TravelTemplatePopularResponse> response =
+            travelTemplateFacade.readPopularTravelTemplates(travelProgramId, page, size);
         return ResponseEntity.ok(SuccessResponse.success(response));
     }
 }

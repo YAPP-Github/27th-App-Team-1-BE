@@ -4,13 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
+import com.yapp.ndgl.application.domains.travel.event.TravelTemplateViewCountEvent;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
@@ -29,6 +33,7 @@ public class TravelTemplateService {
     private final TravelTemplateDomainService travelTemplateDomainService;
     private final PlaceDomainService placeDomainService;
     private final ObjectMapper objectMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     public TravelTemplateResponse getTravelTemplate(Long id) {
@@ -159,6 +164,9 @@ public class TravelTemplateService {
         // 템플릿 상단에 보여줄 핵심 요약 묶음
         TravelTemplate travelTemplate = travelTemplateDomainService.findById(id);
 
+        // 조회수 증가 이벤트 발행
+        eventPublisher.publishEvent(new TravelTemplateViewCountEvent(id));
+
         return TravelTemplateHighlightsResponse.toResponse(travelTemplate);
     }
 
@@ -178,6 +186,20 @@ public class TravelTemplateService {
             .collect(Collectors.toMap(Place::getId, place -> place));
 
         return TravelTemplateItineraryResponse.of(travelTemplatePlaces, placeMap, objectMapper);
+    }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<TravelTemplatePopularResponse> readPopularTravelTemplates(
+        final Long travelProgramId,
+        final int page,
+        final int size
+    ) {
+        SliceResponse<TravelTemplate> templates =
+            travelTemplateDomainService.findPopularTemplates(travelProgramId, page, size);
+        List<TravelTemplatePopularResponse> content = templates.getContent().stream()
+            .map(TravelTemplatePopularResponse::from)
+            .toList();
+        return SliceResponse.of(content, templates.isHasNext());
     }
 
 }

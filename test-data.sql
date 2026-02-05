@@ -1,9 +1,24 @@
 -- Auto-generated from application/src/main/resources/example-request.json
 
--- 1) Travel Template
+-- 1) Travel Program
+INSERT INTO travel_program (
+    name,
+    profile_image,
+    type,
+    created_at,
+    updated_at
+) VALUES (
+    '빠니보틀',
+    'https://yt3.ggpht.com/Sr5y4IxegXCEZ0SYNvFB749crrAZmNpurZqfq2KvPEpiCYeakoMjBWMnW_56rMuYW_HipJOBRtU=s88-c-k-c0x00ffffff-no-rj',
+    'YOUTUBE',
+    NOW(),
+    NOW()
+);
+
+-- 2) Travel Template
 INSERT INTO travel_templates (
     travel_id,
-    youtuber,
+    travel_program_id,
     traveler,
     country,
     city,
@@ -18,7 +33,7 @@ INSERT INTO travel_templates (
     updated_at
 ) VALUES (
              'Pani_Hanoi_2212',
-             'PANI_BOTTLE',
+             (SELECT id FROM travel_program WHERE name = '빠니보틀'),
              '빠니보틀 Pani Bottle',
              '베트남',
              '하노이',
@@ -33,7 +48,7 @@ INSERT INTO travel_templates (
              NOW()
          );
 
--- 2) Places (필수 필드: google_place_id, latitude, longitude, name)
+-- 3) Places (필수 필드: google_place_id, latitude, longitude, name)
 -- 실제 Google Place ID/좌표가 있으면 아래 값을 교체하세요.
 INSERT INTO places (
     google_place_id,
@@ -47,7 +62,7 @@ INSERT INTO places (
       ('ChIJO7qN1b2rNTERi1n8m8ji4QU', 21.0336, 105.8465147, '퍼 자쭈옌', NOW(), NOW()),
       ('ChIJlclXM5WrNTERDqL5tGu_ugE', 21.0286, 105.8521, '호안끼엠 호', NOW(), NOW());
 
--- 3) Travel Template Places
+-- 4) Travel Template Places
 INSERT INTO travel_template_places (
     travel_template_id,
     place_id,

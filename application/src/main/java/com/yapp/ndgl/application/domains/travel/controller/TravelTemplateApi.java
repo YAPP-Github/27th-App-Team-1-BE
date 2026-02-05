@@ -1,5 +1,7 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
+import com.yapp.ndgl.common.response.SliceResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -277,4 +279,52 @@ public interface TravelTemplateApi {
 		@RequestParam(value = "day", required = false)
 		@Min(value = 1, message = "day는 항상 1 이상 입니다.") final Integer day
 	);
+
+    @Operation(
+        summary = "인기 여행지 목록 조회",
+        description = "조회수 내림차순으로 여행 템플릿 목록을 조회합니다."
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = TravelTemplatePopularResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "code": "2000",
+                          "message": "요청에 성공하였습니다.",
+                          "data": {
+                            "content": [
+                              {
+                                "travelId": "TRAVEL_001",
+                                "title": "도쿄 3박 4일 완벽 여행 가이드",
+                                "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
+                                "programName": "빠니보틀",
+                                "programType": "YOUTUBE",
+                                "traveler": "빠니보틀 Pani Bottle",
+                                "country": "일본",
+                                "city": "도쿄",
+                                "nights": 3,
+                                "days": 4
+                              }
+                            ],
+                            "hasNext": true
+                          }
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<SuccessResponse<SliceResponse<TravelTemplatePopularResponse>>> readPopularTravelTemplates(
+        @Parameter(description = "프로그램 ID", example = "1", required = false)
+        @RequestParam(value = "travelProgramId", required = false) final Long travelProgramId,
+        @Parameter(description = "페이지 번호 (0부터 시작)", example = "0", required = false)
+        @RequestParam(value = "page", defaultValue = "0") final int page,
+        @Parameter(description = "페이지 사이즈", example = "20", required = false)
+        @RequestParam(value = "size", defaultValue = "20") @Min(value = 1, message = "size는 1 이상 입니다.") final int size
+    );
 }
