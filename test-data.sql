@@ -1,5 +1,4 @@
 -- Auto-generated from application/src/main/resources/example-request.json
--- NOTE: Replace TODO values and placeholder place IDs/coords with real data.
 
 -- 1) Travel Template
 INSERT INTO travel_templates (
@@ -27,8 +26,8 @@ INSERT INTO travel_templates (
              98000, -- "98,000원" -> 98000 가정 (per person 여부 확인 필요)
              '노홍철, 곽튜브와 함께 베트남 하노이에서 연말을 보내며 현지 로컬 맛집과 문화를 즐기는 여행입니다. 하노이의 활기찬 거리에서 쌀국수를 맛보고 새해 카운트다운을 함께하며 청춘 여행의 감성을 담았습니다.',
              '탈모와 뚱보와 털보의 여행기 【베트남1】',
-             2,     -- TODO: nights
-             3,     -- TODO: days
+             2,
+             3,
              'https://yt3.ggpht.com/Sr5y4IxegXCEZ0SYNvFB749crrAZmNpurZqfq2KvPEpiCYeakoMjBWMnW_56rMuYW_HipJOBRtU=s88-c-k-c0x00ffffff-no-rj',
              NOW(),
              NOW()
