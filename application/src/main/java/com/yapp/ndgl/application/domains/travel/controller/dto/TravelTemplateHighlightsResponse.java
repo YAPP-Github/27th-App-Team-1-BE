@@ -26,9 +26,12 @@ public record TravelTemplateHighlightsResponse(
 	public static TravelTemplateHighlightsResponse toResponse(
 		final TravelTemplate travelTemplate
 	) {
+		String title = travelTemplate.getTitle() == null ? "" : travelTemplate.getTitle();
+		String programName = travelTemplate.getTravelProgramName() == null ? "" : travelTemplate.getTravelProgramName();
+
 		YoutubeInfo youtubeInfo = YoutubeInfo.of(
-			travelTemplate.getTitle(),
-			travelTemplate.getTravelProgramName(), // TODO 필드명 변경?
+			title,
+			programName, // TODO 필드명 변경?
 			travelTemplate.getTravelProgramProfileImage(),
 			travelTemplate.getThumbnail(),
 			travelTemplate.getLink(),
