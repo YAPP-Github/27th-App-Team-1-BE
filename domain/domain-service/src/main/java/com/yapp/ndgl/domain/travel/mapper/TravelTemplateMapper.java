@@ -2,6 +2,7 @@ package com.yapp.ndgl.domain.travel.mapper;
 
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
+import com.yapp.ndgl.domain.travel.type.TravelProgramType;
 
 public class TravelTemplateMapper {
 
@@ -10,14 +11,18 @@ public class TravelTemplateMapper {
             return null;
         }
 
-        String name = entity.getYoutuber() == null ? null : entity.getYoutuber().getName();
-        String profileImage = entity.getYoutuber() == null ? null : entity.getYoutuber().getProfileImage();
+        String programName = entity.getTravelProgram() == null ? null : entity.getTravelProgram().getName();
+        String programProfileImage = entity.getTravelProgram() == null ? null : entity.getTravelProgram().getProfileImage();
+        TravelProgramType programType = entity.getTravelProgram() == null
+            ? null
+            : entity.getTravelProgram().getType();
 
         return TravelTemplate.builder()
             .id(entity.getId())
             .travelId(entity.getTravelId())
-            .youtuber(name)
-            .profileImage(profileImage)
+            .travelProgramName(programName)
+            .travelProgramProfileImage(programProfileImage)
+            .travelProgramType(programType)
             .traveler(entity.getTraveler())
             .country(entity.getCountry())
             .city(entity.getCity())

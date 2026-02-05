@@ -28,8 +28,8 @@ public record TravelTemplateHighlightsResponse(
 	) {
 		YoutubeInfo youtubeInfo = YoutubeInfo.of(
 			travelTemplate.getTitle(),
-			travelTemplate.getYoutuber(),
-			travelTemplate.getProfileImage(),
+			travelTemplate.getTravelProgramName(), // TODO 필드명 변경?
+			travelTemplate.getTravelProgramProfileImage(),
 			travelTemplate.getThumbnail(),
 			travelTemplate.getLink(),
 			travelTemplate.getSummary());

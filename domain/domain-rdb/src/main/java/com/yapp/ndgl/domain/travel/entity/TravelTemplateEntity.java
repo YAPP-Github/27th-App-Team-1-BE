@@ -1,12 +1,11 @@
 package com.yapp.ndgl.domain.travel.entity;
 
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
-import com.yapp.ndgl.domain.travel.type.YoutuberType;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 import lombok.AccessLevel;
@@ -23,9 +22,9 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(nullable = false, unique = true, length = 255)
     private String travelId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
-    private YoutuberType youtuber;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "travel_program_id", nullable = false)
+    private TravelProgramEntity travelProgram;
 
     @Column(nullable = false, length = 100)
     private String traveler;
@@ -79,7 +78,7 @@ public class TravelTemplateEntity extends BaseEntity {
     @Builder
     public TravelTemplateEntity(
         final String travelId,
-        final YoutuberType youtuber,
+        final TravelProgramEntity travelProgram,
         final String traveler,
         final String country,
         final String city,
@@ -98,7 +97,7 @@ public class TravelTemplateEntity extends BaseEntity {
         final String profileImage
     ) {
         this.travelId = travelId;
-        this.youtuber = youtuber;
+        this.travelProgram = travelProgram;
         this.traveler = traveler;
         this.country = country;
         this.city = city;
