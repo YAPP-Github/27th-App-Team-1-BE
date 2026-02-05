@@ -35,6 +35,9 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String city;
 
+    @Column(length = 50)
+    private String continent;
+
     @Column(name = "weather_info", length = 1000)
     private String weatherInfo;
 
@@ -75,6 +78,7 @@ public class TravelTemplateEntity extends BaseEntity {
         final String traveler,
         final String country,
         final String city,
+        final String continent,
         final String weatherInfo,
         final String cultureInfo,
         final String foodInfo,
@@ -92,6 +96,7 @@ public class TravelTemplateEntity extends BaseEntity {
         this.traveler = traveler;
         this.country = country;
         this.city = city;
+        this.continent = continent;
         this.weatherInfo = weatherInfo;
         this.cultureInfo = cultureInfo;
         this.foodInfo = foodInfo;

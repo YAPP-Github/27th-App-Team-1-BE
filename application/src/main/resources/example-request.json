@@ -1,0 +1,79 @@
+{
+  "travel_id": "Pani_Hanoi_2212",
+  "traveler": "빠니보틀 Pani Bottle",
+  "summary": "노홍철, 곽튜브와 함께 베트남 하노이에서 연말을 보내며 현지 로컬 맛집과 문화를 즐기는 여행입니다. 하노이의 활기찬 거리에서 쌀국수를 맛보고 새해 카운트다운을 함께하며 청춘 여행의 감성을 담았습니다.",
+  "budget_per_person": "95,000원",
+  "continent": "SOUTHEAST_ASIA",
+  "country": "베트남",
+  "city": "하노이",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "sequence": 1,
+          "place_name": "Noi Bai International Airport",
+          "estimated_time": 60,
+          "distance_km": 0.0,
+          "transportation": [],
+          "youtube_tips": [
+            "하노이는 미세먼지가 많을 수 있으니 마스크를 챙기는 것이 좋아요.",
+            "공항에서 시내로 이동할 때는 택시를 이용하는 것이 편리해요."
+          ],
+          "plan_b": [
+            {
+              "name": "Lotte Center Hanoi",
+              "feature": "시내 전망을 볼 수 있는 전망대와 쇼핑몰이 있어요."
+            }
+          ]
+        },
+        {
+          "sequence": 2,
+          "place_name": "Phở Gia Truyền Bát Đàn",
+          "estimated_time": 40,
+          "distance_km": 28.5,
+          "transportation": [
+            {
+              "mode": "TAXI",
+              "time_min": 45
+            }
+          ],
+          "youtube_tips": [
+            "줄이 길어도 현지 분위기를 느끼며 먹는 쌀국수 맛이 일품이에요.",
+            "곁들여 먹는 도너츠(꿔이)를 국물에 적셔 먹으면 정말 맛있어요."
+          ],
+          "plan_b": [
+            {
+              "name": "Phở 10 Lý Quốc Sư",
+              "feature": "하노이에서 손꼽히는 또 다른 유명 쌀국수 맛집이에요."
+            }
+          ]
+        },
+        {
+          "sequence": 3,
+          "place_name": "Hoàn Kiếm Lake",
+          "estimated_time": 120,
+          "distance_km": 1.2,
+          "transportation": [
+            {
+              "mode": "WALKING",
+              "time_min": 15
+            }
+          ],
+          "youtube_tips": [
+            "길을 건널 때 오토바이가 알아서 피해 가니 멈추지 말고 천천히 계속 걷는 게 중요해요.",
+            "연말에는 카운트다운 행사가 열려 인파가 매우 많으니 소지품에 유의하세요.",
+            "길거리에서 해바라기 씨를 까먹으며 맥주 한잔하는 감성을 즐겨보세요."
+          ],
+          "plan_b": [
+            {
+              "name": "St. Joseph's Cathedral, Hanoi",
+              "feature": "유럽풍 성당 앞에서 사진 찍기 좋은 명소예요."
+            }
+          ]
+        }
+      ],
+      "transportation_tip": "공항에서 시내까지는 택시로 이동하는 것이 가장 효율적이며, 하노이 시내(올드쿼터) 내에서는 도보로 충분히 여행이 가능하지만 오토바이 흐름에 익숙해져야 해요."
+    }
+  ]
+}

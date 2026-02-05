@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
+import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
@@ -51,10 +52,72 @@ public class TravelTemplateService {
             .map(travelTemplatePlace -> {
                 Place place = placeMap.get(travelTemplatePlace.getPlaceId());
 
+                // youtubeTipsJson 파싱
+                String travelerTip = null;
+                List<String> youtubeTips = null;
+                if (travelTemplatePlace.getYoutubeTipsJson() != null) {
+                    try {
+                        List<String> tips = objectMapper.readValue(
+                            travelTemplatePlace.getYoutubeTipsJson(),
+                            new com.fasterxml.jackson.core.type.TypeReference<List<String>>() {}
+                        );
+                        youtubeTips = tips;
+                        travelerTip = tips.isEmpty() ? null : tips.get(0);
+                    } catch (Exception e) {
+                        // JSON 파싱 실패 시 null
+                    }
+                }
+
+                // transportationJson 파싱
+                List<TravelTemplateResponse.TransportationInfo> transportation = null;
+                if (travelTemplatePlace.getTransportationJson() != null) {
+                    try {
+                        List<java.util.Map<String, Object>> transportList = objectMapper.readValue(
+                            travelTemplatePlace.getTransportationJson(),
+                            new com.fasterxml.jackson.core.type.TypeReference<List<java.util.Map<String, Object>>>() {}
+                        );
+                        transportation = transportList.stream()
+                            .map(t -> {
+                                String modeStr = (String) t.get("mode");
+                                TransportationMode mode = modeStr != null
+                                    ? TransportationMode.valueOf(modeStr)
+                                    : null;
+                                Integer timeMin = t.get("time_min") != null ? ((Number) t.get("time_min")).intValue() : null;
+                                return new TravelTemplateResponse.TransportationInfo(mode, timeMin);
+                            })
+                            .toList();
+                    } catch (Exception e) {
+                        // JSON 파싱 실패 시 null
+                    }
+                }
+
+                // planBJson 파싱
+                List<TravelTemplateResponse.PlanBInfo> planB = null;
+                if (travelTemplatePlace.getPlanBJson() != null) {
+                    try {
+                        List<java.util.Map<String, String>> planBList = objectMapper.readValue(
+                            travelTemplatePlace.getPlanBJson(),
+                            new com.fasterxml.jackson.core.type.TypeReference<List<java.util.Map<String, String>>>() {}
+                        );
+                        planB = planBList.stream()
+                            .map(p -> new TravelTemplateResponse.PlanBInfo(
+                                p.get("name"),
+                                p.get("feature")
+                            ))
+                            .toList();
+                    } catch (Exception e) {
+                        // JSON 파싱 실패 시 null
+                    }
+                }
+
                 return new TravelTemplateResponse.TravelTemplatePlaceResponse(
                     travelTemplatePlace.getSequence(),
                     travelTemplatePlace.getDay(),
-                    travelTemplatePlace.getTravelerTip(),
+                    travelTemplatePlace.getDistanceKm(),
+                    transportation,
+                    travelerTip,
+                    youtubeTips,
+                    planB,
                     place == null ? null : new TravelTemplateResponse.PlaceResponse(
                         place.getGooglePlaceId(),
                         place.getFormattedAddress(),

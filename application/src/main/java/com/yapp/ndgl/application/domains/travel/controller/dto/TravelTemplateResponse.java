@@ -2,6 +2,8 @@ package com.yapp.ndgl.application.domains.travel.controller.dto;
 
 import java.util.List;
 
+import com.yapp.ndgl.common.type.TransportationMode;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record TravelTemplateResponse(
@@ -41,8 +43,17 @@ public record TravelTemplateResponse(
         Integer sequence,
         @Schema(description = "일차", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
         Integer day,
-        @Schema(description = "여행자 팁", example = "저녁 시간대 방문 추천", nullable = true)
+        @Schema(description = "이전 장소로부터의 거리 (km)", example = "2.5", nullable = true)
+        Double distanceKm,
+        @Schema(description = "교통수단 목록", nullable = true)
+        List<TransportationInfo> transportation,
+        @Deprecated
+        @Schema(description = "여행자 팁 (Deprecated: youtubeTips 사용 권장)", example = "저녁 시간대 방문 추천", nullable = true, deprecated = true)
         String travelerTip,
+        @Schema(description = "유튜버 팁 목록", example = "[\"저녁 시간대 방문 추천\", \"현지인 맛집\"]", nullable = true)
+        List<String> youtubeTips,
+        @Schema(description = "대체 장소 목록 (Plan B)", nullable = true)
+        List<PlanBInfo> planB,
         @Schema(description = "장소 정보", nullable = true)
         PlaceResponse place
     ) {
@@ -69,6 +80,22 @@ public record TravelTemplateResponse(
         String googleMapsUri,
         @Schema(description = "사용자 평점 수", example = "1234", nullable = true)
         Integer userRatingCount
+    ) {
+    }
+
+    public record TransportationInfo(
+        @Schema(description = "교통수단", example = "TAXI", requiredMode = Schema.RequiredMode.REQUIRED)
+        TransportationMode mode,
+        @Schema(description = "소요 시간 (분)", example = "45", nullable = true)
+        Integer timeMin
+    ) {
+    }
+
+    public record PlanBInfo(
+        @Schema(description = "대체 장소명", example = "Noi Bai Airport Lounge", requiredMode = Schema.RequiredMode.REQUIRED)
+        String name,
+        @Schema(description = "특징", example = "시내로 나가기 전 간단히 허기를 채우거나 휴식을 취하기 좋은 라운지", nullable = true)
+        String feature
     ) {
     }
 }

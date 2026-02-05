@@ -12,6 +12,9 @@ public class TravelTemplatePlace {
     private Long placeId;
     private int sequence;
     private int day;
-    private String travelerTip;
+    private Double distanceKm;
+    private String transportationJson;
+    private String youtubeTipsJson;
+    private String planBJson;
     private Integer estimatedDuration;
 }
