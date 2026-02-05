@@ -5,6 +5,7 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHig
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.service.TravelTemplateService;
 import com.yapp.ndgl.common.response.SliceResponse;
@@ -45,5 +46,12 @@ public class TravelTemplateFacade {
     ) {
         log.info("추천 여행 템플릿 목록을 조회합니다. uuid = {}, page = {}, size = {}", uuid, page, size);
         return travelTemplateService.readRecommendedTravelTemplates(uuid, page, size);
+    }
+
+    public SliceResponse<TravelTemplateSearchResponse> searchTravelTemplates(
+        final String keyword, final int page, final int size
+    ) {
+        log.info("여행 템플릿 검색을 수행합니다. keyword = {}, page = {}, size = {}", keyword, page, size);
+        return travelTemplateService.searchTravelTemplates(keyword, page, size);
     }
 }

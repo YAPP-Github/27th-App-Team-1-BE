@@ -82,10 +82,7 @@ public class TravelTemplateDomainService {
     ) {
         Pageable pageable = PageRequest.of(page, size + 1);
 
-        List<TravelTemplateEntity> entities = travelTemplateRepository.findRandomTemplates(
-            country,
-            pageable
-        );
+        List<TravelTemplateEntity> entities = travelTemplateRepository.findRandomTemplates(country, pageable);
 
         boolean hasNext = entities.size() > size;
         List<TravelTemplate> content = entities.stream()
@@ -94,6 +91,36 @@ public class TravelTemplateDomainService {
             .toList();
 
         return SliceResponse.of(content, hasNext);
+    }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<TravelTemplate> findByKeyword(
+        final String keyword, final int page, final int size
+    ) {
+        String normalizedKeyword = normalizeKeyword(keyword);
+        if (normalizedKeyword == null) {
+            return SliceResponse.of(List.of(), false);
+        }
+
+        Pageable pageable = PageRequest.of(page, size + 1);
+        List<TravelTemplateEntity> entities =
+            travelTemplateRepository.findByKeyword(normalizedKeyword, pageable);
+
+        boolean hasNext = entities.size() > size;
+        List<TravelTemplate> content = entities.stream()
+            .limit(size)
+            .map(TravelTemplateMapper::toDomain)
+            .toList();
+
+        return SliceResponse.of(content, hasNext);
+    }
+
+    private String normalizeKeyword(final String keyword) {
+        if (keyword == null) {
+            return null;
+        }
+        String trimmed = keyword.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 
 }

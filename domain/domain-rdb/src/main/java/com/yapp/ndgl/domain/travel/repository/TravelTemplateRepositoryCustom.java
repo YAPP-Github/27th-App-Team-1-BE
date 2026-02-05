@@ -9,4 +9,6 @@ import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
 public interface TravelTemplateRepositoryCustom {
 
     List<TravelTemplateEntity> findRandomTemplates(String country, Pageable pageable);
+
+    List<TravelTemplateEntity> findByKeyword(String keyword, Pageable pageable);
 }

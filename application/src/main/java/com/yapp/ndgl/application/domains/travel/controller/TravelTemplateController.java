@@ -12,6 +12,7 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHig
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.facade.TravelTemplateFacade;
@@ -77,6 +78,18 @@ public class TravelTemplateController implements TravelTemplateApi {
     ) {
         SliceResponse<TravelTemplateRecommendationResponse> response =
             travelTemplateFacade.readRecommendedTravelTemplates(uuid, page, size);
+        return ResponseEntity.ok(SuccessResponse.success(response));
+    }
+
+    @Override
+    @GetMapping("/search")
+    public ResponseEntity<SuccessResponse<SliceResponse<TravelTemplateSearchResponse>>> searchTravelTemplates(
+        @RequestParam(value = "keyword") final String keyword,
+        @RequestParam(value = "page", defaultValue = "0") final int page,
+        @RequestParam(value = "size", defaultValue = "20") final int size
+    ) {
+        SliceResponse<TravelTemplateSearchResponse> response =
+            travelTemplateFacade.searchTravelTemplates(keyword, page, size);
         return ResponseEntity.ok(SuccessResponse.success(response));
     }
 }

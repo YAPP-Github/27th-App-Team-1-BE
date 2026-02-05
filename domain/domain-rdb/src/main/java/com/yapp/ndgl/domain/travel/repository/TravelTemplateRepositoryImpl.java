@@ -34,4 +34,24 @@ public class TravelTemplateRepositoryImpl implements TravelTemplateRepositoryCus
             .limit(pageable.getPageSize())
             .fetch();
     }
+
+    @Override
+    public List<TravelTemplateEntity> findByKeyword(final String keyword, final Pageable pageable) {
+        QTravelTemplateEntity travelTemplate = QTravelTemplateEntity.travelTemplateEntity;
+        BooleanBuilder where = new BooleanBuilder();
+        if (keyword != null) {
+            where.and(
+                travelTemplate.country.containsIgnoreCase(keyword)
+                    .or(travelTemplate.city.containsIgnoreCase(keyword))
+                    .or(travelTemplate.travelProgram.name.containsIgnoreCase(keyword))
+            );
+        }
+
+        return queryFactory.selectFrom(travelTemplate)
+            .leftJoin(travelTemplate.travelProgram).fetchJoin()
+            .where(where)
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+    }
 }
