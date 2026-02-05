@@ -22,7 +22,7 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(nullable = false, unique = true, length = 255)
     private String travelId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_program_id", nullable = false)
     private TravelProgramEntity travelProgram;
 
