@@ -65,7 +65,9 @@ public class TravelTemplateDomainService {
 
     @Transactional(readOnly = true)
     public SliceResponse<TravelTemplate> findPopularTemplates(
-        final Long travelProgramId, final int page, final int size
+        final Long travelProgramId,
+        final int page,
+        final int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Slice<TravelTemplateEntity> entities = travelProgramId == null
@@ -75,4 +77,29 @@ public class TravelTemplateDomainService {
         Slice<TravelTemplate> templates = entities.map(TravelTemplateMapper::toDomain);
         return SliceResponse.of(templates.getContent(), templates.hasNext());
     }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<TravelTemplate> findRecommendedTemplates(
+        final String country,
+        final int page,
+        final int size
+    ) {
+        int limit = size + 1;
+        int offset = Math.max(page, 0) * size;
+
+        List<TravelTemplateEntity> entities = travelTemplateRepository.findRandomTemplates(
+            country,
+            limit,
+            offset
+        );
+
+        boolean hasNext = entities.size() > size;
+        List<TravelTemplate> content = entities.stream()
+            .limit(size)
+            .map(TravelTemplateMapper::toDomain)
+            .toList();
+
+        return SliceResponse.of(content, hasNext);
+    }
+
 }

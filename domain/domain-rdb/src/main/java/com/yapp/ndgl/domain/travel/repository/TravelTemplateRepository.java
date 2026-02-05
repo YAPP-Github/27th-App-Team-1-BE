@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface TravelTemplateRepository extends JpaRepository<TravelTemplateEntity, Long> {
 
     @Modifying
@@ -17,5 +19,21 @@ public interface TravelTemplateRepository extends JpaRepository<TravelTemplateEn
     Slice<TravelTemplateEntity> findAllByOrderByViewCountDesc(Pageable pageable);
 
     Slice<TravelTemplateEntity> findByTravelProgramIdOrderByViewCountDesc(Long travelProgramId, Pageable pageable);
+
+    @Query(
+        value = """
+            select *
+            from travel_templates t
+            where (:country is null or t.country = :country)
+            order by rand()
+            limit :limit offset :offset
+            """,
+        nativeQuery = true
+    )
+    List<TravelTemplateEntity> findRandomTemplates(
+        @Param("country") String country,
+        @Param("limit") int limit,
+        @Param("offset") int offset
+    );
 
 }

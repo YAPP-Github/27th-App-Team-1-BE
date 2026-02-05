@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.event.TravelTemplateViewCountEvent;
 import com.yapp.ndgl.common.response.SliceResponse;
@@ -20,8 +21,11 @@ import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
+import com.yapp.ndgl.domain.travel.UserTravel;
 import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 import com.yapp.ndgl.domain.travel.service.TravelTemplatePlaceDomainService;
+import com.yapp.ndgl.domain.travel.service.UserTravelDomainService;
+import com.yapp.ndgl.domain.user.service.UserDomainService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +38,8 @@ public class TravelTemplateService {
     private final PlaceDomainService placeDomainService;
     private final ObjectMapper objectMapper;
     private final ApplicationEventPublisher eventPublisher;
+    private final UserDomainService userDomainService;
+    private final UserTravelDomainService userTravelDomainService;
 
     @Transactional(readOnly = true)
     public TravelTemplateResponse getTravelTemplate(Long id) {
@@ -198,6 +204,21 @@ public class TravelTemplateService {
             travelTemplateDomainService.findPopularTemplates(travelProgramId, page, size);
         List<TravelTemplatePopularResponse> content = templates.getContent().stream()
             .map(TravelTemplatePopularResponse::from)
+            .toList();
+        return SliceResponse.of(content, templates.isHasNext());
+    }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<TravelTemplateRecommendationResponse> readRecommendedTravelTemplates(
+        final String uuid, final int page, final int size
+    ) {
+        Long userId = userDomainService.findByUuid(uuid).getId();
+        UserTravel latestUserTravel = userTravelDomainService.findLatestUpcomingByUserId(userId).orElse(null);
+        String country = latestUserTravel == null ? null : latestUserTravel.getCountry();
+
+        SliceResponse<TravelTemplate> templates = travelTemplateDomainService.findRecommendedTemplates(country, page, size);
+        List<TravelTemplateRecommendationResponse> content = templates.getContent().stream()
+            .map(TravelTemplateRecommendationResponse::from)
             .toList();
         return SliceResponse.of(content, templates.isHasNext());
     }

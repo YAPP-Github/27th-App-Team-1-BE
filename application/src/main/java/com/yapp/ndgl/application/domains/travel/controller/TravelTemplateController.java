@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
+import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.facade.TravelTemplateFacade;
 import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
@@ -63,6 +65,18 @@ public class TravelTemplateController implements TravelTemplateApi {
     ) {
         SliceResponse<TravelTemplatePopularResponse> response =
             travelTemplateFacade.readPopularTravelTemplates(travelProgramId, page, size);
+        return ResponseEntity.ok(SuccessResponse.success(response));
+    }
+
+    @Override
+    @GetMapping("/recommend")
+    public ResponseEntity<SuccessResponse<SliceResponse<TravelTemplateRecommendationResponse>>> readRecommendedTravelTemplates(
+        @CurrentUuid String uuid,
+        @RequestParam(value = "page", defaultValue = "0") final int page,
+        @RequestParam(value = "size", defaultValue = "20") final int size
+    ) {
+        SliceResponse<TravelTemplateRecommendationResponse> response =
+            travelTemplateFacade.readRecommendedTravelTemplates(uuid, page, size);
         return ResponseEntity.ok(SuccessResponse.success(response));
     }
 }
