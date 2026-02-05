@@ -52,4 +52,9 @@ public class TravelTemplateDomainService {
                 .build())
             .toList();
     }
+
+    @Transactional
+    public void incrementViewCount(final Long id) {
+        travelTemplateRepository.incrementViewCount(id);
+    }
 }

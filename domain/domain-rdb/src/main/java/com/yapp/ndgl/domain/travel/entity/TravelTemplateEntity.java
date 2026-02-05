@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.ColumnDefault;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,6 +54,10 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(name = "link", length = 500)
     private String link;
 
+    @Column(nullable = false, name = "view_count")
+    @ColumnDefault("0")
+    private long viewCount = 0L;
+
     @Column(name = "budget_per_person")
     private Integer budgetPerPerson;
 
@@ -84,6 +89,7 @@ public class TravelTemplateEntity extends BaseEntity {
         final String foodInfo,
         final String thumbnail,
         final String link,
+        final Long viewCount,
         final Integer budgetPerPerson,
         final String summary,
         final String title,
@@ -102,6 +108,7 @@ public class TravelTemplateEntity extends BaseEntity {
         this.foodInfo = foodInfo;
         this.thumbnail = thumbnail;
         this.link = link;
+        this.viewCount = viewCount == null ? 0L : viewCount;
         this.budgetPerPerson = budgetPerPerson;
         this.summary = summary;
         this.title = title;
