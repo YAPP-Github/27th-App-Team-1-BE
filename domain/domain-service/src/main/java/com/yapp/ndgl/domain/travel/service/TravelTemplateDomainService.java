@@ -65,9 +65,7 @@ public class TravelTemplateDomainService {
 
     @Transactional(readOnly = true)
     public SliceResponse<TravelTemplate> findPopularTemplates(
-        final Long travelProgramId,
-        final int page,
-        final int size
+        final Long travelProgramId, final int page, final int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Slice<TravelTemplateEntity> entities = travelProgramId == null
@@ -80,17 +78,13 @@ public class TravelTemplateDomainService {
 
     @Transactional(readOnly = true)
     public SliceResponse<TravelTemplate> findRecommendedTemplates(
-        final String country,
-        final int page,
-        final int size
+        final String country, final int page, final int size
     ) {
-        int limit = size + 1;
-        int offset = Math.max(page, 0) * size;
+        Pageable pageable = PageRequest.of(page, size + 1);
 
         List<TravelTemplateEntity> entities = travelTemplateRepository.findRandomTemplates(
             country,
-            limit,
-            offset
+            pageable
         );
 
         boolean hasNext = entities.size() > size;
