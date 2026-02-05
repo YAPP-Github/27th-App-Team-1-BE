@@ -2,13 +2,18 @@ package com.yapp.ndgl.domain.travel.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
+import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplatePlaceEntity;
 import com.yapp.ndgl.domain.travel.mapper.TravelTemplateMapper;
 import com.yapp.ndgl.domain.travel.repository.TravelTemplatePlaceRepository;
@@ -56,5 +61,18 @@ public class TravelTemplateDomainService {
     @Transactional
     public void incrementViewCount(final Long id) {
         travelTemplateRepository.incrementViewCount(id);
+    }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<TravelTemplate> findPopularTemplates(
+        final Long travelProgramId, final int page, final int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Slice<TravelTemplateEntity> entities = travelProgramId == null
+            ? travelTemplateRepository.findAllByOrderByViewCountDesc(pageable)
+            : travelTemplateRepository.findByTravelProgramIdOrderByViewCountDesc(travelProgramId, pageable);
+
+        Slice<TravelTemplate> templates = entities.map(TravelTemplateMapper::toDomain);
+        return SliceResponse.of(templates.getContent(), templates.hasNext());
     }
 }

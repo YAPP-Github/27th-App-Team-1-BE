@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.event.TravelTemplateViewCountEvent;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
@@ -184,6 +186,20 @@ public class TravelTemplateService {
             .collect(Collectors.toMap(Place::getId, place -> place));
 
         return TravelTemplateItineraryResponse.of(travelTemplatePlaces, placeMap, objectMapper);
+    }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<TravelTemplatePopularResponse> readPopularTravelTemplates(
+        final Long travelProgramId,
+        final int page,
+        final int size
+    ) {
+        SliceResponse<TravelTemplate> templates =
+            travelTemplateDomainService.findPopularTemplates(travelProgramId, page, size);
+        List<TravelTemplatePopularResponse> content = templates.getContent().stream()
+            .map(TravelTemplatePopularResponse::from)
+            .toList();
+        return SliceResponse.of(content, templates.isHasNext());
     }
 
 }
