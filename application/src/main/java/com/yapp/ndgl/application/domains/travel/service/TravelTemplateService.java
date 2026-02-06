@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.event.TravelTemplateViewCountEvent;
@@ -219,6 +220,17 @@ public class TravelTemplateService {
         SliceResponse<TravelTemplate> templates = travelTemplateDomainService.findRecommendedTemplates(country, page, size);
         List<TravelTemplateRecommendationResponse> content = templates.getContent().stream()
             .map(TravelTemplateRecommendationResponse::from)
+            .toList();
+        return SliceResponse.of(content, templates.isHasNext());
+    }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<TravelTemplateSearchResponse> searchTravelTemplates(
+        final String keyword, final int page, final int size
+    ) {
+        SliceResponse<TravelTemplate> templates = travelTemplateDomainService.findByKeyword(keyword, page, size);
+        List<TravelTemplateSearchResponse> content = templates.getContent().stream()
+            .map(TravelTemplateSearchResponse::from)
             .toList();
         return SliceResponse.of(content, templates.isHasNext());
     }

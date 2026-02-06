@@ -10,6 +10,7 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHig
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
 import com.yapp.ndgl.common.response.SliceResponse;
@@ -373,6 +374,54 @@ public interface TravelTemplateApi {
     })
     ResponseEntity<SuccessResponse<SliceResponse<TravelTemplateRecommendationResponse>>> readRecommendedTravelTemplates(
 		@CurrentUuid String uuid,
+        @Parameter(description = "페이지 번호 (0부터 시작)", example = "0", required = false)
+        @RequestParam(value = "page", defaultValue = "0") final int page,
+        @Parameter(description = "페이지 사이즈", example = "20", required = false)
+        @RequestParam(value = "size", defaultValue = "20") @Min(value = 1, message = "size는 1 이상 입니다.") final int size
+    );
+
+    @Operation(
+        summary = "여행 템플릿 검색",
+        description = "키워드로 여행 템플릿을 검색합니다."
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = TravelTemplateSearchResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "code": "2000",
+                          "message": "요청에 성공하였습니다.",
+                          "data": {
+                            "content": [
+                              {
+                                "travelId": "TRAVEL_001",
+                                "title": "도쿄 3박 4일 완벽 여행 가이드",
+                                "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
+                                "programName": "빠니보틀",
+                                "programType": "YOUTUBE",
+                                "traveler": "빠니보틀 Pani Bottle",
+                                "country": "일본",
+                                "city": "도쿄",
+                                "nights": 3,
+                                "days": 4
+                              }
+                            ],
+                            "hasNext": true
+                          }
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<SuccessResponse<SliceResponse<TravelTemplateSearchResponse>>> searchTravelTemplates(
+        @Parameter(description = "검색 키워드", example = "도쿄", required = true)
+        @RequestParam(value = "keyword") final String keyword,
         @Parameter(description = "페이지 번호 (0부터 시작)", example = "0", required = false)
         @RequestParam(value = "page", defaultValue = "0") final int page,
         @Parameter(description = "페이지 사이즈", example = "20", required = false)
