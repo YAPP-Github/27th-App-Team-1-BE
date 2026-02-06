@@ -75,4 +75,25 @@ public class TravelTemplateDomainService {
         Slice<TravelTemplate> templates = entities.map(TravelTemplateMapper::toDomain);
         return SliceResponse.of(templates.getContent(), templates.hasNext());
     }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<TravelTemplate> findRecommendedTemplates(
+        final String country, final int page, final int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size + 1);
+
+        List<TravelTemplateEntity> entities = travelTemplateRepository.findRandomTemplates(
+            country,
+            pageable
+        );
+
+        boolean hasNext = entities.size() > size;
+        List<TravelTemplate> content = entities.stream()
+            .limit(size)
+            .map(TravelTemplateMapper::toDomain)
+            .toList();
+
+        return SliceResponse.of(content, hasNext);
+    }
+
 }
