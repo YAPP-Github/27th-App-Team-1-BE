@@ -29,7 +29,7 @@ public class AsyncConfig {
 		executor.setMaxPoolSize(50);
 		executor.setQueueCapacity(500);
 		executor.setThreadNamePrefix("photo-async-");
-		executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+		executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
 		executor.setWaitForTasksToCompleteOnShutdown(true);
 		executor.setAwaitTerminationSeconds(60);
 		executor.initialize();
