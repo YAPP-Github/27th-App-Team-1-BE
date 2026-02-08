@@ -38,9 +38,10 @@ public class PlaceDetailFacade {
 
 		PlaceDetailResponse placeDetailResponse = placeDetailService.savePlace(googlePlaceDetailsResponse);
 
-		// 2. photo URIs 조회 (없는 photo만 API 호출) 및 DB 저장
-		// Photo 저장은 별도 처리 (PlacePhotoService)
+		// 2. 사진 비동기 저장
 		placePhotoService.savePhotosIfNotExists(googlePlaceId);
+
+		log.info("장소 검색 및 저장 완료. googlePlaceId={}", googlePlaceId);
 
 		return placeDetailResponse;
 	}
