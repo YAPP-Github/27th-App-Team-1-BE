@@ -6,7 +6,6 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateIti
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
-import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.service.TravelTemplateService;
 import com.yapp.ndgl.common.response.SliceResponse;
 
@@ -19,10 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TravelTemplateFacade {
 
     private final TravelTemplateService travelTemplateService;
-
-    public TravelTemplateResponse getTravelTemplate(Long id) {
-        return travelTemplateService.getTravelTemplate(id);
-    }
 
     public TravelTemplateHighlightsResponse readTravelTemplateHighlights(final Long id) {
         log.info("여행 템플릿의 상단 내역을 조회합니다. templateId = {}", id);

@@ -46,7 +46,7 @@ public record TravelTemplateItineraryResponse(
         List<String> youtubeTips,
         @Schema(description = "대체 장소 목록 (Plan B)", nullable = true)
         List<PlanBInfo> planB,
-        @Schema(description = "예상 소요 시간 (분)", example = "60", nullable = true)
+        @Schema(description = "예상 소요 시간 (분)", example = "60", requiredMode = Schema.RequiredMode.REQUIRED)
         Integer estimatedDuration,
         @Schema(description = "장소 정보", nullable = true)
         PlaceInfo place
@@ -199,7 +199,7 @@ public record TravelTemplateItineraryResponse(
     public record TransportationInfo(
         @Schema(description = "교통수단", example = "TAXI", requiredMode = Schema.RequiredMode.REQUIRED)
         TransportationMode mode,
-        @Schema(description = "소요 시간 (분)", example = "45", nullable = true)
+        @Schema(description = "소요 시간 (분)", example = "45", requiredMode = Schema.RequiredMode.REQUIRED)
         Integer timeMin
     ) {
     }

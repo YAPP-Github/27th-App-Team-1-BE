@@ -14,10 +14,8 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateIti
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
-import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.event.TravelTemplateViewCountEvent;
 import com.yapp.ndgl.common.response.SliceResponse;
-import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
@@ -41,129 +39,6 @@ public class TravelTemplateService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserDomainService userDomainService;
     private final UserTravelDomainService userTravelDomainService;
-
-    @Transactional(readOnly = true)
-    public TravelTemplateResponse getTravelTemplate(Long id) {
-        // 템플릿 조회
-        TravelTemplate travelTemplate = travelTemplateDomainService.findById(id);
-
-        // 매핑 테이블 조회
-        List<TravelTemplatePlace> travelTemplatePlaces = travelTemplateDomainService
-            .findPlacesByTravelTemplateId(id);
-
-        List<Long> placeIds = travelTemplatePlaces.stream()
-            .map(TravelTemplatePlace::getPlaceId)
-            .collect(Collectors.toList());
-
-        // 장소 목록 조회
-        List<Place> placeList = placeDomainService.findByIds(placeIds);
-        Map<Long, Place> placeMap = placeList.stream()
-            .collect(Collectors.toMap(Place::getId, place -> place));
-
-        List<TravelTemplateResponse.TravelTemplatePlaceResponse> places = travelTemplatePlaces.stream()
-            .map(travelTemplatePlace -> {
-                Place place = placeMap.get(travelTemplatePlace.getPlaceId());
-
-                // youtubeTipsJson 파싱
-                String travelerTip = null;
-                List<String> youtubeTips = null;
-                if (travelTemplatePlace.getYoutubeTipsJson() != null) {
-                    try {
-                        List<String> tips = objectMapper.readValue(
-                            travelTemplatePlace.getYoutubeTipsJson(),
-                            new com.fasterxml.jackson.core.type.TypeReference<List<String>>() {}
-                        );
-                        youtubeTips = tips;
-                        travelerTip = tips.isEmpty() ? null : tips.get(0);
-                    } catch (Exception e) {
-                        // JSON 파싱 실패 시 null
-                    }
-                }
-
-                // transportationJson 파싱
-                List<TravelTemplateResponse.TransportationInfo> transportation = null;
-                if (travelTemplatePlace.getTransportationJson() != null) {
-                    try {
-                        List<java.util.Map<String, Object>> transportList = objectMapper.readValue(
-                            travelTemplatePlace.getTransportationJson(),
-                            new com.fasterxml.jackson.core.type.TypeReference<List<java.util.Map<String, Object>>>() {}
-                        );
-                        transportation = transportList.stream()
-                            .map(t -> {
-                                String modeStr = (String) t.get("mode");
-                                TransportationMode mode = modeStr != null
-                                    ? TransportationMode.valueOf(modeStr)
-                                    : null;
-                                Integer timeMin = t.get("time_min") != null ? ((Number) t.get("time_min")).intValue() : null;
-                                return new TravelTemplateResponse.TransportationInfo(mode, timeMin);
-                            })
-                            .toList();
-                    } catch (Exception e) {
-                        // JSON 파싱 실패 시 null
-                    }
-                }
-
-                // planBJson 파싱
-                List<TravelTemplateResponse.PlanBInfo> planB = null;
-                if (travelTemplatePlace.getPlanBJson() != null) {
-                    try {
-                        List<java.util.Map<String, String>> planBList = objectMapper.readValue(
-                            travelTemplatePlace.getPlanBJson(),
-                            new com.fasterxml.jackson.core.type.TypeReference<List<java.util.Map<String, String>>>() {}
-                        );
-                        planB = planBList.stream()
-                            .map(p -> new TravelTemplateResponse.PlanBInfo(
-                                p.get("name"),
-                                p.get("feature")
-                            ))
-                            .toList();
-                    } catch (Exception e) {
-                        // JSON 파싱 실패 시 null
-                    }
-                }
-
-                return new TravelTemplateResponse.TravelTemplatePlaceResponse(
-                    travelTemplatePlace.getSequence(),
-                    travelTemplatePlace.getDay(),
-                    travelTemplatePlace.getDistanceKm(),
-                    transportation,
-                    travelerTip,
-                    youtubeTips,
-                    planB,
-                    place == null ? null : new TravelTemplateResponse.PlaceResponse(
-                        place.getGooglePlaceId(),
-                        place.getFormattedAddress(),
-                        place.getLatitude(),
-                        place.getLongitude(),
-                        place.getRating(),
-                        place.getNationalPhoneNumber(),
-                        place.getInternationalPhoneNumber(),
-                        place.getWebsiteUri(),
-                        place.getGoogleMapsUri(),
-                        place.getUserRatingCount()
-                    )
-                );
-            })
-            .collect(Collectors.toList());
-
-        return new TravelTemplateResponse(
-            travelTemplate.getTravelId(),
-            travelTemplate.getTraveler(),
-            travelTemplate.getCountry(),
-            travelTemplate.getCity(),
-            travelTemplate.getWeatherInfo(),
-            travelTemplate.getCultureInfo(),
-            travelTemplate.getFoodInfo(),
-            travelTemplate.getThumbnail(),
-            travelTemplate.getLink(),
-            travelTemplate.getBudgetPerPerson(),
-            travelTemplate.getSummary(),
-            travelTemplate.getTitle(),
-            travelTemplate.getNights(),
-            travelTemplate.getDays(),
-            places
-        );
-    }
 
     @Transactional(readOnly = true)
     public TravelTemplateHighlightsResponse readTravelTemplateHighlights(final Long id) {

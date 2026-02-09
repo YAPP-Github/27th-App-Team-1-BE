@@ -13,7 +13,6 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateIti
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
-import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateResponse;
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.facade.TravelTemplateFacade;
 import com.yapp.ndgl.common.response.SliceResponse;
@@ -28,16 +27,6 @@ import lombok.RequiredArgsConstructor;
 public class TravelTemplateController implements TravelTemplateApi {
 
     private final TravelTemplateFacade travelTemplateFacade;
-
-    @Override
-    @GetMapping("/{id}")
-    @Deprecated
-    public ResponseEntity<SuccessResponse<TravelTemplateResponse>> getTravelTemplate(
-        @PathVariable Long id
-    ) {
-        TravelTemplateResponse response = travelTemplateFacade.getTravelTemplate(id);
-        return ResponseEntity.ok(SuccessResponse.success(response));
-    }
 
     @GetMapping("/{id}/content-card")
     public ResponseEntity<SuccessResponse<TravelTemplateHighlightsResponse>> readTravelTemplateHighlights(
