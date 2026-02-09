@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
@@ -118,5 +119,51 @@ public interface UserTravelApi {
     ResponseEntity<?> createUserTravel(
         @CurrentUuid String uuid,
         @Valid @RequestBody CreateUserTravelRequest request
+    );
+
+    @Operation(
+        summary = "다가오는 여행 조회",
+        description = "사용자의 가장 가까운 예정 여행과 첫 일정 정보를 조회합니다. 없을 경우 null 반환.",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = UpcomingUserTravelResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "userTravelId": 1,
+                          "title": "여행 제목",
+                          "country": "인도",
+                          "city": "뭄바이",
+                          "startDate": "2023-08-01",
+                          "endDate": "2023-08-10",
+                          "nights": 6,
+                          "days": 7,
+                          "upcomingUserTravelPlace": {
+                            "id": 1,
+                            "estimatedDuration": 60,
+                            "place": {
+                              "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
+                              "thumbnail": "https://lh3.googleusercontent.com/place-photos/AEkURDym40I4XyqXUosRz8bTu9aPvDUklxkfM79KCa03C0SQTnDaTu_RXXiWQjCRZ3-yK4dTbzoySqMrucj1ubPQNUZ5yKseTRfmaME5C--5jLYB0rU-MLXqUabNEk3myTWywzIuEHcKz_I-H4Xtdg=s4800-w4800-h3600",
+                              "latitude": 35.6762,
+                              "longitude": 139.6503,
+                              "name": "도쿄타워",
+                              "regularOpeningHours": "09:00~23:00",
+                              "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978"
+                            }
+                          }
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<UpcomingUserTravelResponse> getUpcomingUserTravel(
+        @CurrentUuid String uuid
     );
 }
