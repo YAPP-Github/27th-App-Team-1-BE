@@ -138,7 +138,7 @@ public interface UserTravelApi {
                         {
                           "userTravelId": 1,
                           "title": "여행 제목",
-                          "country": "인도",
+                          "country": "IN",
                           "city": "뭄바이",
                           "startDate": "2023-08-01",
                           "endDate": "2023-08-10",

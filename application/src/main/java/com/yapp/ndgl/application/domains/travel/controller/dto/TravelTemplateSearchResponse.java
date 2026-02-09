@@ -18,7 +18,7 @@ public record TravelTemplateSearchResponse(
     TravelProgramType programType,
     @Schema(description = "여행자 표시명", example = "빠니보틀 Pani Bottle", nullable = true)
     String traveler,
-    @Schema(description = "국가", example = "일본", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "국가", example = "JP", requiredMode = Schema.RequiredMode.REQUIRED)
     String country,
     @Schema(description = "도시", example = "도쿄", requiredMode = Schema.RequiredMode.REQUIRED)
     String city,

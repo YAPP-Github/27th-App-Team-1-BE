@@ -9,7 +9,7 @@ public record UpcomingUserTravelResponse(
     long userTravelId,
     @Schema(description = "여행 제목", example = "여행 제목", requiredMode = Schema.RequiredMode.REQUIRED)
     String title,
-    @Schema(description = "여행 국가", example = "인도", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "여행 국가", example = "IN", requiredMode = Schema.RequiredMode.REQUIRED)
     String country,
     @Schema(description = "여행 도시", example = "뭄바이", requiredMode = Schema.RequiredMode.REQUIRED)
     String city,

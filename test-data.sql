@@ -35,7 +35,7 @@ INSERT INTO travel_templates (
              'Pani_Hanoi_2212',
              (SELECT id FROM travel_program WHERE name = '빠니보틀'),
              '빠니보틀 Pani Bottle',
-             '베트남',
+             'VN',
              '하노이',
              'SOUTHEAST_ASIA',
              98000, -- "98,000원" -> 98000 가정 (per person 여부 확인 필요)

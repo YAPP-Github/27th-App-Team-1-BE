@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record TravelTemplateHighlightsResponse(
 	@Schema(description = "여행 템플릿 ID", example = "TRAVEL_001", requiredMode = Schema.RequiredMode.REQUIRED)
 	String travelId,
-	@Schema(description = "국가", example = "일본", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "국가", example = "JP", requiredMode = Schema.RequiredMode.REQUIRED)
 	String country,
 	@Schema(description = "도시", example = "도쿄", requiredMode = Schema.RequiredMode.REQUIRED)
 	String city,

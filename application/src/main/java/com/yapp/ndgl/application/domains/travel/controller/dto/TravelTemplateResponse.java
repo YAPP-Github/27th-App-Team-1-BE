@@ -11,7 +11,7 @@ public record TravelTemplateResponse(
     String travelId,
     @Schema(description = "유튜버 이름", example = "유튜버_이름", requiredMode = Schema.RequiredMode.REQUIRED)
     String traveler,
-    @Schema(description = "국가", example = "일본", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "국가", example = "JP", requiredMode = Schema.RequiredMode.REQUIRED)
     String country,
     @Schema(description = "도시", example = "도쿄", requiredMode = Schema.RequiredMode.REQUIRED)
     String city,
