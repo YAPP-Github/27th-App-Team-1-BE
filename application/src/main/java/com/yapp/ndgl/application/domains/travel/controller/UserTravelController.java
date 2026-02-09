@@ -37,6 +37,9 @@ public class UserTravelController implements UserTravelApi {
         @CurrentUuid String uuid
     ) {
         UpcomingUserTravelResponse response = userTravelFacade.getUpcomingUserTravel(uuid);
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(response);
     }
 }

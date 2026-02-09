@@ -123,7 +123,7 @@ public interface UserTravelApi {
 
     @Operation(
         summary = "다가오는 여행 조회",
-        description = "사용자의 가장 가까운 예정 여행과 첫 일정 정보를 조회합니다. 없을 경우 null 반환.",
+        description = "사용자의 가장 가까운 예정 여행과 첫 일정 정보를 조회합니다.",
         security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
@@ -161,6 +161,10 @@ public interface UserTravelApi {
                         """
                 )
             )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "다가오는 여행 없음"
         )
     })
     ResponseEntity<UpcomingUserTravelResponse> getUpcomingUserTravel(

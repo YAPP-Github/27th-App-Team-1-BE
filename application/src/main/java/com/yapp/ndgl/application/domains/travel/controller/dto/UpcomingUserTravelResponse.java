@@ -22,7 +22,7 @@ public record UpcomingUserTravelResponse(
     @Schema(description = "여행 총 일 수", example = "7", requiredMode = Schema.RequiredMode.REQUIRED)
     int days,
 
-    @Schema(description = "다가오는 여행 프로그램 정보", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "다가오는 여행 프로그램 정보", nullable = true)
     UserTravelPlace upcomingUserTravelPlace
 ) {
 
