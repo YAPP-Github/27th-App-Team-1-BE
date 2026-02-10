@@ -46,7 +46,7 @@ public interface TravelTemplateApi {
                             "message": "요청에 성공하였습니다.",
                             "data": {
                                 "travelId": "TRAVEL_001",
-                                "country": "태국",
+                                "country": "TH",
                                 "city": "방콕",
                                 "budgetPerPerson": 1200000,
                                 "nights": 3,
@@ -218,7 +218,7 @@ public interface TravelTemplateApi {
                                 "programName": "빠니보틀",
                                 "programType": "YOUTUBE",
                                 "traveler": "빠니보틀 Pani Bottle",
-                                "country": "일본",
+                                "country": "JP",
                                 "city": "도쿄",
                                 "nights": 3,
                                 "days": 4
@@ -267,7 +267,7 @@ public interface TravelTemplateApi {
                                 "programName": "빠니보틀",
                                 "programType": "YOUTUBE",
                                 "traveler": "빠니보틀 Pani Bottle",
-                                "country": "일본",
+                                "country": "JP",
                                 "city": "도쿄",
                                 "nights": 3,
                                 "days": 4
@@ -314,7 +314,7 @@ public interface TravelTemplateApi {
                                 "programName": "빠니보틀",
                                 "programType": "YOUTUBE",
                                 "traveler": "빠니보틀 Pani Bottle",
-                                "country": "일본",
+                                "country": "JP",
                                 "city": "도쿄",
                                 "nights": 3,
                                 "days": 4
