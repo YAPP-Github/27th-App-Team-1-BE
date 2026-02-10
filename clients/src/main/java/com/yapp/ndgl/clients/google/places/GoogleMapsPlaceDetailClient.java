@@ -45,7 +45,8 @@ public class GoogleMapsPlaceDetailClient {
 		"regularOpeningHours",
 		"userRatingCount",
 		"primaryType",
-		"types"
+		"types",
+		"priceRange"
 	);
 
 	private final RestClient googleMapsPlaceRestClient;
