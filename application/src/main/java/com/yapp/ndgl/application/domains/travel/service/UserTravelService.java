@@ -70,9 +70,11 @@ public class UserTravelService {
 			return null;
 		}
 
-		UserTravelPlace upcomingPlace = userTravelDomainService.findFirstPlaceByUserTravelId(upcomingTravel.getId()).orElse(null);
+		// TODO 현재 시간 기준으로 조회
+		UserTravelPlace upcomingPlace =
+			userTravelDomainService.findFirstPlaceByUserTravelId(upcomingTravel.getId()).orElse(null);
 
-		Place place = upcomingPlace == null ? null : placeDomainService.findByIds(List.of(upcomingPlace.getPlaceId())).stream().findFirst().orElse(null);
+		Place place = upcomingPlace == null ? null : placeDomainService.findById(upcomingPlace.getPlaceId());
 
 		return UpcomingUserTravelResponse.of(upcomingTravel, upcomingPlace, place, objectMapper);
 	}
