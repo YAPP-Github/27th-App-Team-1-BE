@@ -64,7 +64,8 @@ public interface PlaceApi {
 						                "일요일: AM 11:00 ~ PM 10:00"
 						            ],
 						            "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-						            "websiteUri": "https://www.gyukatsu-motomura.com/shop/shinjukuhonten"
+						            "websiteUri": "https://www.gyukatsu-motomura.com/shop/shinjukuhonten",
+						            "category": "RESTAURANT"
 						        }
 						    }
 						}
@@ -152,7 +153,8 @@ public interface PlaceApi {
 						                "일요일: AM 11:00 ~ PM 10:00"
 						            ],
 						            "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-						            "websiteUri": "https://www.gyukatsu-motomura.com/shop/shinjukuhonten"
+						            "websiteUri": "https://www.gyukatsu-motomura.com/shop/shinjukuhonten",
+						            "category": "RESTAURANT"
 						        }
 						    }
 						}
