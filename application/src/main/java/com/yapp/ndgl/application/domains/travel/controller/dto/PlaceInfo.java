@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.domain.place.Place;
+import com.yapp.ndgl.domain.place.PlaceCategory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -23,7 +24,10 @@ public record PlaceInfo(
     @Schema(description = "오늘의 영업시간 정보 (JSON 파싱 실패 시 null)", example = "09:00~23:00", nullable = true)
     String regularOpeningHours,
     @Schema(description = "Google Maps URI", example = "https://maps.google.com/?cid=14776686710302251978", requiredMode = Schema.RequiredMode.REQUIRED)
-    String googleMapsUri
+    String googleMapsUri,
+    @Schema(description = "장소 카테고리", example = "TRANSPORT", requiredMode = Schema.RequiredMode.REQUIRED,
+        allowableValues = {"AIRPORT", "TRANSPORT", "ATTRACTION", "RESTAURANT", "CAFE", "ACCOMMODATION"})
+    PlaceCategory category
 ) {
 
     public static PlaceInfo from(final Place place, final ObjectMapper objectMapper) {
@@ -40,7 +44,8 @@ public record PlaceInfo(
             place.getLongitude(),
             place.getName(),
             todayOpeningHours,
-            place.getGoogleMapsUri()
+            place.getGoogleMapsUri(),
+            place.getCategory()
         );
     }
 
