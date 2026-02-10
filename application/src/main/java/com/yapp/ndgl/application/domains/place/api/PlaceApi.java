@@ -69,11 +69,13 @@ public interface PlaceApi {
 						            "priceRange": {
 						                "startPrice": {
 						                    "currencyCode": "JPY",
-						                    "units": "1000"
+						                    "units": "1000",
+						                    "symbol": "¥"
 						                },
 						                "endPrice": {
 						                    "currencyCode": "JPY",
-						                    "units": "2000"
+						                    "units": "2000",
+						                    "symbol": "¥"
 						                }
 						            }
 						        }
@@ -168,11 +170,13 @@ public interface PlaceApi {
 						            "priceRange": {
 						                "startPrice": {
 						                    "currencyCode": "JPY",
-						                    "units": "1000"
+						                    "units": "1000",
+						                    "symbol": "¥"
 						                },
 						                "endPrice": {
 						                    "currencyCode": "JPY",
-						                    "units": "2000"
+						                    "units": "2000",
+						                    "symbol": "¥"
 						                }
 						            }
 						        }
