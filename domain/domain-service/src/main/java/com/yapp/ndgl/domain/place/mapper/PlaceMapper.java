@@ -22,6 +22,9 @@ public class PlaceMapper {
 			.thumbnail(place.getThumbnail())
 			.regularOpeningHours(place.getRegularOpeningHours())
 			.photosJson(place.getPhotosJson())
+			.priceCurrencyCode(place.getPriceCurrencyCode())
+			.priceStartUnits(place.getPriceStartUnits())
+			.priceEndUnits(place.getPriceEndUnits())
 			.category(place.getCategory() != null ? place.getCategory().name() : PlaceCategory.ATTRACTION.name())
 			.build();
 	}
@@ -47,6 +50,9 @@ public class PlaceMapper {
 			.thumbnail(entity.getThumbnail())
 			.regularOpeningHours(entity.getRegularOpeningHours())
 			.photosJson(entity.getPhotosJson())
+			.priceCurrencyCode(entity.getPriceCurrencyCode())
+			.priceStartUnits(entity.getPriceStartUnits())
+			.priceEndUnits(entity.getPriceEndUnits())
 			.category(category)
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())

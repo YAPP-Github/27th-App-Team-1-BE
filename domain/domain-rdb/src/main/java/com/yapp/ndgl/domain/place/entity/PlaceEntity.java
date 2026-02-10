@@ -62,6 +62,15 @@ public class PlaceEntity extends BaseEntity {
 	@Column(columnDefinition = "JSON")
 	private String photosJson;
 
+	@Column(length = 10)
+	private String priceCurrencyCode;
+
+	@Column(length = 20)
+	private String priceStartUnits;
+
+	@Column(length = 20)
+	private String priceEndUnits;
+
 	@Column(length = 50)
 	private String category;
 
@@ -81,6 +90,9 @@ public class PlaceEntity extends BaseEntity {
 		final String thumbnail,
 		final String regularOpeningHours,
 		final String photosJson,
+		final String priceCurrencyCode,
+		final String priceStartUnits,
+		final String priceEndUnits,
 		final String category
 	) {
 		this.googlePlaceId = googlePlaceId;
@@ -97,6 +109,9 @@ public class PlaceEntity extends BaseEntity {
 		this.thumbnail = thumbnail;
 		this.regularOpeningHours = regularOpeningHours;
 		this.photosJson = photosJson;
+		this.priceCurrencyCode = priceCurrencyCode;
+		this.priceStartUnits = priceStartUnits;
+		this.priceEndUnits = priceEndUnits;
 		this.category = category;
 	}
 }
