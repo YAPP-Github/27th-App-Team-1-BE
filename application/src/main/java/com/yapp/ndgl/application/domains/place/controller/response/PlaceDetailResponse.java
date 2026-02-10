@@ -1,5 +1,6 @@
 package com.yapp.ndgl.application.domains.place.controller.response;
 
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -112,7 +113,7 @@ public record PlaceDetailResponse(
 			}
 			try {
 				Locale locale = new Locale("", currencyCode.substring(0, 2));
-				return java.util.Currency.getInstance(currencyCode).getSymbol(locale);
+				return Currency.getInstance(currencyCode).getSymbol(locale);
 			} catch (Exception e) {
 				return currencyCode;
 			}
