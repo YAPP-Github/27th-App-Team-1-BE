@@ -62,6 +62,9 @@ public class PlaceEntity extends BaseEntity {
 	@Column(columnDefinition = "JSON")
 	private String photosJson;
 
+	@Column(length = 50)
+	private String category;
+
 	@Builder
 	public PlaceEntity(
 		final String googlePlaceId,
@@ -77,7 +80,8 @@ public class PlaceEntity extends BaseEntity {
 		final String name,
 		final String thumbnail,
 		final String regularOpeningHours,
-		final String photosJson
+		final String photosJson,
+		final String category
 	) {
 		this.googlePlaceId = googlePlaceId;
 		this.formattedAddress = formattedAddress;
@@ -93,5 +97,6 @@ public class PlaceEntity extends BaseEntity {
 		this.thumbnail = thumbnail;
 		this.regularOpeningHours = regularOpeningHours;
 		this.photosJson = photosJson;
+		this.category = category;
 	}
 }

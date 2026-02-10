@@ -1,6 +1,7 @@
 package com.yapp.ndgl.domain.place.mapper;
 
 import com.yapp.ndgl.domain.place.Place;
+import com.yapp.ndgl.domain.place.PlaceCategory;
 import com.yapp.ndgl.domain.place.entity.PlaceEntity;
 
 public class PlaceMapper {
@@ -21,10 +22,16 @@ public class PlaceMapper {
 			.thumbnail(place.getThumbnail())
 			.regularOpeningHours(place.getRegularOpeningHours())
 			.photosJson(place.getPhotosJson())
+			.category(place.getCategory() != null ? place.getCategory().name() : null)
 			.build();
 	}
 
 	public static Place toDomain(final PlaceEntity entity) {
+		PlaceCategory category = null;
+		if (entity.getCategory() != null) {
+			category = PlaceCategory.valueOf(entity.getCategory());
+		}
+
 		return Place.builder()
 			.id(entity.getId())
 			.googlePlaceId(entity.getGooglePlaceId())
@@ -41,6 +48,7 @@ public class PlaceMapper {
 			.thumbnail(entity.getThumbnail())
 			.regularOpeningHours(entity.getRegularOpeningHours())
 			.photosJson(entity.getPhotosJson())
+			.category(category)
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
 			.build();
