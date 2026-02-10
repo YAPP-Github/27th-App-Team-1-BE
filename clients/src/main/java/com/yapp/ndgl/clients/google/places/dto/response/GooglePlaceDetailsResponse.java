@@ -19,7 +19,9 @@ public record GooglePlaceDetailsResponse(
 	RegularOpeningHours regularOpeningHours,
 	Integer userRatingCount,
 	DisplayName name,
-	List<PhotoMeta> photos
+	List<PhotoMeta> photos,
+	String primaryType,
+	List<String> types
 ) {
 
 	public GooglePlaceDetailsResponse(
@@ -34,7 +36,9 @@ public record GooglePlaceDetailsResponse(
 		@JsonProperty("regularOpeningHours") final RegularOpeningHours regularOpeningHours,
 		@JsonProperty("userRatingCount") final Integer userRatingCount,
 		@JsonProperty("displayName") final DisplayName name,
-		@JsonProperty("photos") final List<PhotoMeta> photos
+		@JsonProperty("photos") final List<PhotoMeta> photos,
+		@JsonProperty("primaryType") final String primaryType,
+		@JsonProperty("types") final List<String> types
 	) {
 		this.id = id;
 		this.nationalPhoneNumber = nationalPhoneNumber;
@@ -48,6 +52,8 @@ public record GooglePlaceDetailsResponse(
 		this.userRatingCount = userRatingCount;
 		this.name = name;
 		this.photos = photos;
+		this.primaryType = primaryType;
+		this.types = types;
 	}
 
 	public record Location(Double latitude, Double longitude) {
