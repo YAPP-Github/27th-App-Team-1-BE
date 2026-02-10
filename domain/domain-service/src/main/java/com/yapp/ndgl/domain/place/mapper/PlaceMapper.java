@@ -22,15 +22,14 @@ public class PlaceMapper {
 			.thumbnail(place.getThumbnail())
 			.regularOpeningHours(place.getRegularOpeningHours())
 			.photosJson(place.getPhotosJson())
-			.category(place.getCategory() != null ? place.getCategory().name() : null)
+			.category(place.getCategory() != null ? place.getCategory().name() : PlaceCategory.ATTRACTION.name())
 			.build();
 	}
 
 	public static Place toDomain(final PlaceEntity entity) {
-		PlaceCategory category = null;
-		if (entity.getCategory() != null) {
-			category = PlaceCategory.valueOf(entity.getCategory());
-		}
+		PlaceCategory category = entity.getCategory() != null
+			? PlaceCategory.valueOf(entity.getCategory())
+			: PlaceCategory.ATTRACTION;
 
 		return Place.builder()
 			.id(entity.getId())
