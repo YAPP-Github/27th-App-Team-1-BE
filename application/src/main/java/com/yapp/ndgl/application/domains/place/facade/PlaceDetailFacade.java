@@ -33,7 +33,7 @@ public class PlaceDetailFacade {
 		log.info("Google Maps에서 장소 검색 및 저장 시작. googlePlaceId={}", googlePlaceId);
 
 		// 1. Google Maps API 호출 후 장소 정보 저장
-		GooglePlaceDetailsResponse googlePlaceDetailsResponse = placeDetailService.searchAndSavePlaceFromGoogleMaps(
+		GooglePlaceDetailsResponse googlePlaceDetailsResponse = placeDetailService.searchPlaceFromGoogleMaps(
 			googlePlaceId);
 
 		PlaceDetailResponse placeDetailResponse = placeDetailService.savePlace(googlePlaceDetailsResponse);

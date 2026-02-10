@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.domain.place.Place;
+import com.yapp.ndgl.domain.place.PlaceCategory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -35,7 +36,10 @@ public record PlaceDetailResponse(
 	@Schema(description = "Google Maps URI", example = "https://maps.google.com/?cid=14776686710302251978", nullable = true)
 	String googleMapsUri,
 	@Schema(description = "웹사이트 URI", example = "https://www.gyukatsu-motomura.com/shop/shinjukuhonten", nullable = true)
-	String websiteUri
+	String websiteUri,
+	@Schema(description = "장소 카테고리", example = "TRANSPORT", requiredMode = Schema.RequiredMode.REQUIRED,
+		allowableValues = {"AIRPORT", "TRANSPORT", "ATTRACTION", "RESTAURANT", "CAFE", "ACCOMMODATION"})
+	PlaceCategory category
 ) {
 
 	public record Location(
@@ -84,6 +88,8 @@ public record PlaceDetailResponse(
 				);
 			}
 
+			PlaceCategory category = place.getCategory() != null ? place.getCategory() : PlaceCategory.ATTRACTION;
+
 			return new PlaceDetailResponse(
 				place.getGooglePlaceId(),
 				place.getName(),
@@ -96,7 +102,8 @@ public record PlaceDetailResponse(
 				place.getRating(),
 				regularOpeningHours,
 				place.getGoogleMapsUri(),
-				place.getWebsiteUri()
+				place.getWebsiteUri(),
+				category
 			);
 		} catch (Exception e) {
 			throw new RuntimeException("PlaceDetailResponse 변환 실패: googlePlaceId=" + place.getGooglePlaceId(), e);
