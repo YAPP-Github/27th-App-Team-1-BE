@@ -43,6 +43,15 @@ public class PlaceDomainService {
 			.toList();
 	}
 
+	public Place findById(final Long id) {
+		if (id == null) {
+			return null;
+		}
+		return placeRepository.findById(id)
+			.map(PlaceMapper::toDomain)
+			.orElse(null);
+	}
+
 	/**
 	 * googlePlaceId가 이미 존재하면 예외 발생
 	 */

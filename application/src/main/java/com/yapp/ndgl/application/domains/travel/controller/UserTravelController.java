@@ -1,11 +1,9 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
@@ -31,5 +29,17 @@ public class UserTravelController implements UserTravelApi {
     ) {
         Long userTravelId = userTravelFacade.createUserTravel(uuid, request);
         return ResponseEntity.ok(SuccessResponse.success("userTravelId", userTravelId));
+    }
+
+    @Override
+    @GetMapping("/upcoming")
+    public ResponseEntity<UpcomingUserTravelResponse> getUpcomingUserTravel(
+        @CurrentUuid String uuid
+    ) {
+        UpcomingUserTravelResponse response = userTravelFacade.getUpcomingUserTravel(uuid);
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(response);
     }
 }

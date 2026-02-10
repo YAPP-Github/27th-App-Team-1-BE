@@ -88,4 +88,18 @@ public class UserTravelDomainService {
 		return userTravelRepository.findTopByUserIdAndStartDateGreaterThanEqualOrderByStartDateAsc(userId, today)
 			.map(UserTravelMapper::toDomain);
 	}
+
+	@Transactional(readOnly = true)
+	public Optional<UserTravelPlace> findFirstPlaceByUserTravelId(final Long userTravelId) {
+		return userTravelPlaceRepository.findTopByUserTravelIdOrderByDayAscSequenceAsc(userTravelId)
+			.map(entity -> UserTravelPlace.builder()
+				.id(entity.getId())
+				.userTravelId(entity.getUserTravelId())
+				.placeId(entity.getPlaceId())
+				.day(entity.getDay())
+				.sequence(entity.getSequence())
+				.travelerTip(entity.getTravelerTip())
+				.estimatedDuration(entity.getEstimatedDuration())
+				.build());
+	}
 }
