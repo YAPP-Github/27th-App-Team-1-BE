@@ -1,12 +1,10 @@
 package com.yapp.ndgl.application.domains.place.controller.response;
 
-import java.util.Currency;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.application.common.utils.CurrencySymbolResolver;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.PlaceCategory;
 
@@ -98,25 +96,8 @@ public record PlaceDetailResponse(
 		String symbol
 	) {
 
-		private static final Map<String, String> EXCEPTIONS = Map.of("EUR", "€");
-
 		public static Money of(final String currencyCode, final String units) {
-			return new Money(currencyCode, units, resolveSymbol(currencyCode));
-		}
-
-		private static String resolveSymbol(final String currencyCode) {
-			if (currencyCode == null) {
-				return null;
-			}
-			if (EXCEPTIONS.containsKey(currencyCode)) {
-				return EXCEPTIONS.get(currencyCode);
-			}
-			try {
-				Locale locale = new Locale("", currencyCode.substring(0, 2));
-				return Currency.getInstance(currencyCode).getSymbol(locale);
-			} catch (Exception e) {
-				return currencyCode;
-			}
+			return new Money(currencyCode, units, CurrencySymbolResolver.resolve(currencyCode));
 		}
 	}
 
