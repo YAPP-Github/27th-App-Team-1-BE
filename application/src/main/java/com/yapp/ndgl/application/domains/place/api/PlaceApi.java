@@ -65,7 +65,17 @@ public interface PlaceApi {
 						            ],
 						            "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
 						            "websiteUri": "https://www.gyukatsu-motomura.com/shop/shinjukuhonten",
-						            "category": "RESTAURANT"
+						            "category": "RESTAURANT",
+						            "priceRange": {
+						                "startPrice": {
+						                    "currencyCode": "JPY",
+						                    "units": "1000"
+						                },
+						                "endPrice": {
+						                    "currencyCode": "JPY",
+						                    "units": "2000"
+						                }
+						            }
 						        }
 						    }
 						}
@@ -154,7 +164,17 @@ public interface PlaceApi {
 						            ],
 						            "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
 						            "websiteUri": "https://www.gyukatsu-motomura.com/shop/shinjukuhonten",
-						            "category": "RESTAURANT"
+						            "category": "RESTAURANT",
+						            "priceRange": {
+						                "startPrice": {
+						                    "currencyCode": "JPY",
+						                    "units": "1000"
+						                },
+						                "endPrice": {
+						                    "currencyCode": "JPY",
+						                    "units": "2000"
+						                }
+						            }
 						        }
 						    }
 						}

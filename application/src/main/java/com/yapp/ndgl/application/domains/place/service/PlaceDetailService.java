@@ -94,6 +94,19 @@ public class PlaceDetailService {
 			Double latitude = response.location() != null ? response.location().latitude() : null;
 			Double longitude = response.location() != null ? response.location().longitude() : null;
 
+			String priceCurrencyCode = null;
+			String priceStartUnits = null;
+			String priceEndUnits = null;
+			if (response.priceRange() != null) {
+				if (response.priceRange().startPrice() != null) {
+					priceCurrencyCode = response.priceRange().startPrice().currencyCode();
+					priceStartUnits = response.priceRange().startPrice().units();
+				}
+				if (response.priceRange().endPrice() != null) {
+					priceEndUnits = response.priceRange().endPrice().units();
+				}
+			}
+
 			PlaceCategory category = GooglePlaceTypeMapper.toCategory(response.primaryType(), response.types());
 
 			return Place.create(
@@ -111,6 +124,9 @@ public class PlaceDetailService {
 				thumbnail,
 				regularOpeningHours,
 				photosJson,
+				priceCurrencyCode,
+				priceStartUnits,
+				priceEndUnits,
 				category
 			);
 		} catch (Exception e) {

@@ -1,6 +1,8 @@
 package com.yapp.ndgl.application.domains.place.controller.response;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +41,9 @@ public record PlaceDetailResponse(
 	String websiteUri,
 	@Schema(description = "장소 카테고리", example = "TRANSPORT", requiredMode = Schema.RequiredMode.REQUIRED,
 		allowableValues = {"AIRPORT", "TRANSPORT", "ATTRACTION", "RESTAURANT", "CAFE", "ACCOMMODATION"})
-	PlaceCategory category
+	PlaceCategory category,
+	@Schema(description = "가격 범위", nullable = true)
+	PriceRange priceRange
 ) {
 
 	public record Location(
@@ -76,6 +80,45 @@ public record PlaceDetailResponse(
 		}
 	}
 
+	public record PriceRange(
+		@Schema(description = "최소 가격", nullable = true)
+		Money startPrice,
+		@Schema(description = "최대 가격", nullable = true)
+		Money endPrice
+	) {
+	}
+
+	public record Money(
+		@Schema(description = "통화 코드", example = "JPY")
+		String currencyCode,
+		@Schema(description = "금액", example = "1000")
+		String units,
+		@Schema(description = "통화 기호", example = "¥")
+		String symbol
+	) {
+
+		private static final Map<String, String> EXCEPTIONS = Map.of("EUR", "€");
+
+		public static Money of(final String currencyCode, final String units) {
+			return new Money(currencyCode, units, resolveSymbol(currencyCode));
+		}
+
+		private static String resolveSymbol(final String currencyCode) {
+			if (currencyCode == null) {
+				return null;
+			}
+			if (EXCEPTIONS.containsKey(currencyCode)) {
+				return EXCEPTIONS.get(currencyCode);
+			}
+			try {
+				Locale locale = new Locale("", currencyCode.substring(0, 2));
+				return java.util.Currency.getInstance(currencyCode).getSymbol(locale);
+			} catch (Exception e) {
+				return currencyCode;
+			}
+		}
+	}
+
 	public static PlaceDetailResponse toResponse(final Place place, final ObjectMapper objectMapper) {
 		try {
 			Location location = Location.of(place.getLatitude(), place.getLongitude());
@@ -90,6 +133,14 @@ public record PlaceDetailResponse(
 
 			PlaceCategory category = place.getCategory() != null ? place.getCategory() : PlaceCategory.ATTRACTION;
 
+			PriceRange priceRange = null;
+			if (place.getPriceCurrencyCode() != null) {
+				priceRange = new PriceRange(
+					Money.of(place.getPriceCurrencyCode(), place.getPriceStartUnits()),
+					Money.of(place.getPriceCurrencyCode(), place.getPriceEndUnits())
+				);
+			}
+
 			return new PlaceDetailResponse(
 				place.getGooglePlaceId(),
 				place.getName(),
@@ -103,7 +154,8 @@ public record PlaceDetailResponse(
 				regularOpeningHours,
 				place.getGoogleMapsUri(),
 				place.getWebsiteUri(),
-				category
+				category,
+				priceRange
 			);
 		} catch (Exception e) {
 			throw new RuntimeException("PlaceDetailResponse 변환 실패: googlePlaceId=" + place.getGooglePlaceId(), e);

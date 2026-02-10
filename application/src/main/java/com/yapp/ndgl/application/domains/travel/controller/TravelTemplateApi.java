@@ -126,7 +126,8 @@ public interface TravelTemplateApi {
 											"name": "Tokyo Tower",
 											"regularOpeningHours": "09:00~23:00",
 											"googleMapsUri": "https://maps.google.com/?cid=10281119591005088802",
-											"category": "ATTRACTION"
+											"category": "ATTRACTION",
+											"priceRange": null
 										}
 									},
 									{
@@ -159,7 +160,8 @@ public interface TravelTemplateApi {
 											"name": "Meiji Jingu",
 											"regularOpeningHours": "06:00~18:00",
 											"googleMapsUri": "https://maps.google.com/?cid=10361244767556222835",
-											"category": "ATTRACTION"
+											"category": "ATTRACTION",
+											"priceRange": null
 										}
 									}
 								]
