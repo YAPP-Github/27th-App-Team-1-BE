@@ -80,19 +80,19 @@ public record PlaceDetailResponse(
 	}
 
 	public record PriceRange(
-		@Schema(description = "최소 가격", nullable = true)
+		@Schema(description = "최소 가격", requiredMode = Schema.RequiredMode.REQUIRED)
 		Money startPrice,
-		@Schema(description = "최대 가격", nullable = true)
+		@Schema(description = "최대 가격", requiredMode = Schema.RequiredMode.REQUIRED)
 		Money endPrice
 	) {
 	}
 
 	public record Money(
-		@Schema(description = "통화 코드", example = "JPY")
+		@Schema(description = "통화 코드", example = "JPY", requiredMode = Schema.RequiredMode.REQUIRED)
 		String currencyCode,
-		@Schema(description = "금액", example = "1000")
+		@Schema(description = "금액", example = "1000", requiredMode = Schema.RequiredMode.REQUIRED)
 		String units,
-		@Schema(description = "통화 기호", example = "¥")
+		@Schema(description = "통화 기호", example = "¥", requiredMode = Schema.RequiredMode.REQUIRED)
 		String symbol
 	) {
 
@@ -109,7 +109,8 @@ public record PlaceDetailResponse(
 			if (place.getRegularOpeningHours() != null) {
 				regularOpeningHours = objectMapper.readValue(
 					place.getRegularOpeningHours(),
-					new TypeReference<>() {}
+					new TypeReference<>() {
+					}
 				);
 			}
 
@@ -134,7 +135,7 @@ public record PlaceDetailResponse(
 				regularOpeningHours,
 				place.getGoogleMapsUri(),
 				place.getWebsiteUri(),
-			place.getCategory(),
+				place.getCategory(),
 				priceRange
 			);
 		} catch (Exception e) {
