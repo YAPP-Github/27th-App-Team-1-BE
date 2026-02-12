@@ -1,7 +1,9 @@
-package com.yapp.ndgl.domain.place;
+package com.yapp.ndgl.common.type;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum PlaceCategory {
 	AIRPORT("공항"),
@@ -12,8 +14,4 @@ public enum PlaceCategory {
 	ACCOMMODATION("숙소");
 
 	private final String label;
-
-	public String getLabel() {
-		return label;
-	}
 }

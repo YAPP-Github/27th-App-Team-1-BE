@@ -2,6 +2,8 @@ package com.yapp.ndgl.domain.place;
 
 import java.time.LocalDateTime;
 
+import com.yapp.ndgl.common.type.PlaceCategory;
+
 import lombok.Builder;
 import lombok.Getter;
 

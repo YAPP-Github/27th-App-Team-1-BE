@@ -1,9 +1,12 @@
 package com.yapp.ndgl.domain.place.entity;
 
+import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -71,8 +74,9 @@ public class PlaceEntity extends BaseEntity {
 	@Column(length = 20)
 	private String priceEndUnits;
 
+	@Enumerated(EnumType.STRING)
 	@Column(length = 50)
-	private String category;
+	private PlaceCategory category;
 
 	@Builder
 	public PlaceEntity(
@@ -93,7 +97,7 @@ public class PlaceEntity extends BaseEntity {
 		final String priceCurrencyCode,
 		final String priceStartUnits,
 		final String priceEndUnits,
-		final String category
+		final PlaceCategory category
 	) {
 		this.googlePlaceId = googlePlaceId;
 		this.formattedAddress = formattedAddress;

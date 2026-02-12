@@ -1,7 +1,7 @@
 package com.yapp.ndgl.domain.place.mapper;
 
+import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.place.Place;
-import com.yapp.ndgl.domain.place.PlaceCategory;
 import com.yapp.ndgl.domain.place.entity.PlaceEntity;
 
 public class PlaceMapper {
@@ -25,15 +25,11 @@ public class PlaceMapper {
 			.priceCurrencyCode(place.getPriceCurrencyCode())
 			.priceStartUnits(place.getPriceStartUnits())
 			.priceEndUnits(place.getPriceEndUnits())
-			.category(place.getCategory() != null ? place.getCategory().name() : PlaceCategory.ATTRACTION.name())
+			.category(place.getCategory() != null ? place.getCategory() : PlaceCategory.ATTRACTION)
 			.build();
 	}
 
 	public static Place toDomain(final PlaceEntity entity) {
-		PlaceCategory category = entity.getCategory() != null
-			? PlaceCategory.valueOf(entity.getCategory())
-			: PlaceCategory.ATTRACTION;
-
 		return Place.builder()
 			.id(entity.getId())
 			.googlePlaceId(entity.getGooglePlaceId())
@@ -53,7 +49,7 @@ public class PlaceMapper {
 			.priceCurrencyCode(entity.getPriceCurrencyCode())
 			.priceStartUnits(entity.getPriceStartUnits())
 			.priceEndUnits(entity.getPriceEndUnits())
-			.category(category)
+			.category(entity.getCategory() != null ? entity.getCategory() : PlaceCategory.ATTRACTION)
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
 			.build();

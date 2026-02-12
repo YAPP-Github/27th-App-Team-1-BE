@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.common.utils.CurrencySymbolResolver;
 import com.yapp.ndgl.domain.place.Place;
-import com.yapp.ndgl.domain.place.PlaceCategory;
+import com.yapp.ndgl.common.type.PlaceCategory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -113,8 +113,6 @@ public record PlaceDetailResponse(
 				);
 			}
 
-			PlaceCategory category = place.getCategory() != null ? place.getCategory() : PlaceCategory.ATTRACTION;
-
 			PriceRange priceRange = null;
 			if (place.getPriceCurrencyCode() != null) {
 				priceRange = new PriceRange(
@@ -136,7 +134,7 @@ public record PlaceDetailResponse(
 				regularOpeningHours,
 				place.getGoogleMapsUri(),
 				place.getWebsiteUri(),
-				category,
+			place.getCategory(),
 				priceRange
 			);
 		} catch (Exception e) {

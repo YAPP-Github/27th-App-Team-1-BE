@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.yapp.ndgl.domain.place.PlaceCategory;
+import com.yapp.ndgl.common.type.PlaceCategory;
 
 /**
  * Google Places API의 primaryType/types를 서비스 태그로 매핑하는 유틸리티.

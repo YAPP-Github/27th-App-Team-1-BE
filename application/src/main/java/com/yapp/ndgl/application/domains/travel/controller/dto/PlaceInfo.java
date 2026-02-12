@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.domain.place.Place;
-import com.yapp.ndgl.domain.place.PlaceCategory;
+import com.yapp.ndgl.common.type.PlaceCategory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
