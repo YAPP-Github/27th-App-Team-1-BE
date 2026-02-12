@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.application.common.utils.CurrencySymbolResolver;
 import com.yapp.ndgl.domain.place.Place;
+import com.yapp.ndgl.common.type.PlaceCategory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -35,7 +37,12 @@ public record PlaceDetailResponse(
 	@Schema(description = "Google Maps URI", example = "https://maps.google.com/?cid=14776686710302251978", nullable = true)
 	String googleMapsUri,
 	@Schema(description = "웹사이트 URI", example = "https://www.gyukatsu-motomura.com/shop/shinjukuhonten", nullable = true)
-	String websiteUri
+	String websiteUri,
+	@Schema(description = "장소 카테고리", example = "TRANSPORT", requiredMode = Schema.RequiredMode.REQUIRED,
+		allowableValues = {"AIRPORT", "TRANSPORT", "ATTRACTION", "RESTAURANT", "CAFE", "ACCOMMODATION"})
+	PlaceCategory category,
+	@Schema(description = "가격 범위", nullable = true)
+	PriceRange priceRange
 ) {
 
 	public record Location(
@@ -72,6 +79,28 @@ public record PlaceDetailResponse(
 		}
 	}
 
+	public record PriceRange(
+		@Schema(description = "최소 가격", requiredMode = Schema.RequiredMode.REQUIRED)
+		Money startPrice,
+		@Schema(description = "최대 가격", requiredMode = Schema.RequiredMode.REQUIRED)
+		Money endPrice
+	) {
+	}
+
+	public record Money(
+		@Schema(description = "통화 코드", example = "JPY", requiredMode = Schema.RequiredMode.REQUIRED)
+		String currencyCode,
+		@Schema(description = "금액", example = "1000", requiredMode = Schema.RequiredMode.REQUIRED)
+		String units,
+		@Schema(description = "통화 기호", example = "¥", requiredMode = Schema.RequiredMode.REQUIRED)
+		String symbol
+	) {
+
+		public static Money of(final String currencyCode, final String units) {
+			return new Money(currencyCode, units, CurrencySymbolResolver.resolve(currencyCode));
+		}
+	}
+
 	public static PlaceDetailResponse toResponse(final Place place, final ObjectMapper objectMapper) {
 		try {
 			Location location = Location.of(place.getLatitude(), place.getLongitude());
@@ -80,7 +109,16 @@ public record PlaceDetailResponse(
 			if (place.getRegularOpeningHours() != null) {
 				regularOpeningHours = objectMapper.readValue(
 					place.getRegularOpeningHours(),
-					new TypeReference<>() {}
+					new TypeReference<>() {
+					}
+				);
+			}
+
+			PriceRange priceRange = null;
+			if (place.getPriceCurrencyCode() != null) {
+				priceRange = new PriceRange(
+					Money.of(place.getPriceCurrencyCode(), place.getPriceStartUnits()),
+					Money.of(place.getPriceCurrencyCode(), place.getPriceEndUnits())
 				);
 			}
 
@@ -96,7 +134,9 @@ public record PlaceDetailResponse(
 				place.getRating(),
 				regularOpeningHours,
 				place.getGoogleMapsUri(),
-				place.getWebsiteUri()
+				place.getWebsiteUri(),
+				place.getCategory(),
+				priceRange
 			);
 		} catch (Exception e) {
 			throw new RuntimeException("PlaceDetailResponse 변환 실패: googlePlaceId=" + place.getGooglePlaceId(), e);

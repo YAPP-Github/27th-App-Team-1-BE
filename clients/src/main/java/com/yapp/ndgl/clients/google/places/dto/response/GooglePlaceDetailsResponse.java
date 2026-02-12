@@ -19,7 +19,10 @@ public record GooglePlaceDetailsResponse(
 	RegularOpeningHours regularOpeningHours,
 	Integer userRatingCount,
 	DisplayName name,
-	List<PhotoMeta> photos
+	List<PhotoMeta> photos,
+	String primaryType,
+	List<String> types,
+	PriceRange priceRange
 ) {
 
 	public GooglePlaceDetailsResponse(
@@ -34,7 +37,10 @@ public record GooglePlaceDetailsResponse(
 		@JsonProperty("regularOpeningHours") final RegularOpeningHours regularOpeningHours,
 		@JsonProperty("userRatingCount") final Integer userRatingCount,
 		@JsonProperty("displayName") final DisplayName name,
-		@JsonProperty("photos") final List<PhotoMeta> photos
+		@JsonProperty("photos") final List<PhotoMeta> photos,
+		@JsonProperty("primaryType") final String primaryType,
+		@JsonProperty("types") final List<String> types,
+		@JsonProperty("priceRange") final PriceRange priceRange
 	) {
 		this.id = id;
 		this.nationalPhoneNumber = nationalPhoneNumber;
@@ -48,6 +54,9 @@ public record GooglePlaceDetailsResponse(
 		this.userRatingCount = userRatingCount;
 		this.name = name;
 		this.photos = photos;
+		this.primaryType = primaryType;
+		this.types = types;
+		this.priceRange = priceRange;
 	}
 
 	public record Location(Double latitude, Double longitude) {
@@ -92,6 +101,28 @@ public record GooglePlaceDetailsResponse(
 			this.name = name;
 			this.widthPx = widthPx;
 			this.heightPx = heightPx;
+		}
+	}
+
+	public record PriceRange(Money startPrice, Money endPrice) {
+
+		public PriceRange(
+			@JsonProperty("startPrice") final Money startPrice,
+			@JsonProperty("endPrice") final Money endPrice
+		) {
+			this.startPrice = startPrice;
+			this.endPrice = endPrice;
+		}
+	}
+
+	public record Money(String currencyCode, String units) {
+
+		public Money(
+			@JsonProperty("currencyCode") final String currencyCode,
+			@JsonProperty("units") final String units
+		) {
+			this.currencyCode = currencyCode;
+			this.units = units;
 		}
 	}
 }

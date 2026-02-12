@@ -1,9 +1,12 @@
 package com.yapp.ndgl.domain.place.entity;
 
+import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -62,6 +65,19 @@ public class PlaceEntity extends BaseEntity {
 	@Column(columnDefinition = "JSON")
 	private String photosJson;
 
+	@Column(length = 10)
+	private String priceCurrencyCode;
+
+	@Column(length = 20)
+	private String priceStartUnits;
+
+	@Column(length = 20)
+	private String priceEndUnits;
+
+	@Enumerated(EnumType.STRING)
+	@Column(length = 50)
+	private PlaceCategory category;
+
 	@Builder
 	public PlaceEntity(
 		final String googlePlaceId,
@@ -77,7 +93,11 @@ public class PlaceEntity extends BaseEntity {
 		final String name,
 		final String thumbnail,
 		final String regularOpeningHours,
-		final String photosJson
+		final String photosJson,
+		final String priceCurrencyCode,
+		final String priceStartUnits,
+		final String priceEndUnits,
+		final PlaceCategory category
 	) {
 		this.googlePlaceId = googlePlaceId;
 		this.formattedAddress = formattedAddress;
@@ -93,5 +113,9 @@ public class PlaceEntity extends BaseEntity {
 		this.thumbnail = thumbnail;
 		this.regularOpeningHours = regularOpeningHours;
 		this.photosJson = photosJson;
+		this.priceCurrencyCode = priceCurrencyCode;
+		this.priceStartUnits = priceStartUnits;
+		this.priceEndUnits = priceEndUnits;
+		this.category = category;
 	}
 }

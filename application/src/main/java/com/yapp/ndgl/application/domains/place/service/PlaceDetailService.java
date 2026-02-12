@@ -9,9 +9,11 @@ import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
+import com.yapp.ndgl.application.domains.place.mapper.GooglePlaceTypeMapper;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.domain.place.Place;
+import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,7 +44,7 @@ public class PlaceDetailService {
 	/**
 	 * Google Maps API에서 장소 검색 후 DB에 저장
 	 */
-	public GooglePlaceDetailsResponse searchAndSavePlaceFromGoogleMaps(final String googlePlaceId) {
+	public GooglePlaceDetailsResponse searchPlaceFromGoogleMaps(final String googlePlaceId) {
 		log.info("[SearchAndSavePlace] Google Maps API 호출 시작. googlePlaceId:{}", googlePlaceId);
 
 		// 이미 존재하면 Google API 호출 전에 차단
@@ -92,6 +94,21 @@ public class PlaceDetailService {
 			Double latitude = response.location() != null ? response.location().latitude() : null;
 			Double longitude = response.location() != null ? response.location().longitude() : null;
 
+			String priceCurrencyCode = null;
+			String priceStartUnits = null;
+			String priceEndUnits = null;
+			if (response.priceRange() != null) {
+				if (response.priceRange().startPrice() != null) {
+					priceCurrencyCode = response.priceRange().startPrice().currencyCode();
+					priceStartUnits = response.priceRange().startPrice().units();
+				}
+				if (response.priceRange().endPrice() != null) {
+					priceEndUnits = response.priceRange().endPrice().units();
+				}
+			}
+
+			PlaceCategory category = GooglePlaceTypeMapper.toCategory(response.primaryType(), response.types());
+
 			return Place.create(
 				response.id(),
 				response.formattedAddress(),
@@ -106,7 +123,11 @@ public class PlaceDetailService {
 				name,
 				thumbnail,
 				regularOpeningHours,
-				photosJson
+				photosJson,
+				priceCurrencyCode,
+				priceStartUnits,
+				priceEndUnits,
+				category
 			);
 		} catch (Exception e) {
 			log.error("Place 변환 실패: googlePlaceId={}", response.id(), e);

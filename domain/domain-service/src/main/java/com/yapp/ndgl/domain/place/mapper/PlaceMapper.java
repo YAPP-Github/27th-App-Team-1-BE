@@ -1,5 +1,6 @@
 package com.yapp.ndgl.domain.place.mapper;
 
+import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.entity.PlaceEntity;
 
@@ -21,6 +22,10 @@ public class PlaceMapper {
 			.thumbnail(place.getThumbnail())
 			.regularOpeningHours(place.getRegularOpeningHours())
 			.photosJson(place.getPhotosJson())
+			.priceCurrencyCode(place.getPriceCurrencyCode())
+			.priceStartUnits(place.getPriceStartUnits())
+			.priceEndUnits(place.getPriceEndUnits())
+			.category(place.getCategory() != null ? place.getCategory() : PlaceCategory.ATTRACTION)
 			.build();
 	}
 
@@ -41,6 +46,10 @@ public class PlaceMapper {
 			.thumbnail(entity.getThumbnail())
 			.regularOpeningHours(entity.getRegularOpeningHours())
 			.photosJson(entity.getPhotosJson())
+			.priceCurrencyCode(entity.getPriceCurrencyCode())
+			.priceStartUnits(entity.getPriceStartUnits())
+			.priceEndUnits(entity.getPriceEndUnits())
+			.category(entity.getCategory() != null ? entity.getCategory() : PlaceCategory.ATTRACTION)
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
 			.build();

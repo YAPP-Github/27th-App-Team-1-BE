@@ -43,7 +43,10 @@ public class GoogleMapsPlaceDetailClient {
 		"nationalPhoneNumber",
 		"internationalPhoneNumber",
 		"regularOpeningHours",
-		"userRatingCount"
+		"userRatingCount",
+		"primaryType",
+		"types",
+		"priceRange"
 	);
 
 	private final RestClient googleMapsPlaceRestClient;
