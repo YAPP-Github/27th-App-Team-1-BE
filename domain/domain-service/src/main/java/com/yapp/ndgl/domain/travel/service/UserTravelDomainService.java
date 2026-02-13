@@ -7,12 +7,15 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yapp.ndgl.common.exception.GlobalException;
+import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.UserTravel;
 import com.yapp.ndgl.domain.travel.UserTravelPlace;
 import com.yapp.ndgl.domain.travel.entity.UserTravelEntity;
 import com.yapp.ndgl.domain.travel.entity.UserTravelPlaceEntity;
+import com.yapp.ndgl.domain.travel.mapper.UserTravelPlaceMapper;
 import com.yapp.ndgl.domain.travel.mapper.UserTravelMapper;
 import com.yapp.ndgl.domain.travel.repository.UserTravelPlaceRepository;
 import com.yapp.ndgl.domain.travel.repository.UserTravelRepository;
@@ -67,14 +70,7 @@ public class UserTravelDomainService {
 			.toList();
 
 		List<UserTravelPlaceEntity> entities = userTravelPlaces.stream()
-			.map(place -> UserTravelPlaceEntity.builder()
-				.userTravelId(place.getUserTravelId())
-				.placeId(place.getPlaceId())
-				.day(place.getDay())
-				.sequence(place.getSequence())
-				.travelerTip(place.getTravelerTip())
-				.estimatedDuration(place.getEstimatedDuration())
-				.build())
+			.map(UserTravelPlaceMapper::toEntity)
 			.toList();
 
 		userTravelPlaceRepository.saveAll(entities);
@@ -92,14 +88,23 @@ public class UserTravelDomainService {
 	@Transactional(readOnly = true)
 	public Optional<UserTravelPlace> findFirstPlaceByUserTravelId(final Long userTravelId) {
 		return userTravelPlaceRepository.findTopByUserTravelIdOrderByDayAscSequenceAsc(userTravelId)
-			.map(entity -> UserTravelPlace.builder()
-				.id(entity.getId())
-				.userTravelId(entity.getUserTravelId())
-				.placeId(entity.getPlaceId())
-				.day(entity.getDay())
-				.sequence(entity.getSequence())
-				.travelerTip(entity.getTravelerTip())
-				.estimatedDuration(entity.getEstimatedDuration())
-				.build());
+			.map(UserTravelPlaceMapper::toDomain);
+	}
+
+	@Transactional(readOnly = true)
+	public UserTravel findByIdAndUserId(final Long userTravelId, final Long userId) {
+		return userTravelRepository.findByIdAndUserId(userTravelId, userId)
+			.map(UserTravelMapper::toDomain)
+			.orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL));
+	}
+
+	@Transactional(readOnly = true)
+	public List<UserTravelPlace> findPlacesByUserTravelIdAndDay(final Long userTravelId, final int day) {
+		List<UserTravelPlaceEntity> placeEntities =
+			userTravelPlaceRepository.findByUserTravelIdAndDayOrderBySequenceAsc(userTravelId, day);
+
+		return placeEntities.stream()
+			.map(UserTravelPlaceMapper::toDomain)
+			.toList();
 	}
 }

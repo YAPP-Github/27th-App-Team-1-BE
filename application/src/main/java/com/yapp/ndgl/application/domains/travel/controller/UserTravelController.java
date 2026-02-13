@@ -1,12 +1,14 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
-import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.facade.UserTravelFacade;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
@@ -45,5 +47,24 @@ public class UserTravelController implements UserTravelApi {
 
     // TODO 내 여행 목록 조회
 
-    // TODO 내 여행 상세 조회
+    @Override
+    @GetMapping("/{id}/content-card")
+    public ResponseEntity<SuccessResponse<UserTravelContentCardResponse>> readUserTravelContentCard(
+        @CurrentUuid String uuid,
+        @PathVariable("id") final Long id
+    ) {
+        UserTravelContentCardResponse response = userTravelFacade.readUserTravelContentCard(uuid, id);
+        return ResponseEntity.ok(SuccessResponse.success(response));
+    }
+
+    @Override
+    @GetMapping("/{id}/itinerary")
+    public ResponseEntity<SuccessResponse<UserTravelItineraryResponse>> readUserTravelItinerary(
+        @CurrentUuid String uuid,
+        @PathVariable("id") final Long id,
+        @RequestParam(value = "day") final int day
+    ) {
+        UserTravelItineraryResponse response = userTravelFacade.readUserTravelItinerary(uuid, id, day);
+        return ResponseEntity.ok(SuccessResponse.success(response));
+    }
 }
