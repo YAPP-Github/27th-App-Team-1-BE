@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserTravelRepository extends JpaRepository<UserTravelEntity, Long> {
     Optional<UserTravelEntity> findTopByUserIdAndStartDateGreaterThanEqualOrderByStartDateAsc(
         Long userId, LocalDate startDate);
+
+    Optional<UserTravelEntity> findByIdAndUserId(Long id, Long userId);
 }
