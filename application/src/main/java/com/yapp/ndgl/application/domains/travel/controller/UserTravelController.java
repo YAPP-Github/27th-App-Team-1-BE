@@ -33,13 +33,17 @@ public class UserTravelController implements UserTravelApi {
 
     @Override
     @GetMapping("/upcoming")
-    public ResponseEntity<UpcomingUserTravelResponse> getUpcomingUserTravel(
+    public ResponseEntity<SuccessResponse<UpcomingUserTravelResponse>> getUpcomingUserTravel(
         @CurrentUuid String uuid
     ) {
         UpcomingUserTravelResponse response = userTravelFacade.getUpcomingUserTravel(uuid);
         if (response == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(SuccessResponse.success(response));
     }
+
+    // TODO 내 여행 목록 조회
+
+    // TODO 내 여행 상세 조회
 }
