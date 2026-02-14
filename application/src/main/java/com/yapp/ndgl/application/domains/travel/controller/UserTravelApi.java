@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -179,6 +181,56 @@ public interface UserTravelApi {
     })
     ResponseEntity<SuccessResponse<UpcomingUserTravelResponse>> getUpcomingUserTravel(
         @CurrentUuid String uuid
+    );
+
+    @Operation(
+        summary = "내 여행 예정 목록 조회",
+        description = "여행 시작일이 오늘보다 미래인 내 여행 목록을 시작일 오름차순으로 조회합니다.",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = UpcomingUserTravelListResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "code": "2000",
+                          "message": "요청에 성공하였습니다.",
+                          "data": {
+                            "content": [
+                              {
+                                "id": 1,
+                                "title": "도쿄 3박 4일",
+                                "country": "JP",
+                                "city": "도쿄",
+                                "startDate": "2026-03-01",
+                                "endDate": "2026-03-04",
+                                "nights": 3,
+                                "days": 4,
+                                "templateId": 10,
+                                "thumbnail": "https://example.com/thumbnail.jpg",
+                                "profileImage": "https://example.com/profile.jpg"
+                              }
+                            ],
+                            "hasNext": true
+                          }
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<SuccessResponse<SliceResponse<UpcomingUserTravelListResponse>>> getUpcomingUserTravels(
+        @CurrentUuid String uuid,
+        @Parameter(description = "페이지 번호 (0부터 시작)", example = "0", required = false)
+        @RequestParam(value = "page", defaultValue = "0") final int page,
+        @Parameter(description = "페이지 사이즈", example = "20", required = false)
+        @RequestParam(value = "size", defaultValue = "20")
+        @Min(value = 1, message = "size는 1 이상 입니다.") final int size
     );
 
     @Operation(

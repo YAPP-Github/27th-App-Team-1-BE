@@ -4,19 +4,25 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.UserTravel;
+import com.yapp.ndgl.domain.travel.UserUpcomingTravel;
 import com.yapp.ndgl.domain.travel.UserTravelPlace;
 import com.yapp.ndgl.domain.travel.entity.UserTravelEntity;
 import com.yapp.ndgl.domain.travel.entity.UserTravelPlaceEntity;
+import com.yapp.ndgl.domain.travel.mapper.UserUpcomingTravelMapper;
 import com.yapp.ndgl.domain.travel.mapper.UserTravelPlaceMapper;
 import com.yapp.ndgl.domain.travel.mapper.UserTravelMapper;
+import com.yapp.ndgl.domain.travel.query.UserUpcomingTravelSummary;
 import com.yapp.ndgl.domain.travel.repository.UserTravelPlaceRepository;
 import com.yapp.ndgl.domain.travel.repository.UserTravelRepository;
 import com.yapp.ndgl.domain.user.User;
@@ -107,5 +113,24 @@ public class UserTravelDomainService {
 		return placeEntities.stream()
 			.map(UserTravelPlaceMapper::toDomain)
 			.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public SliceResponse<UserUpcomingTravel> findUpcomingTravelsByUserId(
+		final Long userId, final int page, final int size
+	) {
+		LocalDate today = LocalDate.now();
+		Pageable pageable = PageRequest.of(page, size + 1);
+
+		List<UserUpcomingTravelSummary> summaries =
+			userTravelRepository.findUpcomingUserTravelsByUserId(userId, today, pageable);
+
+		boolean hasNext = summaries.size() > size;
+		List<UserUpcomingTravel> content = summaries.stream()
+			.limit(size)
+			.map(UserUpcomingTravelMapper::toDomain)
+			.toList();
+
+		return SliceResponse.of(content, hasNext);
 	}
 }
