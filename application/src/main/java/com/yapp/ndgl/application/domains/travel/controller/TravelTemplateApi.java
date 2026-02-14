@@ -216,7 +216,7 @@ public interface TravelTemplateApi {
                           "data": {
                             "content": [
                               {
-                                "travelId": "TRAVEL_001",
+                                "id": 1,
                                 "title": "도쿄 3박 4일 완벽 여행 가이드",
                                 "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
                                 "programName": "빠니보틀",
@@ -265,7 +265,7 @@ public interface TravelTemplateApi {
                           "data": {
                             "content": [
                               {
-                                "travelId": "TRAVEL_001",
+                                "id": 1,
                                 "title": "도쿄 3박 4일 완벽 여행 가이드",
                                 "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
                                 "programName": "빠니보틀",
@@ -312,7 +312,7 @@ public interface TravelTemplateApi {
                           "data": {
                             "content": [
                               {
-                                "travelId": "TRAVEL_001",
+                                "id": 1,
                                 "title": "도쿄 3박 4일 완벽 여행 가이드",
                                 "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
                                 "programName": "빠니보틀",

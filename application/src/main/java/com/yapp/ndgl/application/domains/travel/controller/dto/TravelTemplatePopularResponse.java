@@ -6,9 +6,9 @@ import com.yapp.ndgl.domain.travel.type.TravelProgramType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record TravelTemplatePopularResponse(
-    @Schema(description = "여행 템플릿 ID", example = "TRAVEL_001", requiredMode = Schema.RequiredMode.REQUIRED)
-    String travelId,
-    @Schema(description = "영상 제목", example = "도쿄 3박 4일 완벽 여행 가이드", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "여행 템플릿 고유 ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+    Long id,
+@Schema(description = "영상 제목", example = "도쿄 3박 4일 완벽 여행 가이드", requiredMode = Schema.RequiredMode.REQUIRED)
     String title,
     @Schema(description = "영상 썸네일 URL", example = "https://example.com/thumbnail/tokyo.jpg", nullable = true)
     String thumbnail,
@@ -30,7 +30,7 @@ public record TravelTemplatePopularResponse(
 
     public static TravelTemplatePopularResponse from(final TravelTemplate travelTemplate) {
         return new TravelTemplatePopularResponse(
-            travelTemplate.getTravelId(),
+            travelTemplate.getId(),
             travelTemplate.getTitle(),
             travelTemplate.getThumbnail(),
             travelTemplate.getTravelProgramName(),
