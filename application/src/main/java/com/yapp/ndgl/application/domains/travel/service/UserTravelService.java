@@ -55,15 +55,15 @@ public class UserTravelService {
 		List<TravelTemplatePlace> templatePlaces = travelTemplateDomainService.findPlacesByTravelTemplateId(
 			template.getId());
 
-			return userTravelDomainService.createUserTravelWithPlaces(
-				user,
-				template,
-				templatePlaces,
-				request.startDate(),
-				request.endDate(),
-				nights,
-				days
-			).getId();
+		return userTravelDomainService.createUserTravelWithPlaces(
+			user,
+			template,
+			templatePlaces,
+			request.startDate(),
+			request.endDate(),
+			nights,
+			days
+		).getId();
 	}
 
 	@Transactional(readOnly = true)

@@ -18,7 +18,6 @@ public class UserTravelMapper {
             .city(userTravel.getCity())
             .startDate(userTravel.getStartDate())
             .endDate(userTravel.getEndDate())
-            .startTime(userTravel.getStartTime())
             .nights(userTravel.getNights())
             .days(userTravel.getDays())
             .build();
@@ -38,7 +37,6 @@ public class UserTravelMapper {
             .city(entity.getCity())
             .startDate(entity.getStartDate())
             .endDate(entity.getEndDate())
-            .startTime(entity.getStartTime())
             .nights(entity.getNights())
             .days(entity.getDays())
             .createdAt(entity.getCreatedAt())

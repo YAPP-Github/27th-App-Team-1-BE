@@ -150,7 +150,6 @@ public interface UserTravelApi {
                             "country": "IN",
                             "city": "뭄바이",
                             "startDate": "2023-08-01",
-                            "startTime": "08:30:00",
                             "endDate": "2023-08-10",
                             "nights": 6,
                             "days": 7,
@@ -206,7 +205,6 @@ public interface UserTravelApi {
                             "country": "JP",
                             "city": "도쿄",
                             "startDate": "2026-03-01",
-                            "startTime": "08:30:00",
                             "endDate": "2026-03-04",
                             "nights": 3,
                             "days": 4
@@ -264,6 +262,7 @@ public interface UserTravelApi {
                                 "day": 1,
                                 "sequence": 1,
                                 "travelerTip": null,
+                                "startTime": "08:30:00",
                                 "estimatedDuration": 60,
                                 "place": {
                                   "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",

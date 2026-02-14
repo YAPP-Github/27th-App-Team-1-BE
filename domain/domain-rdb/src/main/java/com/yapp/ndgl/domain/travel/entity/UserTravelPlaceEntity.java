@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Entity
 @Table(
     name = "user_travel_places",
@@ -44,6 +46,9 @@ public class UserTravelPlaceEntity extends BaseEntity {
     @Column(name = "traveler_tip", length = 1000)
     private String travelerTip;
 
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
     @Column(name = "estimated_duration")
     private Integer estimatedDuration;
 
@@ -54,6 +59,7 @@ public class UserTravelPlaceEntity extends BaseEntity {
         final Integer day,
         final Integer sequence,
         final String travelerTip,
+        final LocalTime startTime,
         final Integer estimatedDuration
     ) {
         this.userTravelId = userTravelId;
@@ -61,6 +67,7 @@ public class UserTravelPlaceEntity extends BaseEntity {
         this.day = day;
         this.sequence = sequence;
         this.travelerTip = travelerTip;
+        this.startTime = startTime;
         this.estimatedDuration = estimatedDuration;
     }
 }

@@ -1,7 +1,6 @@
 package com.yapp.ndgl.application.domains.travel.controller.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.domain.place.Place;
@@ -20,8 +19,6 @@ public record UpcomingUserTravelResponse(
     String city,
     @Schema(description = "여행 시작 날짜", example = "2023-08-01", requiredMode = Schema.RequiredMode.REQUIRED)
     LocalDate startDate,
-    @Schema(description = "여행 시작 시간", example = "09:00:00", nullable = true)
-    LocalTime startTime,
     @Schema(description = "여행 종료 날짜", example = "2023-08-10", requiredMode = Schema.RequiredMode.REQUIRED)
     LocalDate endDate,
     @Schema(description = "여행 총 밤 수", example = "6", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -49,7 +46,6 @@ public record UpcomingUserTravelResponse(
             upcomingTravel.getCountry(),
             upcomingTravel.getCity(),
             upcomingTravel.getStartDate(),
-            upcomingTravel.getStartTime(),
             upcomingTravel.getEndDate(),
             upcomingTravel.getNights(),
             upcomingTravel.getDays(),

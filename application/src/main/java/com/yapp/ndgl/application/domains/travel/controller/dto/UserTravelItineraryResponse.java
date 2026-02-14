@@ -1,5 +1,6 @@
 package com.yapp.ndgl.application.domains.travel.controller.dto;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,8 @@ public record UserTravelItineraryResponse(
 		Integer sequence,
 		@Schema(description = "여행자 팁", example = "오전 시간 방문 추천", nullable = true)
 		String travelerTip,
+		@Schema(description = "해당 일차 시작 시간 (null 인 경우 설정 필요)", example = "09:00:00", nullable = true)
+		LocalTime startTime,
 		@Schema(description = "예상 소요 시간 (분)", example = "60", nullable = true)
 		Integer estimatedDuration,
 		@Schema(description = "장소 정보", nullable = true)
@@ -50,6 +53,7 @@ public record UserTravelItineraryResponse(
 				userTravelPlace.getDay(),
 				userTravelPlace.getSequence(),
 				userTravelPlace.getTravelerTip(),
+				userTravelPlace.getStartTime(),
 				userTravelPlace.getEstimatedDuration(),
 				place == null ? null : PlaceInfo.from(place, objectMapper)
 			);

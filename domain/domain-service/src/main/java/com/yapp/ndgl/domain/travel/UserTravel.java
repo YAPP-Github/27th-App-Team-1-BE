@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
 @Builder
@@ -19,7 +18,6 @@ public class UserTravel {
     private String city;
     private LocalDate startDate;
     private LocalDate endDate;
-    private LocalTime startTime;
     private Integer nights;
     private Integer days;
     private LocalDateTime createdAt;
@@ -33,7 +31,6 @@ public class UserTravel {
         final String city,
         final LocalDate startDate,
         final LocalDate endDate,
-        final LocalTime startTime,
         final Integer nights,
         final Integer days
     ) {
@@ -47,7 +44,6 @@ public class UserTravel {
             .city(city)
             .startDate(startDate)
             .endDate(endDate)
-            .startTime(startTime)
             .nights(nights)
             .days(days)
             .createdAt(now)

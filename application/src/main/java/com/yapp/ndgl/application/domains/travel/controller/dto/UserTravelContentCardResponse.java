@@ -1,7 +1,6 @@
 package com.yapp.ndgl.application.domains.travel.controller.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import com.yapp.ndgl.domain.travel.UserTravel;
 
@@ -20,8 +19,6 @@ public record UserTravelContentCardResponse(
 	String city,
 	@Schema(description = "여행 시작일", example = "2026-03-01", requiredMode = Schema.RequiredMode.REQUIRED)
 	LocalDate startDate,
-	@Schema(description = "여행 시작시간", example = "09:00:00", nullable = true)
-	LocalTime startTime,
 	@Schema(description = "여행 종료일", example = "2026-03-04", requiredMode = Schema.RequiredMode.REQUIRED)
 	LocalDate endDate,
 	@Schema(description = "박 수", example = "3", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -38,7 +35,6 @@ public record UserTravelContentCardResponse(
 			userTravel.getCountry(),
 			userTravel.getCity(),
 			userTravel.getStartDate(),
-			userTravel.getStartTime(),
 			userTravel.getEndDate(),
 			userTravel.getNights(),
 			userTravel.getDays()

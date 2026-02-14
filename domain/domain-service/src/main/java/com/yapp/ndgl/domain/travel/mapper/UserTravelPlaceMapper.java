@@ -16,6 +16,7 @@ public class UserTravelPlaceMapper {
 			.day(userTravelPlace.getDay())
 			.sequence(userTravelPlace.getSequence())
 			.travelerTip(userTravelPlace.getTravelerTip())
+			.startTime(userTravelPlace.getStartTime())
 			.estimatedDuration(userTravelPlace.getEstimatedDuration())
 			.build();
 	}
@@ -32,6 +33,7 @@ public class UserTravelPlaceMapper {
 			.day(entity.getDay())
 			.sequence(entity.getSequence())
 			.travelerTip(entity.getTravelerTip())
+			.startTime(entity.getStartTime())
 			.estimatedDuration(entity.getEstimatedDuration())
 			.build();
 	}

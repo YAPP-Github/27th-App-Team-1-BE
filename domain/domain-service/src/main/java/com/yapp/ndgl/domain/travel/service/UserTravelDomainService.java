@@ -1,7 +1,6 @@
 package com.yapp.ndgl.domain.travel.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +50,6 @@ public class UserTravelDomainService {
 			template.getCity(),
 			startDate,
 			endDate,
-			null,
 			nights,
 			days
 		);
@@ -67,6 +65,7 @@ public class UserTravelDomainService {
 				templatePlace.getDay(),
 				templatePlace.getSequence(),
 				null, // TODO: UserTravel 정규화 시 youtubeTipsJson에서 변환 필요
+				null,
 				templatePlace.getEstimatedDuration()
 			))
 			.toList();

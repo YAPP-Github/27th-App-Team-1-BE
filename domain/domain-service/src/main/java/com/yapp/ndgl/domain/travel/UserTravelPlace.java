@@ -1,5 +1,7 @@
 package com.yapp.ndgl.domain.travel;
 
+import java.time.LocalTime;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,6 +15,7 @@ public class UserTravelPlace {
     private Integer day;
     private Integer sequence;
     private String travelerTip;
+    private LocalTime startTime;
     private Integer estimatedDuration;
 
     public static UserTravelPlace create(
@@ -21,6 +24,7 @@ public class UserTravelPlace {
         final Integer day,
         final Integer sequence,
         final String travelerTip,
+        final LocalTime startTime,
         final Integer estimatedDuration
     ) {
         return UserTravelPlace.builder()
@@ -29,6 +33,7 @@ public class UserTravelPlace {
             .day(day)
             .sequence(sequence)
             .travelerTip(travelerTip)
+            .startTime(startTime)
             .estimatedDuration(estimatedDuration)
             .build();
     }
