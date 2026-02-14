@@ -79,10 +79,6 @@ public class UserTravelService {
 		User user = userDomainService.findByUuid(uuid);
 		userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
 
-		List<Long> userTravelPlaceIds = request.updates().stream()
-			.map(UpdateUserTravelPlaceStartTimesRequest.Item::id)
-			.toList();
-
 		Map<Long, LocalTime> startTimeByUserTravelPlaceId = request.updates().stream()
 			.collect(Collectors.toMap(
 				UpdateUserTravelPlaceStartTimesRequest.Item::id,
@@ -90,6 +86,10 @@ public class UserTravelService {
 				(existing, replacement) -> replacement,
 				LinkedHashMap::new
 			));
+
+		List<Long> userTravelPlaceIds = startTimeByUserTravelPlaceId
+			.keySet().stream()
+			.toList();
 		userTravelDomainService.bulkUpdateStartTime(userTravelId, userTravelPlaceIds, startTimeByUserTravelPlaceId);
 	}
 
