@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(
@@ -45,6 +46,9 @@ public class UserTravelEntity extends BaseEntity {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
     @Column(name = "nights", nullable = false)
     private Integer nights;
 
@@ -60,6 +64,7 @@ public class UserTravelEntity extends BaseEntity {
         final String city,
         final LocalDate startDate,
         final LocalDate endDate,
+        final LocalTime startTime,
         final Integer nights,
         final Integer days
     ) {
@@ -70,6 +75,7 @@ public class UserTravelEntity extends BaseEntity {
         this.city = city;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.startTime = startTime;
         this.nights = nights;
         this.days = days;
     }
