@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record UpdateUserTravelPlaceStartTimesRequest(
 	@Schema(description = "수정 대상 목록", requiredMode = Schema.RequiredMode.REQUIRED)
+	@NotNull(message = "업데이트 목록은 필수입니다.")
 	@NotEmpty(message = "업데이트 목록은 최소 1개 이상이어야 합니다.")
 	List<@Valid Item> updates
 ) {

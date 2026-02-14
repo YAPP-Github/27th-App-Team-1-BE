@@ -300,6 +300,7 @@ public interface UserTravelApi {
     ResponseEntity<SuccessResponse<SliceResponse<UpcomingUserTravelListResponse>>> getUpcomingUserTravels(
         @CurrentUuid String uuid,
         @Parameter(description = "페이지 번호 (0부터 시작)", example = "0", required = false)
+        @Min(value = 0, message = "page는 0 이상 입니다.")
         @RequestParam(value = "page", defaultValue = "0") final int page,
         @Parameter(description = "페이지 사이즈", example = "20", required = false)
         @RequestParam(value = "size", defaultValue = "20")
