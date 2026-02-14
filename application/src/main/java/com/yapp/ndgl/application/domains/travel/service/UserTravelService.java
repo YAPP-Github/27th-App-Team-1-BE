@@ -1,6 +1,8 @@
 package com.yapp.ndgl.application.domains.travel.service;
 
 import java.time.temporal.ChronoUnit;
+import java.time.LocalTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
@@ -67,6 +70,27 @@ public class UserTravelService {
 			nights,
 			days
 		).getId();
+	}
+
+	@Transactional
+	public void bulkUpdateUserTravelPlaceStartTimes(
+		final String uuid, final Long userTravelId, final UpdateUserTravelPlaceStartTimesRequest request
+	) {
+		User user = userDomainService.findByUuid(uuid);
+		userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
+
+		List<Long> userTravelPlaceIds = request.updates().stream()
+			.map(UpdateUserTravelPlaceStartTimesRequest.Item::id)
+			.toList();
+
+		Map<Long, LocalTime> startTimeByUserTravelPlaceId = request.updates().stream()
+			.collect(Collectors.toMap(
+				UpdateUserTravelPlaceStartTimesRequest.Item::id,
+				UpdateUserTravelPlaceStartTimesRequest.Item::startTime,
+				(existing, replacement) -> replacement,
+				LinkedHashMap::new
+			));
+		userTravelDomainService.bulkUpdateStartTime(userTravelId, userTravelPlaceIds, startTimeByUserTravelPlaceId);
 	}
 
 	@Transactional(readOnly = true)

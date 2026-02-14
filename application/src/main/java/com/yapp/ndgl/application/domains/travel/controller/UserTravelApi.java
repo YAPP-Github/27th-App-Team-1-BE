@@ -2,6 +2,7 @@ package com.yapp.ndgl.application.domains.travel.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
@@ -127,6 +129,77 @@ public interface UserTravelApi {
     ResponseEntity<?> createUserTravel(
         @CurrentUuid String uuid,
         @Valid @RequestBody CreateUserTravelRequest request
+    );
+
+    @Operation(
+        summary = "내 여행 startTime 일괄 수정",
+        description = "사용자 본인 여행의 장소 startTime을 id/startTime 쌍으로 일괄 수정합니다.",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = SuccessResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "code": "2000",
+                          "message": "요청에 성공하였습니다.",
+                          "data": {}
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "내 여행을 찾을 수 없음",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "NOT_FOUND_USER_TRAVEL",
+                    value = """
+                        {
+                          "code": "TRAVEL-02-002",
+                          "message": "내 여행 정보를 찾을 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "422",
+            description = "유효성 검증 실패",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "VALIDATION_ERROR",
+                    value = """
+                        {
+                          "code": "COMM-01-005",
+                          "message": "유효성 검증에 실패하였습니다",
+                          "errors": [
+                            {
+                              "field": "updates",
+                              "message": "업데이트 목록은 최소 1개 이상이어야 합니다."
+                            }
+                          ]
+                        }
+                        """
+                )
+            )
+        )
+    })
+    @PatchMapping("/{id}/start-time/bulk")
+    ResponseEntity<SuccessResponse> bulkUpdateUserTravelPlaceStartTimes(
+        @CurrentUuid String uuid,
+        @Parameter(description = "사용자 여행 ID", example = "1", required = true)
+        @PathVariable("id") final Long id,
+        @Valid @RequestBody UpdateUserTravelPlaceStartTimesRequest request
     );
 
     @Operation(
