@@ -1,6 +1,7 @@
 package com.yapp.ndgl.domain.travel.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +51,7 @@ public class UserTravelDomainService {
 			template.getCity(),
 			startDate,
 			endDate,
+			null,
 			nights,
 			days
 		);
