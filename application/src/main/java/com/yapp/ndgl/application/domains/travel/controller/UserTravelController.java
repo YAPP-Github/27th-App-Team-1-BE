@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.facade.UserTravelFacade;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
 import jakarta.validation.Valid;
@@ -45,7 +47,17 @@ public class UserTravelController implements UserTravelApi {
         return ResponseEntity.ok(SuccessResponse.success(response));
     }
 
-    // TODO 내 여행 목록 조회
+    @Override
+    @GetMapping("/upcoming/list")
+    public ResponseEntity<SuccessResponse<SliceResponse<UpcomingUserTravelListResponse>>> getUpcomingUserTravels(
+        @CurrentUuid String uuid,
+        @RequestParam(value = "page", defaultValue = "0") final int page,
+        @RequestParam(value = "size", defaultValue = "20") final int size
+    ) {
+        SliceResponse<UpcomingUserTravelListResponse> response =
+            userTravelFacade.getUpcomingUserTravels(uuid, page, size);
+        return ResponseEntity.ok(SuccessResponse.success(response));
+    }
 
     @Override
     @GetMapping("/{id}/content-card")

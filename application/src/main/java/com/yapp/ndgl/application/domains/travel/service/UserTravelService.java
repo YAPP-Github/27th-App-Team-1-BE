@@ -11,15 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.UserTravel;
+import com.yapp.ndgl.domain.travel.UserUpcomingTravel;
 import com.yapp.ndgl.domain.travel.UserTravelPlace;
 import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 import com.yapp.ndgl.domain.travel.service.UserTravelDomainService;
@@ -81,6 +84,20 @@ public class UserTravelService {
 		Place place = upcomingPlace == null ? null : placeDomainService.findById(upcomingPlace.getPlaceId());
 
 		return UpcomingUserTravelResponse.of(upcomingTravel, upcomingPlace, place, objectMapper);
+	}
+
+	@Transactional(readOnly = true)
+	public SliceResponse<UpcomingUserTravelListResponse> getUpcomingUserTravels(
+		final String uuid, final int page, final int size
+	) {
+		User user = userDomainService.findByUuid(uuid);
+		SliceResponse<UserUpcomingTravel> upcomingTravels =
+			userTravelDomainService.findUpcomingTravelsByUserId(user.getId(), page, size);
+
+		List<UpcomingUserTravelListResponse> content = upcomingTravels.getContent().stream()
+			.map(UpcomingUserTravelListResponse::from)
+			.toList();
+		return SliceResponse.of(content, upcomingTravels.isHasNext());
 	}
 
 	@Transactional(readOnly = true)
