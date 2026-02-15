@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
@@ -35,6 +37,7 @@ import com.yapp.ndgl.domain.user.service.UserDomainService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserTravelService {
 
@@ -70,6 +73,39 @@ public class UserTravelService {
 			nights,
 			days
 		).getId();
+	}
+
+	@Transactional
+	public void updateUserTravel(final String uuid, final Long userTravelId, final UpdateUserTravelRequest request) {
+		log.info("내 여행 정보를 수정합니다. uuid = {}, userTravelId = {}", uuid, userTravelId);
+		User user = userDomainService.findByUuid(uuid);
+		String title = request.title().trim();
+
+		if (request.endDate().isBefore(request.startDate())) {
+			log.warn(
+				"내 여행 정보 수정 실패 - 날짜 순서 오류. uuid = {}, userTravelId = {}, startDate = {}, endDate = {}",
+				uuid,
+				userTravelId,
+				request.startDate(),
+				request.endDate()
+			);
+			throw new GlobalException(TravelErrorCode.INVALID_DATE_ORDER);
+		}
+
+		long daysBetween = ChronoUnit.DAYS.between(request.startDate(), request.endDate());
+		int nights = (int)daysBetween;
+		int days = nights + 1;
+
+		userTravelDomainService.updateUserTravel(
+			userTravelId,
+			user.getId(),
+			title,
+			request.startDate(),
+			request.endDate(),
+			nights,
+			days
+		);
+		log.info("내 여행 정보를 수정했습니다. uuid = {}, userTravelId = {}", uuid, userTravelId);
 	}
 
 	@Transactional

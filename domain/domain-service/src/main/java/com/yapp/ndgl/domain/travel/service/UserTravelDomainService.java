@@ -107,6 +107,22 @@ public class UserTravelDomainService {
 			.orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL));
 	}
 
+	@Transactional
+	public void updateUserTravel(
+		final Long userTravelId,
+		final Long userId,
+		final String title,
+		final LocalDate startDate,
+		final LocalDate endDate,
+		final int nights,
+		final int days
+	) {
+		UserTravelEntity userTravelEntity = userTravelRepository.findByIdAndUserId(userTravelId, userId)
+			.orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL));
+		userTravelEntity.updateTravelInfo(title, startDate, endDate, nights, days);
+		userTravelRepository.save(userTravelEntity);
+	}
+
 	@Transactional(readOnly = true)
 	public List<UserTravelPlace> findPlacesByUserTravelIdAndDay(final Long userTravelId, final int day) {
 		List<UserTravelPlaceEntity> placeEntities =
@@ -140,7 +156,6 @@ public class UserTravelDomainService {
 
 		for (UserTravelPlaceEntity placeEntity : placeEntities) {
 			placeEntity.updateStartTime(startTimeByUserTravelPlaceId.get(placeEntity.getId()));
-			userTravelPlaceRepository.save(placeEntity);
 		}
 	}
 

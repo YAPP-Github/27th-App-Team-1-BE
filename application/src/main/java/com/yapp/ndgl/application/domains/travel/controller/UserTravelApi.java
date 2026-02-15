@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
@@ -129,6 +130,94 @@ public interface UserTravelApi {
     ResponseEntity<?> createUserTravel(
         @CurrentUuid String uuid,
         @Valid @RequestBody CreateUserTravelRequest request
+    );
+
+    @Operation(
+        summary = "내 여행 수정",
+        description = "사용자 본인의 여행 제목과 날짜를 수정합니다. nights/days는 서버에서 재계산됩니다.",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = SuccessResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "code": "2000",
+                          "message": "요청에 성공하였습니다.",
+                          "data": {}
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "여행 종료일이 시작일보다 앞설 수 없음",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "INVALID_DATE_ORDER",
+                    value = """
+                        {
+                          "code": "TRAVEL-04-001",
+                          "message": "여행 종료일이 시작일보다 앞설 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "내 여행을 찾을 수 없음",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "NOT_FOUND_USER_TRAVEL",
+                    value = """
+                        {
+                          "code": "TRAVEL-02-002",
+                          "message": "내 여행 정보를 찾을 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "422",
+            description = "유효성 검증 실패",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "VALIDATION_ERROR",
+                    value = """
+                        {
+                          "code": "COMM-01-005",
+                          "message": "유효성 검증에 실패하였습니다",
+                          "errors": [
+                            {
+                              "field": "title",
+                              "message": "여행 제목은 필수입니다."
+                            }
+                          ]
+                        }
+                        """
+                )
+            )
+        )
+    })
+    @PatchMapping("/{id}")
+    ResponseEntity<SuccessResponse> updateUserTravel(
+        @CurrentUuid String uuid,
+        @Parameter(description = "사용자 여행 ID", example = "1", required = true)
+        @PathVariable("id") final Long id,
+        @Valid @RequestBody UpdateUserTravelRequest request
     );
 
     @Operation(

@@ -73,4 +73,18 @@ public class UserTravelEntity extends BaseEntity {
         this.nights = nights;
         this.days = days;
     }
+
+    public void updateTravelInfo(
+        final String title,
+        final LocalDate startDate,
+        final LocalDate endDate,
+        final int nights,
+        final int days
+    ) {
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.nights = nights;
+        this.days = days;
+    }
 }
