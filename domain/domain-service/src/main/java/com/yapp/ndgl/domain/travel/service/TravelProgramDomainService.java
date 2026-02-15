@@ -3,6 +3,8 @@ package com.yapp.ndgl.domain.travel.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,19 +41,24 @@ public class TravelProgramDomainService {
         return travelProgramRepository.save(travelProgramEntity);
     }
 
-    /**
-     * 이름으로 TravelProgram을 조회하고, 없으면 새로 생성하여 entity를 반환한다.
-     */
     @Transactional
     public TravelProgramEntity findOrCreateEntityByName(final String name) {
-        return travelProgramRepository.findByName(name)
-            .orElseGet(() -> {
-                log.info("새로운 여행 프로그램을 생성합니다. name = {}", name);
-                TravelProgramEntity newProgram = TravelProgramEntity.builder()
-                    .name(name)
-                    .type(TravelProgramType.YOUTUBE)
-                    .build();
-                return travelProgramRepository.save(newProgram);
-            });
+        Optional<TravelProgramEntity> existing = travelProgramRepository.findByName(name);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        try {
+            log.info("새로운 여행 프로그램을 생성합니다. name = {}", name);
+            TravelProgramEntity newProgram = TravelProgramEntity.builder()
+                .name(name)
+                .type(TravelProgramType.YOUTUBE)
+                .build();
+            return travelProgramRepository.saveAndFlush(newProgram);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("여행 프로그램 동시 생성 감지, 기존 데이터를 조회합니다. name = {}", name);
+            return travelProgramRepository.findByName(name)
+                .orElseThrow(() -> e);
+        }
     }
 }
