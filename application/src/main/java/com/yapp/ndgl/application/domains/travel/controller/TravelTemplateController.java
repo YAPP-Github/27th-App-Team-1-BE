@@ -36,11 +36,11 @@ public class TravelTemplateController implements TravelTemplateApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<SuccessResponse<Map<String, Object>>> saveTravelTemplate(
+    public ResponseEntity<SuccessResponse<Map<String, Long>>> saveTravelTemplate(
         @Valid @RequestBody final SaveTravelTemplateRequest request
     ) {
-        travelTemplateFacade.saveTravelTemplate(request);
-        return ResponseEntity.ok(SuccessResponse.noContent());
+        Long templateId = travelTemplateFacade.saveTravelTemplate(request);
+        return ResponseEntity.ok(SuccessResponse.success("id", templateId));
     }
 
     @GetMapping("/{id}/content-card")

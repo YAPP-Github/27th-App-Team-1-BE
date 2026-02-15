@@ -11,11 +11,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public record SaveTravelTemplateRequest(
-    @Schema(description = "여행 ID", example = "TRAVEL_001", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "여행 ID는 필수입니다.")
-    @JsonProperty("travel_id")
-    String travelId,
-
     @Schema(description = "여행자", example = "빠니보틀", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "여행자는 필수입니다.")
     String traveler,
@@ -26,7 +21,7 @@ public record SaveTravelTemplateRequest(
 
     @Schema(description = "1인당 예산", example = "1200000")
     @JsonProperty("budget_per_person")
-    String budgetPerPerson,
+    Integer budgetPerPerson,
 
     @Schema(description = "대륙", example = "아시아")
     String continent,

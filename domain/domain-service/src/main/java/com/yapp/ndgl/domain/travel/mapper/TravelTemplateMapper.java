@@ -20,16 +20,12 @@ public class TravelTemplateMapper {
 
         return TravelTemplate.builder()
             .id(entity.getId())
-            .travelId(entity.getTravelId())
             .travelProgramName(programName)
             .travelProgramProfileImage(programProfileImage)
             .travelProgramType(programType)
             .traveler(entity.getTraveler())
             .country(entity.getCountry())
             .city(entity.getCity())
-            .weatherInfo(entity.getWeatherInfo())
-            .cultureInfo(entity.getCultureInfo())
-            .foodInfo(entity.getFoodInfo())
             .thumbnail(entity.getThumbnail())
             .link(entity.getLink())
             .budgetPerPerson(entity.getBudgetPerPerson())
@@ -42,7 +38,6 @@ public class TravelTemplateMapper {
 
     public static TravelTemplateEntity toEntity(final TravelTemplate template, final TravelProgramEntity travelProgram) {
         return TravelTemplateEntity.builder()
-            .travelId(template.getTravelId())
             .travelProgram(travelProgram)
             .traveler(template.getTraveler())
             .country(template.getCountry())

@@ -19,9 +19,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TravelTemplateEntity extends BaseEntity {
 
-    @Column(nullable = false, unique = true, length = 255)
-    private String travelId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_program_id", nullable = false)
     private TravelProgramEntity travelProgram;
@@ -77,7 +74,6 @@ public class TravelTemplateEntity extends BaseEntity {
 
     @Builder
     public TravelTemplateEntity(
-        final String travelId,
         final TravelProgramEntity travelProgram,
         final String traveler,
         final String country,
@@ -96,7 +92,6 @@ public class TravelTemplateEntity extends BaseEntity {
         final Integer days,
         final String profileImage
     ) {
-        this.travelId = travelId;
         this.travelProgram = travelProgram;
         this.traveler = traveler;
         this.country = country;
