@@ -11,7 +11,9 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
+import com.yapp.ndgl.clients.google.places.dto.request.PlaceTextSearchRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceTextSearchResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 
@@ -30,6 +32,7 @@ public class GoogleMapsPlaceDetailClient {
 	private String apiKey;
 	private static final String GOOGLE_MAPS_KEY_HEADER = "X-Goog-Api-Key";
 	private static final String FIELD_MASK_HEADER = "X-Goog-FieldMask";
+	private static final String TEXT_SEARCH_FIELD_MASK = "places.id,places.displayName";
 	private static final String DEFAULT_FIELD_MASK = String.join(",",
 		"displayName",
 		"id",
@@ -89,6 +92,41 @@ public class GoogleMapsPlaceDetailClient {
 
 		} catch (ResourceAccessException e) {
 			log.error("Google Maps API 요청 실패: {}", e.getMessage(), e);
+			if (e.getCause() instanceof SocketTimeoutException) {
+				throw new GlobalException(GoogleMapsErrorCode.API_TIMEOUT);
+			}
+			throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
+		}
+	}
+
+	public GooglePlaceTextSearchResponse searchPlacesByText(final PlaceTextSearchRequest request) {
+		try {
+			if (request == null || !StringUtils.hasText(request.textQuery())) {
+				throw new GlobalException(GoogleMapsErrorCode.INVALID_PLACE_ID);
+			}
+
+			log.info("Google Maps Text Search API 호출: textQuery={}", request.textQuery());
+
+			final GooglePlaceTextSearchResponse response = googleMapsPlaceRestClient.post()
+				.uri("/places:searchText")
+				.header(GOOGLE_MAPS_KEY_HEADER, apiKey)
+				.header(FIELD_MASK_HEADER, TEXT_SEARCH_FIELD_MASK)
+				.contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+				.body(request)
+				.retrieve()
+				.onStatus(HttpStatusCode::isError, (req, res) -> {
+					log.error("Google Maps Text Search API 응답 오류 (status={})", res.getStatusCode());
+					throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
+				})
+				.body(GooglePlaceTextSearchResponse.class);
+
+			if (response == null) {
+				throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
+			}
+			return response;
+
+		} catch (ResourceAccessException e) {
+			log.error("Google Maps Text Search API 요청 실패: {}", e.getMessage(), e);
 			if (e.getCause() instanceof SocketTimeoutException) {
 				throw new GlobalException(GoogleMapsErrorCode.API_TIMEOUT);
 			}
