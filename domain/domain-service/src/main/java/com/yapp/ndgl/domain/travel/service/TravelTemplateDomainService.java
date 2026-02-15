@@ -13,6 +13,7 @@ import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
+import com.yapp.ndgl.domain.travel.entity.TravelProgramEntity;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplatePlaceEntity;
 import com.yapp.ndgl.domain.travel.mapper.TravelTemplateMapper;
@@ -29,6 +30,7 @@ public class TravelTemplateDomainService {
 
     private final TravelTemplateRepository travelTemplateRepository;
     private final TravelTemplatePlaceRepository travelTemplatePlaceRepository;
+    private final TravelProgramDomainService travelProgramDomainService;
 
     @Transactional(readOnly = true)
     public TravelTemplate findById(final Long id) {
@@ -113,6 +115,22 @@ public class TravelTemplateDomainService {
             .toList();
 
         return SliceResponse.of(content, hasNext);
+    }
+
+    @Transactional
+    public TravelTemplate save(final TravelTemplate travelTemplate, final TravelProgramEntity travelProgram) {
+        TravelTemplateEntity entity = TravelTemplateMapper.toEntity(travelTemplate, travelProgram);
+        TravelTemplateEntity savedEntity = travelTemplateRepository.save(entity);
+        return TravelTemplateMapper.toDomain(savedEntity);
+    }
+
+    /**
+     * 여행 템플릿을 저장한다. TravelProgram은 traveler 이름으로 조회/생성한다.
+     */
+    @Transactional
+    public TravelTemplate saveWithTraveler(final TravelTemplate travelTemplate, final String travelerName) {
+        TravelProgramEntity travelProgram = travelProgramDomainService.findOrCreateEntityByName(travelerName);
+        return save(travelTemplate, travelProgram);
     }
 
     private String normalizeKeyword(final String keyword) {

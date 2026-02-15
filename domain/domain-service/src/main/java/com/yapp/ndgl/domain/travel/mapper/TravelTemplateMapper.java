@@ -1,6 +1,7 @@
 package com.yapp.ndgl.domain.travel.mapper;
 
 import com.yapp.ndgl.domain.travel.TravelTemplate;
+import com.yapp.ndgl.domain.travel.entity.TravelProgramEntity;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
 import com.yapp.ndgl.domain.travel.type.TravelProgramType;
 
@@ -36,6 +37,23 @@ public class TravelTemplateMapper {
             .title(entity.getTitle())
             .nights(entity.getNights())
             .days(entity.getDays())
+            .build();
+    }
+
+    public static TravelTemplateEntity toEntity(final TravelTemplate template, final TravelProgramEntity travelProgram) {
+        return TravelTemplateEntity.builder()
+            .travelId(template.getTravelId())
+            .travelProgram(travelProgram)
+            .traveler(template.getTraveler())
+            .country(template.getCountry())
+            .city(template.getCity())
+            .thumbnail(template.getThumbnail())
+            .link(template.getLink())
+            .budgetPerPerson(template.getBudgetPerPerson())
+            .summary(template.getSummary())
+            .title(template.getTitle())
+            .nights(template.getNights())
+            .days(template.getDays())
             .build();
     }
 }
