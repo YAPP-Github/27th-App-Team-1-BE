@@ -1,17 +1,22 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @Tag(name = "User Travel", description = "사용자 여행 관련 API")
 @RequestMapping("/api/v1/travels")
@@ -173,5 +179,133 @@ public interface UserTravelApi {
     })
     ResponseEntity<SuccessResponse<UpcomingUserTravelResponse>> getUpcomingUserTravel(
         @CurrentUuid String uuid
+    );
+
+    @Operation(
+        summary = "내 여행 상단 정보 조회",
+        description = "사용자 본인의 여행 상단 정보(content-card)를 조회합니다.",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = UserTravelContentCardResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "code": "2000",
+                          "message": "요청에 성공하였습니다.",
+                          "data": {
+                            "userTravelId": 1,
+                            "templateId": 3,
+                            "title": "도쿄 3박 4일",
+                            "country": "JP",
+                            "city": "도쿄",
+                            "startDate": "2026-03-01",
+                            "endDate": "2026-03-04",
+                            "nights": 3,
+                            "days": 4
+                          }
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "내 여행을 찾을 수 없음",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "NOT_FOUND_USER_TRAVEL",
+                    value = """
+                        {
+                          "code": "TRAVEL-02-002",
+                          "message": "내 여행 정보를 찾을 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<SuccessResponse<UserTravelContentCardResponse>> readUserTravelContentCard(
+        @CurrentUuid String uuid,
+        @Parameter(description = "사용자 여행 ID", example = "1", required = true)
+        @PathVariable("id") final Long id
+    );
+
+    @Operation(
+        summary = "내 여행 일정 조회",
+        description = "사용자 본인의 여행 일정(itinerary)을 조회합니다. day 파라미터로 특정 일차를 조회할 수 있습니다.",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                schema = @Schema(implementation = UserTravelItineraryResponse.class),
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "code": "2000",
+                          "message": "요청에 성공하였습니다.",
+                          "data": {
+                            "itineraries": [
+                              {
+                                "id": 101,
+                                "day": 1,
+                                "sequence": 1,
+                                "travelerTip": null,
+                                "startTime": "08:30:00",
+                                "estimatedDuration": 60,
+                                "place": {
+                                  "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
+                                  "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
+                                  "latitude": 35.6585805,
+                                  "longitude": 139.7454329,
+                                  "name": "Tokyo Tower",
+                                  "regularOpeningHours": "09:00~23:00",
+                                  "googleMapsUri": "https://maps.google.com/?cid=10281119591005088802",
+                                  "category": "ATTRACTION"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "내 여행을 찾을 수 없음",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "NOT_FOUND_USER_TRAVEL",
+                    value = """
+                        {
+                          "code": "TRAVEL-02-002",
+                          "message": "내 여행 정보를 찾을 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<SuccessResponse<UserTravelItineraryResponse>> readUserTravelItinerary(
+        @CurrentUuid String uuid,
+        @Parameter(description = "사용자 여행 ID", example = "1", required = true)
+        @PathVariable("id") final Long id,
+        @Parameter(description = "조회할 일차", example = "1", required = true)
+        @RequestParam(value = "day")
+        @Min(value = 1, message = "day는 항상 1 이상 입니다.") final int day
     );
 }

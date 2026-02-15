@@ -2,6 +2,8 @@ package com.yapp.ndgl.application.domains.travel.service;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.domain.place.Place;
@@ -77,5 +81,31 @@ public class UserTravelService {
 		Place place = upcomingPlace == null ? null : placeDomainService.findById(upcomingPlace.getPlaceId());
 
 		return UpcomingUserTravelResponse.of(upcomingTravel, upcomingPlace, place, objectMapper);
+	}
+
+	@Transactional(readOnly = true)
+	public UserTravelContentCardResponse readUserTravelContentCard(final String uuid, final Long userTravelId) {
+		User user = userDomainService.findByUuid(uuid);
+		UserTravel userTravel = userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
+		return UserTravelContentCardResponse.from(userTravel);
+	}
+
+	@Transactional(readOnly = true)
+	public UserTravelItineraryResponse readUserTravelItinerary(
+		final String uuid, final Long userTravelId, final int day
+	) {
+		User user = userDomainService.findByUuid(uuid);
+		UserTravel userTravel = userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
+
+		List<UserTravelPlace> userTravelPlaces = userTravelDomainService
+			.findPlacesByUserTravelIdAndDay(userTravel.getId(), day);
+
+		List<Long> placeIds = userTravelPlaces.stream()
+			.map(UserTravelPlace::getPlaceId)
+			.toList();
+		Map<Long, Place> placeMap = placeDomainService.findByIds(placeIds).stream()
+			.collect(Collectors.toMap(Place::getId, place -> place));
+
+		return UserTravelItineraryResponse.of(userTravelPlaces, placeMap, objectMapper);
 	}
 }

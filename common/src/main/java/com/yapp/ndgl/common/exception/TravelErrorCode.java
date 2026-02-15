@@ -12,6 +12,8 @@ public enum TravelErrorCode implements BaseErrorCode {
      */
     NOT_FOUND_TRAVEL_TEMPLATE(StatusCode.NOT_FOUND, DomainCode.TRAVEL,
         CategoryCode.RESOURCE_NOT_FOUND, "001", "여행 템플릿을 찾을 수 없습니다"),
+    NOT_FOUND_USER_TRAVEL(StatusCode.NOT_FOUND, DomainCode.TRAVEL,
+        CategoryCode.RESOURCE_NOT_FOUND, "002", "내 여행 정보를 찾을 수 없습니다"),
 
     /**
      * TRAVEL-04-xxx
