@@ -20,7 +20,9 @@ public enum TravelErrorCode implements BaseErrorCode {
      * BUSINESS_RULE_VIOLATION
      */
     INVALID_DATE_ORDER(StatusCode.BAD_REQUEST, DomainCode.TRAVEL,
-        CategoryCode.BUSINESS_RULE_VIOLATION, "001", "여행 종료일이 시작일보다 앞설 수 없습니다");
+        CategoryCode.BUSINESS_RULE_VIOLATION, "001", "여행 종료일이 시작일보다 앞설 수 없습니다"),
+    INVALID_ITINERARY_REQUEST(StatusCode.BAD_REQUEST, DomainCode.TRAVEL,
+        CategoryCode.BUSINESS_RULE_VIOLATION, "002", "여행 일정 요청 값이 올바르지 않습니다");
 
     private final StatusCode statusCode;
     private final DomainCode domainCode;

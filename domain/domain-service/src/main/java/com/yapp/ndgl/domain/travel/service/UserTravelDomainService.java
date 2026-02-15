@@ -120,7 +120,19 @@ public class UserTravelDomainService {
 		UserTravelEntity userTravelEntity = userTravelRepository.findByIdAndUserId(userTravelId, userId)
 			.orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL));
 		userTravelEntity.updateTravelInfo(title, startDate, endDate, nights, days);
-		userTravelRepository.save(userTravelEntity);
+	}
+
+	@Transactional
+	public void replaceUserTravelPlaces(final Long userTravelId, final List<UserTravelPlace> userTravelPlaces) {
+		userTravelPlaceRepository.deleteByUserTravelId(userTravelId);
+		if (userTravelPlaces.isEmpty()) {
+			return;
+		}
+
+		List<UserTravelPlaceEntity> entities = userTravelPlaces.stream()
+			.map(UserTravelPlaceMapper::toEntity)
+			.toList();
+		userTravelPlaceRepository.saveAll(entities);
 	}
 
 	@Transactional(readOnly = true)
