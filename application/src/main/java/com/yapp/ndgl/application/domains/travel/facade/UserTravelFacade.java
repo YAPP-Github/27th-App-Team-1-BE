@@ -2,6 +2,7 @@ package com.yapp.ndgl.application.domains.travel.facade;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
@@ -22,6 +23,14 @@ public class UserTravelFacade {
     public Long createUserTravel(final String uuid, final CreateUserTravelRequest request) {
         log.info("템플릿으로 사용자 여행을 생성합니다. uuid = {}, templateId = {}", uuid, request.templateId());
         return userTravelService.createUserTravel(uuid, request);
+    }
+
+    public void bulkUpdateUserTravelPlaceStartTimes(
+        final String uuid, final Long userTravelId,
+        final UpdateUserTravelPlaceStartTimesRequest request
+    ) {
+        log.info("사용자 여행 장소 startTime을 일괄 수정합니다. uuid = {}, userTravelId = {}, request = {}", uuid, userTravelId, request);
+        userTravelService.bulkUpdateUserTravelPlaceStartTimes(uuid, userTravelId, request);
     }
 
     public UpcomingUserTravelResponse getUpcomingUserTravel(final String uuid) {

@@ -70,4 +70,8 @@ public class UserTravelPlaceEntity extends BaseEntity {
         this.startTime = startTime;
         this.estimatedDuration = estimatedDuration;
     }
+
+    public void updateStartTime(final LocalTime startTime) {
+        this.startTime = startTime;
+    }
 }

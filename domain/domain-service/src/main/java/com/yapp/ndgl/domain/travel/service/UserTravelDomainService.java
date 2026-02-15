@@ -1,7 +1,9 @@
 package com.yapp.ndgl.domain.travel.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
@@ -113,6 +115,33 @@ public class UserTravelDomainService {
 		return placeEntities.stream()
 			.map(UserTravelPlaceMapper::toDomain)
 			.toList();
+	}
+
+	@Transactional
+	public void bulkUpdateStartTime(
+		final Long userTravelId,
+		final List<Long> userTravelPlaceIds,
+		final Map<Long, LocalTime> startTimeByUserTravelPlaceId
+	) {
+		if (userTravelPlaceIds.isEmpty()) {
+			return;
+		}
+
+		List<UserTravelPlaceEntity> placeEntities = userTravelPlaceRepository.findByIdIn(userTravelPlaceIds);
+		if (placeEntities.size() != userTravelPlaceIds.size()) {
+			throw new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL);
+		}
+
+		boolean allBelongToUserTravel = placeEntities.stream()
+			.allMatch(entity -> entity.getUserTravelId().equals(userTravelId));
+		if (!allBelongToUserTravel) {
+			throw new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL);
+		}
+
+		for (UserTravelPlaceEntity placeEntity : placeEntities) {
+			placeEntity.updateStartTime(startTimeByUserTravelPlaceId.get(placeEntity.getId()));
+			userTravelPlaceRepository.save(placeEntity);
+		}
 	}
 
 	@Transactional(readOnly = true)

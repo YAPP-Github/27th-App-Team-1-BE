@@ -10,4 +10,6 @@ public interface UserTravelPlaceRepository extends JpaRepository<UserTravelPlace
     Optional<UserTravelPlaceEntity> findTopByUserTravelIdOrderByDayAscSequenceAsc(Long userTravelId);
 
     List<UserTravelPlaceEntity> findByUserTravelIdAndDayOrderBySequenceAsc(Long userTravelId, Integer day);
+
+    List<UserTravelPlaceEntity> findByIdIn(List<Long> ids);
 }
