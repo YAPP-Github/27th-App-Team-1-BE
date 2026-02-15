@@ -13,4 +13,16 @@ public class TravelProgram {
     private String name;
     private String profileImage;
     private TravelProgramType type;
+
+    public static TravelProgram create(
+        final String name,
+        final String profileImage,
+        final TravelProgramType type
+    ) {
+        return TravelProgram.builder()
+            .name(name)
+            .profileImage(profileImage)
+            .type(type)
+            .build();
+    }
 }

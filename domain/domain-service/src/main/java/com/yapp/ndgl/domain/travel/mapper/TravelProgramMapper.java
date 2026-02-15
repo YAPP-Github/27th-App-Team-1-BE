@@ -17,4 +17,12 @@ public class TravelProgramMapper {
             .type(entity.getType())
             .build();
     }
+
+    public static TravelProgramEntity toEntity(final TravelProgram program) {
+        return TravelProgramEntity.builder()
+            .name(program.getName())
+            .profileImage(program.getProfileImage())
+            .type(program.getType())
+            .build();
+    }
 }

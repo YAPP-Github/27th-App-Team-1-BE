@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yapp.ndgl.common.exception.GlobalException;
+import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.domain.travel.TravelProgram;
 import com.yapp.ndgl.domain.travel.entity.TravelProgramEntity;
 import com.yapp.ndgl.domain.travel.mapper.TravelProgramMapper;
@@ -31,34 +33,26 @@ public class TravelProgramDomainService {
             .toList();
     }
 
-    @Transactional(readOnly = true)
-    public Optional<TravelProgramEntity> findByName(final String name) {
-        return travelProgramRepository.findByName(name);
-    }
-
-    @Transactional
-    public TravelProgramEntity save(final TravelProgramEntity travelProgramEntity) {
-        return travelProgramRepository.save(travelProgramEntity);
-    }
-
-    @Transactional
-    public TravelProgramEntity findOrCreateEntityByName(final String name) {
-        Optional<TravelProgramEntity> existing = travelProgramRepository.findByName(name);
-        if (existing.isPresent()) {
-            return existing.get();
-        }
+    public TravelProgram createTravelProgram(final String travelerName, final String profileImage, final TravelProgramType programType) {
 
         try {
-            log.info("새로운 여행 프로그램을 생성합니다. name = {}", name);
-            TravelProgramEntity newProgram = TravelProgramEntity.builder()
-                .name(name)
-                .type(TravelProgramType.YOUTUBE)
-                .build();
-            return travelProgramRepository.saveAndFlush(newProgram);
+            TravelProgram travelProgram = TravelProgram.create(travelerName, profileImage, programType);
+            TravelProgramEntity travelProgramEntity = travelProgramRepository.saveAndFlush(
+                TravelProgramMapper.toEntity(travelProgram)
+            );
+            return TravelProgramMapper.toDomain(travelProgramEntity);
         } catch (DataIntegrityViolationException e) {
-            log.warn("여행 프로그램 동시 생성 감지, 기존 데이터를 조회합니다. name = {}", name);
-            return travelProgramRepository.findByName(name)
-                .orElseThrow(() -> e);
+            throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_TRAVEL_PROGRAM);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<TravelProgram> findByName(final String name) {
+        return travelProgramRepository.findByName(name)
+            .map(TravelProgramMapper::toDomain);
+    }
+
+    public TravelProgramEntity getReferenceById(final Long id) {
+        return travelProgramRepository.getReferenceById(id);
     }
 }

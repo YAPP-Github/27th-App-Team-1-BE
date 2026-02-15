@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelProgramResponse;
 import com.yapp.ndgl.domain.travel.TravelProgram;
 import com.yapp.ndgl.domain.travel.service.TravelProgramDomainService;
+import com.yapp.ndgl.domain.travel.type.TravelProgramType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,5 +24,11 @@ public class TravelProgramService {
         return programs.stream()
             .map(TravelProgramResponse::from)
             .toList();
+    }
+
+    @Transactional
+    public TravelProgram findOrCreateProgram(final String travelerName, final String profileImage, final TravelProgramType programType) {
+        return travelProgramDomainService.findByName(travelerName)
+            .orElseGet(() -> travelProgramDomainService.createTravelProgram(travelerName, profileImage, programType));
     }
 }
