@@ -1,11 +1,15 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
+import java.util.Map;
+
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
+import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
@@ -23,10 +27,37 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 @Tag(name = "Travel Template", description = "여행 템플릿 관련 API")
 public interface TravelTemplateApi {
+
+    @Operation(
+        summary = "여행 템플릿 저장",
+        description = "여행 템플릿을 저장합니다."
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "성공",
+            content = @Content(
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                            "code": "2000",
+                            "message": "요청에 성공하였습니다.",
+                            "data": {}
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<SuccessResponse<Map<String, Object>>> saveTravelTemplate(
+        @RequestBody @Valid final SaveTravelTemplateRequest request
+    );
 
     @Operation(
         summary = "여행 템플릿 영상 정보 조회",

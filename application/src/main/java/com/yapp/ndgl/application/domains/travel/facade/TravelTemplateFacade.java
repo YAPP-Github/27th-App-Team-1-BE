@@ -1,6 +1,7 @@
 package com.yapp.ndgl.application.domains.travel.facade;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
+import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
@@ -18,6 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 public class TravelTemplateFacade {
 
     private final TravelTemplateService travelTemplateService;
+
+    public void saveTravelTemplate(final SaveTravelTemplateRequest request) {
+        log.info("여행 템플릿을 저장합니다. travelId = {}", request.travelId());
+        travelTemplateService.saveTravelTemplate(request);
+    }
 
     public TravelTemplateHighlightsResponse readTravelTemplateHighlights(final Long id) {
         log.info("여행 템플릿의 상단 내역을 조회합니다. templateId = {}", id);
