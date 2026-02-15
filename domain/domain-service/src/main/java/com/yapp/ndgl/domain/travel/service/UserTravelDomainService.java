@@ -72,7 +72,7 @@ public class UserTravelDomainService {
 				templatePlace.getPlaceId(),
 				templatePlace.getDay(),
 				templatePlace.getSequence(),
-				null, // TODO: UserTravel 정규화 시 youtubeTipsJson에서 변환 필요
+				null, // TODO: UserTravel 정규화 시 travelerTipsJson에서 변환 필요
 				null,
 				templatePlace.getEstimatedDuration()
 			))

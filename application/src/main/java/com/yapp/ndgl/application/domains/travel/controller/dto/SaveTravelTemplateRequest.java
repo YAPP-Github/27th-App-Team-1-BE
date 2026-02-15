@@ -78,9 +78,9 @@ public record SaveTravelTemplateRequest(
         @Valid
         List<TransportationRequest> transportation,
 
-        @Schema(description = "유튜브 팁 목록")
-        @JsonProperty("youtube_tips")
-        List<String> youtubeTips,
+        @Schema(description = "여행자 팁 목록")
+        @JsonProperty("traveler_tips")
+        List<String> travelerTips,
 
         @Schema(description = "대안 장소 목록")
         @Valid

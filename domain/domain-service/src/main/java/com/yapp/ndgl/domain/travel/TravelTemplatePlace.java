@@ -14,7 +14,7 @@ public class TravelTemplatePlace {
     private int day;
     private Double distanceKm;
     private String transportationJson;
-    private String youtubeTipsJson;
+    private String travelerTipsJson;
     private String planBJson;
     private Integer estimatedDuration;
 
@@ -25,7 +25,7 @@ public class TravelTemplatePlace {
         final int day,
         final Double distanceKm,
         final String transportationJson,
-        final String youtubeTipsJson,
+        final String travelerTipsJson,
         final String planBJson,
         final Integer estimatedDuration
     ) {
@@ -36,7 +36,7 @@ public class TravelTemplatePlace {
             .day(day)
             .distanceKm(distanceKm)
             .transportationJson(transportationJson)
-            .youtubeTipsJson(youtubeTipsJson)
+            .travelerTipsJson(travelerTipsJson)
             .planBJson(planBJson)
             .estimatedDuration(estimatedDuration)
             .build();
@@ -50,7 +50,7 @@ public class TravelTemplatePlace {
         final int day,
         final Double distanceKm,
         final String transportationJson,
-        final String youtubeTipsJson,
+        final String travelerTipsJson,
         final String planBJson,
         final Integer estimatedDuration
     ) {
@@ -62,7 +62,7 @@ public class TravelTemplatePlace {
             .day(day)
             .distanceKm(distanceKm)
             .transportationJson(transportationJson)
-            .youtubeTipsJson(youtubeTipsJson)
+            .travelerTipsJson(travelerTipsJson)
             .planBJson(planBJson)
             .estimatedDuration(estimatedDuration)
             .build();

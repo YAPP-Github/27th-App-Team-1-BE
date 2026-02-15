@@ -52,7 +52,7 @@ public class TravelTemplatePlaceDomainService {
 			entity.getDay(),
 			entity.getDistanceKm(),
 			entity.getTransportationJson(),
-			entity.getYoutubeTipsJson(),
+			entity.getTravelerTipsJson(),
 			entity.getPlanBJson(),
 			entity.getEstimatedDuration()
 		);
@@ -66,7 +66,7 @@ public class TravelTemplatePlaceDomainService {
 			.day(templatePlace.getDay())
 			.distanceKm(templatePlace.getDistanceKm())
 			.transportationJson(templatePlace.getTransportationJson())
-			.youtubeTipsJson(templatePlace.getYoutubeTipsJson())
+			.travelerTipsJson(templatePlace.getTravelerTipsJson())
 			.planBJson(templatePlace.getPlanBJson())
 			.estimatedDuration(templatePlace.getEstimatedDuration())
 			.build();

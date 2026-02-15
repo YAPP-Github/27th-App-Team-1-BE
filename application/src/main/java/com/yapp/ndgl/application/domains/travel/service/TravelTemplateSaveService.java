@@ -92,7 +92,7 @@ public class TravelTemplateSaveService {
 					itinerary.day(),
 					activity.distanceKm(),
 					serializeToJson(activity.transportation()),
-					serializeToJson(activity.youtubeTips()),
+					serializeToJson(activity.travelerTips()),
 					planBJson,
 					activity.estimatedTime()
 				);

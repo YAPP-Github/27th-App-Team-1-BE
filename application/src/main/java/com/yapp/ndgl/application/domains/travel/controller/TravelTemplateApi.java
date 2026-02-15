@@ -153,7 +153,7 @@ public interface TravelTemplateApi {
 						        "distanceKm": 0,
 						        "transportation": [],
 						        "travelerTip": "호텔 조식이 훌륭하니 꼭 챙겨 드세요.",
-						        "youtubeTips": [
+						        "travelerTips": [
 						          "호텔 조식이 훌륭하니 꼭 챙겨 드세요.",
 						          "커넥팅 룸이 있어 가족이나 단체 여행객에게 편리해요."
 						        ],
@@ -187,7 +187,7 @@ public interface TravelTemplateApi {
 						          }
 						        ],
 						        "travelerTip": "성당 내부는 무료 입장이 가능해요.",
-						        "youtubeTips": [
+						        "travelerTips": [
 						          "성당 내부는 무료 입장이 가능해요.",
 						          "북탑 전망대에 올라가면 모자이크 지붕을 가까이서 볼 수 있어요.",
 						          "미사 시간에는 조용히 관람해야 해요."
@@ -222,7 +222,7 @@ public interface TravelTemplateApi {
 						          }
 						        ],
 						        "travelerTip": "오스트리아 국민 웨하스 마너를 종류별로 살 수 있어요.",
-						        "youtubeTips": [
+						        "travelerTips": [
 						          "오스트리아 국민 웨하스 마너를 종류별로 살 수 있어요.",
 						          "귀여운 마너 모자는 기념품으로 딱이에요."
 						        ],
@@ -256,7 +256,7 @@ public interface TravelTemplateApi {
 						          }
 						        ],
 						        "travelerTip": "예약 없이는 입장이 거의 불가능하니 꼭 미리 예약하세요.",
-						        "youtubeTips": [
+						        "travelerTips": [
 						          "예약 없이는 입장이 거의 불가능하니 꼭 미리 예약하세요.",
 						          "예약 실패 시 근처 다른 슈니첼 가게들도 맛이 훌륭해요.",
 						          "굴라쉬 소스에 케첩을 섞으면 돈가스 소스 맛이 나요."
@@ -295,7 +295,7 @@ public interface TravelTemplateApi {
 						          }
 						        ],
 						        "travelerTip": "영화 '비포 선라이즈'에 나온 대관람차(Riesenrad)가 유명해요.",
-						        "youtubeTips": [
+						        "travelerTips": [
 						          "영화 '비포 선라이즈'에 나온 대관람차(Riesenrad)가 유명해요.",
 						          "입장료는 무료이고 놀이기구별로 요금을 내요."
 						        ],
