@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
     uniqueConstraints = {
         @UniqueConstraint(
             name = "uk_travel_template_place",
-            columnNames = {"travel_template_id", "place_id"}
+            columnNames = {"travel_template_id", "day", "sequence"}
         )
     }
 )
