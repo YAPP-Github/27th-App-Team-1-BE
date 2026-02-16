@@ -16,6 +16,13 @@ public enum TravelErrorCode implements BaseErrorCode {
         CategoryCode.RESOURCE_NOT_FOUND, "002", "내 여행 정보를 찾을 수 없습니다"),
 
     /**
+     * TRAVEL-03-xxx
+     * RESOURCE_CONFLICT
+     */
+    ALREADY_EXISTS_TRAVEL_PROGRAM(StatusCode.CONFLICT, DomainCode.TRAVEL,
+        CategoryCode.RESOURCE_CONFLICT, "001", "이미 존재하는 여행 프로그램입니다"),
+
+    /**
      * TRAVEL-04-xxx
      * BUSINESS_RULE_VIOLATION
      */

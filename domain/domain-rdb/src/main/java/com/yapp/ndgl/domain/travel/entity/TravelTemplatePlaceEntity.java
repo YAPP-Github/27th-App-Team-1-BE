@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
     uniqueConstraints = {
         @UniqueConstraint(
             name = "uk_travel_template_place",
-            columnNames = {"travel_template_id", "place_id"}
+            columnNames = {"travel_template_id", "day", "sequence"}
         )
     }
 )
@@ -45,8 +45,8 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
     private String transportationJson;
 
     @Lob
-    @Column(name = "youtube_tips_json", columnDefinition = "JSON")
-    private String youtubeTipsJson;
+    @Column(name = "traveler_tips_json", columnDefinition = "JSON")
+    private String travelerTipsJson;
 
     @Lob
     @Column(name = "plan_b_json", columnDefinition = "JSON")
@@ -63,7 +63,7 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
         final int day,
         final Double distanceKm,
         final String transportationJson,
-        final String youtubeTipsJson,
+        final String travelerTipsJson,
         final String planBJson,
         final Integer estimatedDuration
     ) {
@@ -73,7 +73,7 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
         this.day = day;
         this.distanceKm = distanceKm;
         this.transportationJson = transportationJson;
-        this.youtubeTipsJson = youtubeTipsJson;
+        this.travelerTipsJson = travelerTipsJson;
         this.planBJson = planBJson;
         this.estimatedDuration = estimatedDuration;
     }

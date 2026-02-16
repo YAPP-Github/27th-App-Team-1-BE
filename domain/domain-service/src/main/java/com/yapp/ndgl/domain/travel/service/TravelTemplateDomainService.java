@@ -11,24 +11,26 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.common.response.SliceResponse;
+import com.yapp.ndgl.domain.travel.TravelProgram;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
+import com.yapp.ndgl.domain.travel.entity.TravelProgramEntity;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplateEntity;
 import com.yapp.ndgl.domain.travel.entity.TravelTemplatePlaceEntity;
 import com.yapp.ndgl.domain.travel.mapper.TravelTemplateMapper;
+import com.yapp.ndgl.domain.travel.repository.TravelProgramRepository;
 import com.yapp.ndgl.domain.travel.repository.TravelTemplatePlaceRepository;
 import com.yapp.ndgl.domain.travel.repository.TravelTemplateRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TravelTemplateDomainService {
 
     private final TravelTemplateRepository travelTemplateRepository;
     private final TravelTemplatePlaceRepository travelTemplatePlaceRepository;
+    private final TravelProgramRepository travelProgramRepository;
 
     @Transactional(readOnly = true)
     public TravelTemplate findById(final Long id) {
@@ -43,18 +45,17 @@ public class TravelTemplateDomainService {
             .findByTravelTemplateIdOrderByDayAscSequenceAsc(travelTemplateId);
 
         return placeEntities.stream()
-            .map(entity -> TravelTemplatePlace.builder()
-                .id(entity.getId())
-                .travelTemplateId(entity.getTravelTemplateId())
-                .sequence(entity.getSequence())
-                .day(entity.getDay())
-                .distanceKm(entity.getDistanceKm())
-                .transportationJson(entity.getTransportationJson())
-                .youtubeTipsJson(entity.getYoutubeTipsJson())
-                .planBJson(entity.getPlanBJson())
-                .placeId(entity.getPlaceId())
-                .estimatedDuration(entity.getEstimatedDuration())
-                .build())
+            .map(entity -> TravelTemplatePlace.createWithId(
+                entity.getId(),
+                entity.getTravelTemplateId(),
+                entity.getPlaceId(),
+                entity.getSequence(),
+                entity.getDay(),
+                entity.getDistanceKm(),
+                entity.getTransportationJson(),
+                entity.getTravelerTipsJson(),
+                entity.getPlanBJson(),
+                entity.getEstimatedDuration()))
             .toList();
     }
 
@@ -113,6 +114,17 @@ public class TravelTemplateDomainService {
             .toList();
 
         return SliceResponse.of(content, hasNext);
+    }
+
+    /**
+     * 여행 템플릿과 여행 프로그램을 함께 생성한다.
+     */
+    @Transactional
+    public TravelTemplate createTravelTemplate(final TravelTemplate travelTemplate, final TravelProgram travelProgram) {
+        TravelProgramEntity travelProgramEntity = travelProgramRepository.getReferenceById(travelProgram.getId());
+        TravelTemplateEntity travelTemplateEntity = TravelTemplateMapper.toEntity(travelTemplate, travelProgramEntity);
+        TravelTemplateEntity savedTravelTemplate = travelTemplateRepository.save(travelTemplateEntity);
+        return TravelTemplateMapper.toDomain(savedTravelTemplate);
     }
 
     private String normalizeKeyword(final String keyword) {

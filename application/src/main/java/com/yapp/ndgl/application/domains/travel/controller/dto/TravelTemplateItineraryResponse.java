@@ -39,10 +39,10 @@ public record TravelTemplateItineraryResponse(
         @Schema(description = "교통수단 목록", nullable = true)
         List<TransportationInfo> transportation,
         @Deprecated
-        @Schema(description = "여행자 팁 (Deprecated: youtubeTips 사용 권장)", example = "저녁 시간대 방문 추천", nullable = true, deprecated = true)
+        @Schema(description = "여행자 팁 (Deprecated: travelerTips 사용 권장)", example = "저녁 시간대 방문 추천", nullable = true, deprecated = true)
         String travelerTip,
-        @Schema(description = "유튜버 팁 목록", example = "[\"저녁 시간대 방문 추천\", \"현지인 맛집\"]", nullable = true)
-        List<String> youtubeTips,
+        @Schema(description = "여행자 팁 목록", example = "[\"저녁 시간대 방문 추천\", \"현지인 맛집\"]", nullable = true)
+        List<String> travelerTips,
         @Schema(description = "대체 장소 목록 (Plan B)", nullable = true)
         List<PlanBInfo> planB,
         @Schema(description = "예상 소요 시간 (분)", example = "60", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -57,16 +57,16 @@ public record TravelTemplateItineraryResponse(
         ) {
             Place place = placeMap.get(travelTemplatePlace.getPlaceId());
 
-            // youtubeTipsJson 파싱
+            // travelerTipsJson 파싱
             String travelerTip = null;
-            List<String> youtubeTips = null;
-            if (travelTemplatePlace.getYoutubeTipsJson() != null) {
+            List<String> travelerTips = null;
+            if (travelTemplatePlace.getTravelerTipsJson() != null) {
                 try {
                     List<String> tips = objectMapper.readValue(
-                        travelTemplatePlace.getYoutubeTipsJson(),
+                        travelTemplatePlace.getTravelerTipsJson(),
                         new TypeReference<List<String>>() {}
                     );
-                    youtubeTips = tips;
+                    travelerTips = tips;
                     travelerTip = tips.isEmpty() ? null : tips.get(0);
                 } catch (Exception e) {
                     // JSON 파싱 실패 시 null
@@ -120,7 +120,7 @@ public record TravelTemplateItineraryResponse(
                 travelTemplatePlace.getDistanceKm(),
                 transportation,
                 travelerTip,
-                youtubeTips,
+                travelerTips,
                 planB,
                 travelTemplatePlace.getEstimatedDuration(),
                 place == null ? null : PlaceInfo.from(place, objectMapper)

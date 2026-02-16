@@ -1,6 +1,7 @@
 package com.yapp.ndgl.domain.place.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 public class PlaceDomainService {
 
 	private final PlaceRepository placeRepository;
+
+	/**
+	 * googlePlaceId로 장소 조회 (없으면 Optional.empty 반환)
+	 */
+	public Optional<Place> findByGooglePlaceId(final String googlePlaceId) {
+		return placeRepository.findByGooglePlaceId(googlePlaceId)
+			.map(PlaceMapper::toDomain);
+	}
 
 	/**
 	 * googlePlaceId로 장소 조회 (없으면 예외 발생)
