@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
+import com.yapp.ndgl.application.domains.travel.service.dto.YouTubeVideoInfo;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.domain.place.Place;
@@ -38,10 +39,16 @@ public class TravelTemplateSaveService {
 	private final ObjectMapper objectMapper;
 
 	/**
-	 * Phase 2: 수집된 장소 데이터를 기반으로 DB에 저장한다. (트랜잭션)
+	 * Phase 2: 수집된 장소 데이터와 YouTube 정보를 기반으로 DB에 저장한다. (트랜잭션)
+	 *
+	 * @param youTubeVideoInfo YOUTUBE 타입일 때만 값이 있고, TV 타입 등은 null
 	 */
 	@Transactional
-	public Long persistTravelTemplate(final SaveTravelTemplateRequest request, final Map<String, Place> resolvedPlaces) {
+	public Long persistTravelTemplate(
+		final SaveTravelTemplateRequest request,
+		final Map<String, Place> resolvedPlaces,
+		final YouTubeVideoInfo youTubeVideoInfo
+	) {
 		// 1. 아직 저장되지 않은 Place를 DB에 저장
 		Map<String, Place> savedPlaces = new HashMap<>();
 		for (Map.Entry<String, Place> entry : resolvedPlaces.entrySet()) {
@@ -52,23 +59,47 @@ public class TravelTemplateSaveService {
 			savedPlaces.put(entry.getKey(), place);
 		}
 
-		// 2. TravelProgram 조회 또는 생성
-		TravelProgram travelProgram = travelProgramDomainService.findByName(request.traveler())
-			.orElseGet(() -> travelProgramDomainService.createTravelProgram(request.traveler(), null, TravelProgramType.YOUTUBE));
+		// 2. YOUTUBE 타입이면 YouTube API에서 추출한 채널명을 traveler로 사용
+		final TravelProgramType programType = request.travelProgramType();
+		final String traveler;
+		final String programName;
+		final String profileImage;
+		final String title;
+		final String thumbnail;
 
-		// 3. TravelTemplate 저장
+		if (programType == TravelProgramType.YOUTUBE && youTubeVideoInfo != null) {
+			traveler = youTubeVideoInfo.channelName();
+			programName = youTubeVideoInfo.channelName();
+			profileImage = youTubeVideoInfo.channelProfileImage();
+			title = youTubeVideoInfo.videoTitle();
+			thumbnail = youTubeVideoInfo.thumbnailUrl();
+		} else {
+			traveler = request.traveler();
+			programName = request.traveler();
+			profileImage = null;
+			title = request.traveler();
+			thumbnail = null;
+		}
+
+		// 3. TravelProgram 조회 또는 생성
+		TravelProgram travelProgram = travelProgramDomainService.findByName(programName)
+			.orElseGet(() -> travelProgramDomainService.createTravelProgram(programName, profileImage, programType));
+
+		// 4. TravelTemplate 저장
 		int days = request.itinerary().size();
 		int nights = Math.max(days - 1, 0);
 
 		TravelTemplate travelTemplate = TravelTemplate.create(
-			request.traveler(),
-			"여행 프로그램 이름",
-			"유튜버 이미지",
-			TravelProgramType.YOUTUBE,
+			traveler,
+			programName,
+			profileImage,
+			programType,
 			request.country(),
 			request.city(),
 			request.summary(),
-			"title",
+			title,
+			thumbnail,
+			request.link(),
 			request.budgetPerPerson(),
 			nights,
 			days
@@ -77,12 +108,17 @@ public class TravelTemplateSaveService {
 		TravelTemplate savedTemplate = travelTemplateDomainService.createTravelTemplate(travelTemplate, travelProgram);
 		log.info("여행 템플릿 저장 완료. templateId = {}", savedTemplate.getId());
 
-		// 4. TravelTemplatePlace 일괄 저장
+		// 5. TravelTemplatePlace 일괄 저장
 		List<TravelTemplatePlace> templatePlaces = new ArrayList<>();
 
 		for (SaveTravelTemplateRequest.ItineraryRequest itinerary : request.itinerary()) {
 			for (SaveTravelTemplateRequest.ActivityRequest activity : itinerary.activities()) {
 				Place place = savedPlaces.get(activity.placeName());
+				if (place == null) {
+					log.warn("장소 정보가 없어 건너뜁니다. placeName = {}", activity.placeName());
+					continue;
+				}
+
 				String planBJson = buildPlanBJson(activity.planB(), savedPlaces);
 
 				TravelTemplatePlace templatePlace = TravelTemplatePlace.create(
@@ -113,6 +149,7 @@ public class TravelTemplateSaveService {
 		}
 
 		List<PlanBInfo> planBInfos = planBList.stream()
+			.filter(planB -> savedPlaces.get(planB.name()) != null)
 			.map(planB -> new PlanBInfo(savedPlaces.get(planB.name()).getId(), planB.name(), planB.feature()))
 			.toList();
 

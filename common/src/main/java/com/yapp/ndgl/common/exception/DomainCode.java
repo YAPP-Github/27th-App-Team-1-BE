@@ -10,6 +10,7 @@ public enum DomainCode {
 	USER("유저 도메인 에러"),
 	SURVEY("설문조사 도메인 에러"),
 	TRAVEL("여행 도메인 에러"),
+	YOUTUBE("YouTube 에러"),
 	;
 
 	private final String name;

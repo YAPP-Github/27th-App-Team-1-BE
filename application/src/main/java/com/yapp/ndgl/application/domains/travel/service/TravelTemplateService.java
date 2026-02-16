@@ -19,6 +19,7 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePop
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
 import com.yapp.ndgl.application.domains.travel.event.TravelTemplateViewCountEvent;
+import com.yapp.ndgl.application.domains.travel.service.dto.YouTubeVideoInfo;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
@@ -26,6 +27,9 @@ import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceTextSearchRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceTextSearchResponse;
+import com.yapp.ndgl.clients.google.youtube.YouTubeDataClient;
+import com.yapp.ndgl.clients.google.youtube.dto.response.YouTubeChannelResponse;
+import com.yapp.ndgl.clients.google.youtube.dto.response.YouTubeVideoResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.common.response.SliceResponse;
@@ -55,6 +59,7 @@ public class TravelTemplateService {
     private final PlaceDomainService placeDomainService;
     private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
     private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
+    private final YouTubeDataClient youTubeDataClient;
     private final ObjectMapper objectMapper;
     private final ApplicationEventPublisher eventPublisher;
     private final UserDomainService userDomainService;
@@ -65,14 +70,28 @@ public class TravelTemplateService {
      */
     public Map<String, Place> resolveAllPlaces(final SaveTravelTemplateRequest request) {
         Map<String, Place> resolvedPlaces = new HashMap<>();
+        String city = request.city();
+        String country = request.country();
+        Double lastLatitude = null;
+        Double lastLongitude = null;
 
         for (SaveTravelTemplateRequest.ItineraryRequest itinerary : request.itinerary()) {
             for (SaveTravelTemplateRequest.ActivityRequest activity : itinerary.activities()) {
-                resolvedPlaces.computeIfAbsent(activity.placeName(), this::resolvePlace);
+                if (!resolvedPlaces.containsKey(activity.placeName())) {
+                    resolvedPlaces.put(activity.placeName(), resolvePlace(activity.placeName(), city, country, lastLatitude, lastLongitude));
+                }
+
+                Place place = resolvedPlaces.get(activity.placeName());
+                if (place != null && place.getLatitude() != null && place.getLongitude() != null) {
+                    lastLatitude = place.getLatitude();
+                    lastLongitude = place.getLongitude();
+                }
 
                 if (activity.planB() != null) {
                     for (SaveTravelTemplateRequest.PlanBRequest planB : activity.planB()) {
-                        resolvedPlaces.computeIfAbsent(planB.name(), this::resolvePlace);
+                        if (!resolvedPlaces.containsKey(planB.name())) {
+                            resolvedPlaces.put(planB.name(), resolvePlace(planB.name(), city, country, lastLatitude, lastLongitude));
+                        }
                     }
                 }
             }
@@ -81,8 +100,35 @@ public class TravelTemplateService {
         return resolvedPlaces;
     }
 
-    private Place resolvePlace(final String placeName) {
-        String googlePlaceId = searchGooglePlaceId(placeName);
+    /**
+     * Phase 1: YouTube Data API를 호출하여 영상 및 채널 정보를 수집한다. (트랜잭션 없음)
+     */
+    public YouTubeVideoInfo resolveYouTubeInfo(final String link) {
+        log.info("YouTube Data API를 호출하여 영상 정보를 수집합니다. link = {}", link);
+
+        String videoId = youTubeDataClient.extractVideoId(link);
+
+        YouTubeVideoResponse videoResponse = youTubeDataClient.readVideoInfo(videoId);
+        YouTubeVideoResponse.Item videoItem = videoResponse.items().get(0);
+
+        String title = videoItem.snippet().title();
+        String thumbnail = videoItem.snippet().thumbnails().bestThumbnailUrl();
+        String channelId = videoItem.snippet().channelId();
+
+        YouTubeChannelResponse channelResponse = youTubeDataClient.readChannelInfo(channelId);
+        YouTubeChannelResponse.Item channelItem = channelResponse.items().get(0);
+
+        String channelName = channelItem.snippet().title();
+        String channelProfileImage = channelItem.snippet().thumbnails().bestThumbnailUrl();
+
+        return new YouTubeVideoInfo(title, thumbnail, channelName, channelProfileImage);
+    }
+
+    private Place resolvePlace(final String placeName, final String city, final String country, final Double lastLatitude, final Double lastLongitude) {
+        String googlePlaceId = searchGooglePlaceId(placeName, city, country, lastLatitude, lastLongitude);
+        if (googlePlaceId == null) {
+            return null;
+        }
 
         Optional<Place> existingPlace = placeDomainService.findByGooglePlaceId(googlePlaceId);
         if (existingPlace.isPresent()) {
@@ -104,14 +150,20 @@ public class TravelTemplateService {
         return toPlace(response, thumbnail);
     }
 
-    private String searchGooglePlaceId(final String placeName) {
-        log.info("Google Maps Text Search API로 장소를 검색합니다. placeName = {}", placeName);
+    private String searchGooglePlaceId(final String placeName, final String city, final String country, final Double lastLatitude, final Double lastLongitude) {
+        String textQuery = placeName + ", " + city + ", " + country;
+        log.info("Google Maps Text Search API로 장소를 검색합니다. textQuery = {}", textQuery);
+
+        PlaceTextSearchRequest request = (lastLatitude != null && lastLongitude != null)
+            ? PlaceTextSearchRequest.of(textQuery, lastLatitude, lastLongitude)
+            : PlaceTextSearchRequest.of(textQuery);
+
         GooglePlaceTextSearchResponse response = googleMapsPlaceDetailClient
-            .searchPlacesByText(PlaceTextSearchRequest.of(placeName));
+            .searchPlacesByText(request);
 
         if (response.places() == null || response.places().isEmpty()) {
-            log.error("텍스트 검색 결과가 없습니다. placeName = {}", placeName);
-            throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
+            log.warn("텍스트 검색 결과가 없습니다. 해당 장소를 건너뜁니다. placeName = {}", placeName);
+            return null;
         }
 
         return response.places().get(0).id();

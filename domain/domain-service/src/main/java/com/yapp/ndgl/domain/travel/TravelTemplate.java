@@ -23,7 +23,7 @@ public class TravelTemplate {
     private Integer nights;
     private Integer days;
 
-    public static TravelTemplate create(final String traveler, final String travelProgramName, final String travelProgramProfileImage, final TravelProgramType programType, final String country, final String city, final String summary, final String title, final Integer budgetPerPerson, final Integer nights, final Integer days) {
+    public static TravelTemplate create(final String traveler, final String travelProgramName, final String travelProgramProfileImage, final TravelProgramType programType, final String country, final String city, final String summary, final String title, final String thumbnail, final String link, final Integer budgetPerPerson, final Integer nights, final Integer days) {
         return TravelTemplate.builder()
             .title(title)
             .travelProgramName(travelProgramName)
@@ -33,6 +33,8 @@ public class TravelTemplate {
             .country(country)
             .city(city)
             .summary(summary)
+            .thumbnail(thumbnail)
+            .link(link)
             .budgetPerPerson(budgetPerPerson)
             .nights(nights)
             .days(days)
