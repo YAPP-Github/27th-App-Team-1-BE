@@ -3,6 +3,7 @@ package com.yapp.ndgl.application.domains.travel.controller.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yapp.ndgl.domain.travel.type.TravelProgramType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -11,8 +12,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public record SaveTravelTemplateRequest(
-    @Schema(description = "여행자", example = "빠니보틀", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "여행자는 필수입니다.")
+    @Schema(description = "여행자 (TV 타입일 때 필수, YOUTUBE 타입일 때는 채널명으로 자동 설정)", example = "빠니보틀")
     String traveler,
 
     @Schema(description = "여행 요약", example = "방콕 3박 4일 여행", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -33,6 +33,14 @@ public record SaveTravelTemplateRequest(
     @Schema(description = "도시", example = "방콕", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "도시는 필수입니다.")
     String city,
+
+    @Schema(description = "여행 프로그램 유형 (YOUTUBE, TV)", example = "YOUTUBE", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "여행 프로그램 유형은 필수입니다.")
+    @JsonProperty("travel_program_type")
+    TravelProgramType travelProgramType,
+
+    @Schema(description = "영상 링크 (YOUTUBE 타입일 때 필수)", example = "https://www.youtube.com/watch?v=abc123")
+    String link,
 
     @Schema(description = "일정 목록", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "일정 목록은 필수입니다.")

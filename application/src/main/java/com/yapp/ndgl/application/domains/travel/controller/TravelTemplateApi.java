@@ -35,7 +35,37 @@ public interface TravelTemplateApi {
 
 	@Operation(
 		summary = "여행 템플릿 저장",
-		description = "여행 템플릿을 저장합니다."
+		description = "여행 템플릿을 저장합니다. travel_program_type이 YOUTUBE인 경우 link 필드에 YouTube 영상 URL을 입력하면 영상 제목, 썸네일, 채널명, 채널 프로필 이미지를 자동으로 추출합니다."
+	)
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+		content = @Content(
+			examples = @ExampleObject(
+				name = "YOUTUBE 타입 요청 예시",
+				value = """
+					{
+					    "summary": "방콕 3박 4일 여행",
+					    "budget_per_person": 1200000,
+					    "continent": "아시아",
+					    "country": "TH",
+					    "city": "방콕",
+					    "travel_program_type": "YOUTUBE",
+					    "link": "https://www.youtube.com/watch?v=abc123",
+					    "itinerary": [
+					        {
+					            "day": 1,
+					            "activities": [
+					                {
+					                    "sequence": 1,
+					                    "place_name": "왓 아룬",
+					                    "estimated_time": 60
+					                }
+					            ]
+					        }
+					    ]
+					}
+					"""
+			)
+		)
 	)
 	@ApiResponses({
 		@ApiResponse(
