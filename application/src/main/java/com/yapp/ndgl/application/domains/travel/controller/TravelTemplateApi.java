@@ -43,6 +43,7 @@ public interface TravelTemplateApi {
 				name = "YOUTUBE 타입 요청 예시",
 				value = """
 					{
+						"traveler": "여행자(유튜브의 경우 자동으로 매핑됨)"
 					    "summary": "방콕 3박 4일 여행",
 					    "budget_per_person": 1200000,
 					    "continent": "아시아",
