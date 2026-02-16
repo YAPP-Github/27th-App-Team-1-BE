@@ -419,19 +419,7 @@ public interface UserTravelApi {
                             "endDate": "2023-08-10",
                             "nights": 6,
                             "days": 7,
-                            "upcomingUserTravelPlace": {
-                              "id": 1,
-                              "estimatedDuration": 60,
-                              "place": {
-                                "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
-                                "thumbnail": "https://lh3.googleusercontent.com/place-photos/AEkURDym40I4XyqXUosRz8bTu9aPvDUklxkfM79KCa03C0SQTnDaTu_RXXiWQjCRZ3-yK4dTbzoySqMrucj1ubPQNUZ5yKseTRfmaME5C--5jLYB0rU-MLXqUabNEk3myTWywzIuEHcKz_I-H4Xtdg=s4800-w4800-h3600",
-                                "latitude": 35.6762,
-                                "longitude": 139.6503,
-                                "name": "도쿄타워",
-                                "regularOpeningHours": "09:00~23:00",
-                                "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978"
-                              }
-                            }
+                            "thumbnail" : "abcd"
                           }
                         }
                         """

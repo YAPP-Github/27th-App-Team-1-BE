@@ -1,7 +1,7 @@
 package com.yapp.ndgl.application.domains.travel.service;
 
-import java.time.temporal.ChronoUnit;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -10,17 +10,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelRequest;
-import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelItineraryResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
@@ -32,14 +31,15 @@ import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.UserTravel;
-import com.yapp.ndgl.domain.travel.UserUpcomingTravel;
 import com.yapp.ndgl.domain.travel.UserTravelPlace;
+import com.yapp.ndgl.domain.travel.UserUpcomingTravel;
 import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 import com.yapp.ndgl.domain.travel.service.UserTravelDomainService;
 import com.yapp.ndgl.domain.user.User;
 import com.yapp.ndgl.domain.user.service.UserDomainService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -76,7 +76,8 @@ public class UserTravelService {
 			request.startDate(),
 			request.endDate(),
 			nights,
-			days
+			days,
+			template.getThumbnail()
 		).getId();
 	}
 

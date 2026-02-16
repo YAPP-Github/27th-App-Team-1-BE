@@ -25,7 +25,8 @@ public record UpcomingUserTravelResponse(
     int nights,
     @Schema(description = "여행 총 일 수", example = "7", requiredMode = Schema.RequiredMode.REQUIRED)
     int days,
-
+    @Schema(description = "썸네일 이미지", example = "https://thumbnail.image", requiredMode = Schema.RequiredMode.REQUIRED)
+    String thumbnail,
     @Schema(description = "다가오는 여행 프로그램 정보", nullable = true)
     UserTravelPlace upcomingUserTravelPlace
 ) {
@@ -49,6 +50,7 @@ public record UpcomingUserTravelResponse(
             upcomingTravel.getEndDate(),
             upcomingTravel.getNights(),
             upcomingTravel.getDays(),
+            upcomingTravel.getThumbnail(),
             UserTravelPlace.of(upcomingPlace, place, objectMapper)
         );
     }

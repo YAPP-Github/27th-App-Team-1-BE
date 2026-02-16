@@ -51,6 +51,9 @@ public class UserTravelEntity extends BaseEntity {
     @Column(name = "days", nullable = false)
     private Integer days;
 
+    @Column(name = "thumbnail", length = 1000)
+    private String thumbnail;
+
     @Builder
     public UserTravelEntity(
         final Long userId,
@@ -61,7 +64,8 @@ public class UserTravelEntity extends BaseEntity {
         final LocalDate startDate,
         final LocalDate endDate,
         final Integer nights,
-        final Integer days
+        final Integer days,
+        final String thumbnail
     ) {
         this.userId = userId;
         this.templateId = templateId;
@@ -72,6 +76,7 @@ public class UserTravelEntity extends BaseEntity {
         this.endDate = endDate;
         this.nights = nights;
         this.days = days;
+        this.thumbnail = thumbnail;
     }
 
     public void updateTravelInfo(
