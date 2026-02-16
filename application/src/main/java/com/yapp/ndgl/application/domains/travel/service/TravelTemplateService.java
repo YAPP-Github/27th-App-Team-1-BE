@@ -70,14 +70,28 @@ public class TravelTemplateService {
      */
     public Map<String, Place> resolveAllPlaces(final SaveTravelTemplateRequest request) {
         Map<String, Place> resolvedPlaces = new HashMap<>();
+        String city = request.city();
+        String country = request.country();
+        Double lastLatitude = null;
+        Double lastLongitude = null;
 
         for (SaveTravelTemplateRequest.ItineraryRequest itinerary : request.itinerary()) {
             for (SaveTravelTemplateRequest.ActivityRequest activity : itinerary.activities()) {
-                resolvedPlaces.computeIfAbsent(activity.placeName(), this::resolvePlace);
+                if (!resolvedPlaces.containsKey(activity.placeName())) {
+                    resolvedPlaces.put(activity.placeName(), resolvePlace(activity.placeName(), city, country, lastLatitude, lastLongitude));
+                }
+
+                Place place = resolvedPlaces.get(activity.placeName());
+                if (place != null && place.getLatitude() != null && place.getLongitude() != null) {
+                    lastLatitude = place.getLatitude();
+                    lastLongitude = place.getLongitude();
+                }
 
                 if (activity.planB() != null) {
                     for (SaveTravelTemplateRequest.PlanBRequest planB : activity.planB()) {
-                        resolvedPlaces.computeIfAbsent(planB.name(), this::resolvePlace);
+                        if (!resolvedPlaces.containsKey(planB.name())) {
+                            resolvedPlaces.put(planB.name(), resolvePlace(planB.name(), city, country, lastLatitude, lastLongitude));
+                        }
                     }
                 }
             }
@@ -110,8 +124,8 @@ public class TravelTemplateService {
         return new YouTubeVideoInfo(title, thumbnail, channelName, channelProfileImage);
     }
 
-    private Place resolvePlace(final String placeName) {
-        String googlePlaceId = searchGooglePlaceId(placeName);
+    private Place resolvePlace(final String placeName, final String city, final String country, final Double lastLatitude, final Double lastLongitude) {
+        String googlePlaceId = searchGooglePlaceId(placeName, city, country, lastLatitude, lastLongitude);
         if (googlePlaceId == null) {
             return null;
         }
@@ -136,10 +150,16 @@ public class TravelTemplateService {
         return toPlace(response, thumbnail);
     }
 
-    private String searchGooglePlaceId(final String placeName) {
-        log.info("Google Maps Text Search API로 장소를 검색합니다. placeName = {}", placeName);
+    private String searchGooglePlaceId(final String placeName, final String city, final String country, final Double lastLatitude, final Double lastLongitude) {
+        String textQuery = placeName + ", " + city + ", " + country;
+        log.info("Google Maps Text Search API로 장소를 검색합니다. textQuery = {}", textQuery);
+
+        PlaceTextSearchRequest request = (lastLatitude != null && lastLongitude != null)
+            ? PlaceTextSearchRequest.of(textQuery, lastLatitude, lastLongitude)
+            : PlaceTextSearchRequest.of(textQuery);
+
         GooglePlaceTextSearchResponse response = googleMapsPlaceDetailClient
-            .searchPlacesByText(PlaceTextSearchRequest.of(placeName));
+            .searchPlacesByText(request);
 
         if (response.places() == null || response.places().isEmpty()) {
             log.warn("텍스트 검색 결과가 없습니다. 해당 장소를 건너뜁니다. placeName = {}", placeName);
