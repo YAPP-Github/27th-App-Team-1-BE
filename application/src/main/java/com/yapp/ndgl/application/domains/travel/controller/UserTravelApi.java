@@ -419,7 +419,7 @@ public interface UserTravelApi {
                             "endDate": "2023-08-10",
                             "nights": 6,
                             "days": 7,
-                            "thumbnail" : "abcd"
+                            "thumbnail": "https://i.ytimg.com/vi/example/mqdefault.jpg"
                           }
                         }
                         """
