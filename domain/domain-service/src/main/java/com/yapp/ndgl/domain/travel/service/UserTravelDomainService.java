@@ -48,7 +48,8 @@ public class UserTravelDomainService {
 		final LocalDate startDate,
 		final LocalDate endDate,
 		final int nights,
-		final int days) {
+		final int days,
+		final String thumbnail) {
 
 		UserTravel userTravel = UserTravel.create(
 			user.getId(),
@@ -59,7 +60,8 @@ public class UserTravelDomainService {
 			startDate,
 			endDate,
 			nights,
-			days
+			days,
+			thumbnail
 		);
 
 		UserTravelEntity savedUserTravelEntity = userTravelRepository.save(UserTravelMapper.toEntity(userTravel));

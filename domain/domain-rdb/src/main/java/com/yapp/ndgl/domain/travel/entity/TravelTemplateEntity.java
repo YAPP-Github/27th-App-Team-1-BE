@@ -1,13 +1,15 @@
 package com.yapp.ndgl.domain.travel.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.ColumnDefault;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,15 +36,6 @@ public class TravelTemplateEntity extends BaseEntity {
 
     @Column(length = 50)
     private String continent;
-
-    @Column(name = "weather_info", length = 1000)
-    private String weatherInfo;
-
-    @Column(name = "culture_info", length = 1000)
-    private String cultureInfo;
-
-    @Column(name = "food_info", length = 1000)
-    private String foodInfo;
 
     @Column(name = "thumbnail", length = 1000)
     private String thumbnail;
@@ -79,9 +72,6 @@ public class TravelTemplateEntity extends BaseEntity {
         final String country,
         final String city,
         final String continent,
-        final String weatherInfo,
-        final String cultureInfo,
-        final String foodInfo,
         final String thumbnail,
         final String link,
         final Long viewCount,
@@ -97,9 +87,6 @@ public class TravelTemplateEntity extends BaseEntity {
         this.country = country;
         this.city = city;
         this.continent = continent;
-        this.weatherInfo = weatherInfo;
-        this.cultureInfo = cultureInfo;
-        this.foodInfo = foodInfo;
         this.thumbnail = thumbnail;
         this.link = link;
         this.viewCount = viewCount == null ? 0L : viewCount;

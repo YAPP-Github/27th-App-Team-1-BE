@@ -20,6 +20,7 @@ public class UserTravelMapper {
             .endDate(userTravel.getEndDate())
             .nights(userTravel.getNights())
             .days(userTravel.getDays())
+            .thumbnail(userTravel.getThumbnail())
             .build();
     }
 
@@ -39,6 +40,7 @@ public class UserTravelMapper {
             .endDate(entity.getEndDate())
             .nights(entity.getNights())
             .days(entity.getDays())
+            .thumbnail(entity.getThumbnail())
             .createdAt(entity.getCreatedAt())
             .updatedAt(entity.getUpdatedAt())
             .build();

@@ -1,10 +1,10 @@
 package com.yapp.ndgl.domain.travel;
 
-import lombok.Builder;
-import lombok.Getter;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
@@ -20,6 +20,7 @@ public class UserTravel {
     private LocalDate endDate;
     private Integer nights;
     private Integer days;
+    private String thumbnail;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -32,7 +33,8 @@ public class UserTravel {
         final LocalDate startDate,
         final LocalDate endDate,
         final Integer nights,
-        final Integer days
+        final Integer days,
+        final String thumbnail
     ) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -46,6 +48,7 @@ public class UserTravel {
             .endDate(endDate)
             .nights(nights)
             .days(days)
+            .thumbnail(thumbnail)
             .createdAt(now)
             .updatedAt(now)
             .build();
