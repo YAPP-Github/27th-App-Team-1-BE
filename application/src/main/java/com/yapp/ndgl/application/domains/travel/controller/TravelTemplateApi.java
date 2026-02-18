@@ -176,7 +176,7 @@ public interface TravelTemplateApi {
 					          "estimated_time": 30,
 					          "distance_km": 0.0,
 					          "transportation": [],
-					          "youtube_tips": [
+					          "traveler_tips": [
 					            "체크아웃 전 짐을 잘 챙겼는지 마지막으로 확인하세요."
 					          ],
 					          "plan_b": []
