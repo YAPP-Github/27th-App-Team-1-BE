@@ -17,7 +17,8 @@ public record TravelTemplateHighlightsResponse(
 	Integer nights,
 	@Schema(description = "일 수", example = "4", requiredMode = Schema.RequiredMode.REQUIRED)
 	Integer days,
-	@Schema(description = "유튜브 영상 정보", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Deprecated
+	@Schema(description = "유튜브 영상 정보(해당 필드는 Deprecated 되었습니다. program 필드를 사용해주셔야 합니다.)", requiredMode = Schema.RequiredMode.REQUIRED, deprecated = true)
 	YoutubeInfo youtube,
 	@Schema(description = "영상 정보", requiredMode = Schema.RequiredMode.REQUIRED)
 	ProgramInfo program

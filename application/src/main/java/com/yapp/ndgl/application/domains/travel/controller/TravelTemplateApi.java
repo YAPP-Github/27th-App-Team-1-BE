@@ -278,14 +278,6 @@ public interface TravelTemplateApi {
 						    "budgetPerPerson": 300000,
 						    "nights": 0,
 						    "days": 1,
-						    "youtube": {
-						      "title": "title",
-						      "name": "뜬뜬 DdeunDdeun",
-						      "profileImage": "profile Image",
-						      "thumbnail": "thumbnail",
-						      "link": "youtube link",
-						      "summary": "오스트리아 빈에서 펼쳐지는 무계획 P들의 좌충우돌 여행기. 슈테판 대성당의 웅장함에 감탄하고, 예약 전쟁으로 유명한 슈니첼 맛집 피그뮐러를 방문했으나 실패한 뒤 프라터 놀이공원으로 향하는 하루 일정을 담고 있다."
-						    },
 						    "program": {
 						      "title": "title",
 						      "name": "뜬뜬 DdeunDdeun",
