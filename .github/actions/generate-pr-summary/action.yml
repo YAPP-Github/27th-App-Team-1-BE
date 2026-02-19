@@ -97,7 +97,7 @@ runs:
                 {\"role\": \"system\", \"content\": \"Write a concise GitHub Pull Request summary in Korean Markdown. Under 15 lines. Return markdown only.\"},
                 {\"role\": \"user\", \"content\": $(printf \"%s\" \"$PROMPT\" | jq -Rs .)}
               ],
-              \"max_output_tokens\": 1024
+              \"max_output_tokens\": 4096
             }")"
 
           # API error 체크
