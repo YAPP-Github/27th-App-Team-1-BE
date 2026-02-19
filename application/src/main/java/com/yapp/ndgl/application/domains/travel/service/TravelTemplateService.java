@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.place.mapper.GooglePlaceTypeMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
@@ -249,13 +250,33 @@ public class TravelTemplateService {
         // 여행 템플릿 장소 목록 조회 (day 파라미터에 따라 DB에서 필터링)
         List<TravelTemplatePlace> travelTemplatePlaces = travelTemplatePlaceDomainService.findPlacesByTravelTemplateIdAndDay(travelTemplateId, day);
 
-        // placeId 목록 추출
+        // placeId 목록 추출 (메인 장소 + PlanB 장소)
         List<Long> placeIds = travelTemplatePlaces.stream()
             .map(TravelTemplatePlace::getPlaceId)
             .collect(Collectors.toList());
 
-        // 장소 목록 조회
-        List<Place> placeList = placeDomainService.findByIds(placeIds);
+        // PlanB JSON에서 placeId 추출
+        for (TravelTemplatePlace ttp : travelTemplatePlaces) {
+            if (ttp.getPlanBJson() != null) {
+                try {
+                    List<Map<String, Object>> planBList = objectMapper.readValue(
+                        ttp.getPlanBJson(),
+                        new TypeReference<List<Map<String, Object>>>() {}
+                    );
+                    for (Map<String, Object> p : planBList) {
+                        if (p.get("placeId") != null) {
+                            placeIds.add(((Number) p.get("placeId")).longValue());
+                        }
+                    }
+                } catch (Exception e) {
+                    // JSON 파싱 실패 시 무시
+                }
+            }
+        }
+
+        // 중복 제거 후 장소 목록 조회
+        List<Long> distinctPlaceIds = placeIds.stream().distinct().collect(Collectors.toList());
+        List<Place> placeList = placeDomainService.findByIds(distinctPlaceIds);
         Map<Long, Place> placeMap = placeList.stream()
             .collect(Collectors.toMap(Place::getId, place -> place));
 
