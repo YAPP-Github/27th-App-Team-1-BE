@@ -43,11 +43,11 @@ public interface TravelTemplateApi {
 				name = "YOUTUBE 타입 요청 예시",
 				value = """
 					{
-					  "traveler" : "이름 또는 프로그램 (유튜브 링크라면 자동 매핑)"
+					  "traveler" : "이름 또는 프로그램 (유튜브 링크라면 자동 매핑)",
 					  "summary": "유재석, 이성민, 지석진, 양세찬이 오스트리아 빈을 여행하며 겪는 좌충우돌 에피소드를 담고 있다. 프라터 놀이공원에서의 즐거운 시간, 한식당 방문, 그리고 클림트의 키스를 보러 간 벨베데레 궁전 투어까지 알차게 즐기는 모습이 인상적이다.",
 					  "budget_per_person": 350000,
 					  "continent": "EUROPE",
-					  "country": "오스트리아",
+					  "country": "AT",
 					  "city": "빈",
 					  "travel_program_type": "YOUTUBE",
 					  "link": "https://www.youtube.com/watch?v=0RJpkvVJVUE",
@@ -94,8 +94,7 @@ public interface TravelTemplateApi {
 					            }
 					          ]
 					        }
-					      ],
-					      "transportation_tip": "프라터 공원 근처는 도보로 이동하기 좋으며, 밤에는 조명이 예뻐 산책하기 좋습니다."
+					      ]
 					    },
 					    {
 					      "day": 2,
@@ -159,8 +158,7 @@ public interface TravelTemplateApi {
 					            }
 					          ]
 					        }
-					      ],
-					      "transportation_tip": "시내 이동 시 일행이 많다면 택시를 이용하는 것이 편리하고 경제적일 수 있습니다."
+					      ]
 					    },
 					    {
 					      "day": 3,
@@ -215,8 +213,7 @@ public interface TravelTemplateApi {
 					          ],
 					          "plan_b": []
 					        }
-					      ],
-					      "transportation_tip": "기차역으로 이동할 때는 교통 체증을 고려해 여유 있게 출발하는 것이 좋습니다."
+					      ]
 					    }
 					  ]
 					}
