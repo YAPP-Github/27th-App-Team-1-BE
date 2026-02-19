@@ -4,8 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.common.exception.CommonErrorCode;
+import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
@@ -27,6 +32,8 @@ public record TravelTemplateItineraryResponse(
 
         return new TravelTemplateItineraryResponse(places);
     }
+
+    private static final Logger log = LoggerFactory.getLogger(TravelTemplateItineraryResponse.class);
 
     public record ItineraryPlaceResponse(
         @Schema(description = "장소 ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -103,11 +110,12 @@ public record TravelTemplateItineraryResponse(
                         travelTemplatePlace.getPlanBJson(),
                         new TypeReference<List<Map<String, Object>>>() {}
                     );
-                    planB = planBList.stream()
+                    List<PlanBInfo> parsed = planBList.stream()
                         .map(p -> {
                             Long placeId = p.get("placeId") != null ? ((Number) p.get("placeId")).longValue() : null;
                             Place planBPlace = placeId != null ? placeMap.get(placeId) : null;
                             if (planBPlace == null) {
+                                log.warn("PlanB 장소 조회 실패. placeId={}, templatePlaceId={}", placeId, travelTemplatePlace.getId());
                                 return null;
                             }
                             return new PlanBInfo(
@@ -119,8 +127,10 @@ public record TravelTemplateItineraryResponse(
                         })
                         .filter(Objects::nonNull)
                         .toList();
+                    planB = parsed.isEmpty() ? null : parsed;
                 } catch (Exception e) {
-                    // JSON 파싱 실패 시 null
+                    log.error(e.getMessage());
+                    throw new GlobalException(CommonErrorCode.INTERNAL_SERVER_ERROR);
                 }
             }
 
