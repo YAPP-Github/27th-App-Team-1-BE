@@ -110,10 +110,7 @@ public record SaveTravelTemplateRequest(
     public record PlanBRequest(
         @Schema(description = "장소명", example = "요요기 공원", requiredMode = Schema.RequiredMode.REQUIRED)
         @NotBlank(message = "대안 장소명은 필수입니다.")
-        String name,
-
-        @Schema(description = "장소 특징", example = "메이지 신궁 옆에 위치한 넓은 공원으로 피크닉하기 좋음")
-        String feature
+        String name
     ) {
     }
 }

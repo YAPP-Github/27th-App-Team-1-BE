@@ -43,11 +43,11 @@ public interface TravelTemplateApi {
 				name = "YOUTUBE 타입 요청 예시",
 				value = """
 					{
-					  "traveler" : "이름 또는 프로그램 (유튜브 링크라면 자동 매핑)"
+					  "traveler" : "이름 또는 프로그램 (유튜브 링크라면 자동 매핑)",
 					  "summary": "유재석, 이성민, 지석진, 양세찬이 오스트리아 빈을 여행하며 겪는 좌충우돌 에피소드를 담고 있다. 프라터 놀이공원에서의 즐거운 시간, 한식당 방문, 그리고 클림트의 키스를 보러 간 벨베데레 궁전 투어까지 알차게 즐기는 모습이 인상적이다.",
 					  "budget_per_person": 350000,
 					  "continent": "EUROPE",
-					  "country": "오스트리아",
+					  "country": "AT",
 					  "city": "빈",
 					  "travel_program_type": "YOUTUBE",
 					  "link": "https://www.youtube.com/watch?v=0RJpkvVJVUE",
@@ -68,8 +68,7 @@ public interface TravelTemplateApi {
 					          ],
 					          "plan_b": [
 					            {
-					              "name": "Schweizerhaus",
-					              "feature": "프라터 공원 내 유명한 학센 맛집"
+					              "name": "Schweizerhaus"
 					            }
 					          ]
 					        },
@@ -91,13 +90,11 @@ public interface TravelTemplateApi {
 					          ],
 					          "plan_b": [
 					            {
-					              "name": "BILLA",
-					              "feature": "오스트리아의 대표적인 슈퍼마켓 체인"
+					              "name": "BILLA"
 					            }
 					          ]
 					        }
-					      ],
-					      "transportation_tip": "프라터 공원 근처는 도보로 이동하기 좋으며, 밤에는 조명이 예뻐 산책하기 좋습니다."
+					      ]
 					    },
 					    {
 					      "day": 2,
@@ -114,8 +111,7 @@ public interface TravelTemplateApi {
 					          ],
 					          "plan_b": [
 					            {
-					              "name": "Hotel Sacher Wien",
-					              "feature": "비엔나의 유서 깊은 호텔이자 자허토르테의 본고장"
+					              "name": "Hotel Sacher Wien"
 					            }
 					          ]
 					        },
@@ -137,8 +133,7 @@ public interface TravelTemplateApi {
 					          ],
 					          "plan_b": [
 					            {
-					              "name": "Yori",
-					              "feature": "비엔나의 또 다른 유명 한식당"
+					              "name": "Yori"
 					            }
 					          ]
 					        },
@@ -159,13 +154,11 @@ public interface TravelTemplateApi {
 					          ],
 					          "plan_b": [
 					            {
-					              "name": "Wien Westbahnhof",
-					              "feature": "비엔나의 또 다른 주요 기차역"
+					              "name": "Wien Westbahnhof"
 					            }
 					          ]
 					        }
-					      ],
-					      "transportation_tip": "시내 이동 시 일행이 많다면 택시를 이용하는 것이 편리하고 경제적일 수 있습니다."
+					      ]
 					    },
 					    {
 					      "day": 3,
@@ -199,8 +192,7 @@ public interface TravelTemplateApi {
 					          ],
 					          "plan_b": [
 					            {
-					              "name": "Botanischer Garten der Universität Wien",
-					              "feature": "벨베데레 궁전 바로 옆에 위치한 평화로운 식물원"
+					              "name": "Botanischer Garten der Universität Wien"
 					            }
 					          ]
 					        },
@@ -221,12 +213,10 @@ public interface TravelTemplateApi {
 					          ],
 					          "plan_b": []
 					        }
-					      ],
-					      "transportation_tip": "기차역으로 이동할 때는 교통 체증을 고려해 여유 있게 출발하는 것이 좋습니다."
+					      ]
 					    }
 					  ]
 					}
-					
 					"""
 			)
 		)
@@ -345,8 +335,10 @@ public interface TravelTemplateApi {
 						        ],
 						        "planB": [
 						          {
+						            "googlePlaceId": "ChIJtY2ydasHbUcRsP1rMIlBx1s",
 						            "name": "Hotel Sacher Wien",
-						            "feature": "비엔나의 상징적인 럭셔리 호텔"
+						            "thumbnail": "https://lh3.googleusercontent.com/places/example-sacher.jpg",
+						            "category": "ACCOMMODATION"
 						          }
 						        ],
 						        "estimatedDuration": 0,
@@ -380,8 +372,10 @@ public interface TravelTemplateApi {
 						        ],
 						        "planB": [
 						          {
+						            "googlePlaceId": "ChIJkbeSa18HbUcRxc0jf7E1bNA",
 						            "name": "Karlskirche",
-						            "feature": "바로크 양식의 걸작으로 꼽히는 성당"
+						            "thumbnail": "https://lh3.googleusercontent.com/places/example-karlskirche.jpg",
+						            "category": "TOURIST_ATTRACTION"
 						          }
 						        ],
 						        "estimatedDuration": 60,
@@ -414,8 +408,10 @@ public interface TravelTemplateApi {
 						        ],
 						        "planB": [
 						          {
+						            "googlePlaceId": "ChIJE5HQ648HbUcR3tcEG7W3bAo",
 						            "name": "Gerstner K. u. K. Hofzuckerbäcker",
-						            "feature": "황실에 납품하던 유서 깊은 디저트 가게"
+						            "thumbnail": "https://lh3.googleusercontent.com/places/example-gerstner.jpg",
+						            "category": "RESTAURANT"
 						          }
 						        ],
 						        "estimatedDuration": 30,
@@ -449,12 +445,16 @@ public interface TravelTemplateApi {
 						        ],
 						        "planB": [
 						          {
+						            "googlePlaceId": "ChIJbU-Egp8HbUcRp7vCmHLUqXw",
 						            "name": "Lugeck",
-						            "feature": "피그뮐러에서 운영하는 모던한 분위기의 레스토랑"
+						            "thumbnail": "https://lh3.googleusercontent.com/places/example-lugeck.jpg",
+						            "category": "RESTAURANT"
 						          },
 						          {
+						            "googlePlaceId": "ChIJVTtr7EcHbUcRkFjSjWR2h9Y",
 						            "name": "Plachutta Wollzeile",
-						            "feature": "타펠슈피츠(갈비탕 비슷한 요리)로 유명한 맛집"
+						            "thumbnail": "https://lh3.googleusercontent.com/places/example-plachutta.jpg",
+						            "category": "RESTAURANT"
 						          }
 						        ],
 						        "estimatedDuration": 40,
@@ -487,8 +487,10 @@ public interface TravelTemplateApi {
 						        ],
 						        "planB": [
 						          {
+						            "googlePlaceId": "ChIJi2KXYH8HbUcRqPzCEHvJTQI",
 						            "name": "Stadtpark",
-						            "feature": "요한 슈트라우스 동상이 있는 아름다운 시립 공원"
+						            "thumbnail": "https://lh3.googleusercontent.com/places/example-stadtpark.jpg",
+						            "category": "TOURIST_ATTRACTION"
 						          }
 						        ],
 						        "estimatedDuration": 90,

@@ -150,7 +150,7 @@ public class TravelTemplateSaveService {
 
 		List<PlanBInfo> planBInfos = planBList.stream()
 			.filter(planB -> savedPlaces.get(planB.name()) != null)
-			.map(planB -> new PlanBInfo(savedPlaces.get(planB.name()).getId(), planB.name(), planB.feature()))
+			.map(planB -> new PlanBInfo(savedPlaces.get(planB.name()).getId(), planB.name()))
 			.toList();
 
 		return serializeToJson(planBInfos);
@@ -168,5 +168,5 @@ public class TravelTemplateSaveService {
 		}
 	}
 
-	private record PlanBInfo(Long placeId, String name, String feature) {}
+	private record PlanBInfo(Long placeId, String name) {}
 }

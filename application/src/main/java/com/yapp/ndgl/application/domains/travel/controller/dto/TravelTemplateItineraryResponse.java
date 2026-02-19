@@ -2,9 +2,15 @@ package com.yapp.ndgl.application.domains.travel.controller.dto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.common.exception.CommonErrorCode;
+import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
@@ -26,6 +32,8 @@ public record TravelTemplateItineraryResponse(
 
         return new TravelTemplateItineraryResponse(places);
     }
+
+    private static final Logger log = LoggerFactory.getLogger(TravelTemplateItineraryResponse.class);
 
     public record ItineraryPlaceResponse(
         @Schema(description = "장소 ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -77,9 +85,9 @@ public record TravelTemplateItineraryResponse(
             List<TransportationInfo> transportation = null;
             if (travelTemplatePlace.getTransportationJson() != null) {
                 try {
-                    List<java.util.Map<String, Object>> transportList = objectMapper.readValue(
+                    List<Map<String, Object>> transportList = objectMapper.readValue(
                         travelTemplatePlace.getTransportationJson(),
-                        new TypeReference<List<java.util.Map<String, Object>>>() {}
+                        new TypeReference<List<Map<String, Object>>>() {}
                     );
                     transportation = transportList.stream()
                         .map(t -> {
@@ -94,22 +102,35 @@ public record TravelTemplateItineraryResponse(
                 }
             }
 
-            // planBJson 파싱
+            // planBJson 파싱 - placeId로 Place 조회하여 필드 보강
             List<PlanBInfo> planB = null;
             if (travelTemplatePlace.getPlanBJson() != null) {
                 try {
-                    List<java.util.Map<String, String>> planBList = objectMapper.readValue(
+                    List<Map<String, Object>> planBList = objectMapper.readValue(
                         travelTemplatePlace.getPlanBJson(),
-                        new TypeReference<List<java.util.Map<String, String>>>() {}
+                        new TypeReference<List<Map<String, Object>>>() {}
                     );
-                    planB = planBList.stream()
-                        .map(p -> new PlanBInfo(
-                            p.get("name"),
-                            p.get("feature")
-                        ))
+                    List<PlanBInfo> parsed = planBList.stream()
+                        .map(p -> {
+                            Long placeId = p.get("placeId") != null ? ((Number) p.get("placeId")).longValue() : null;
+                            Place planBPlace = placeId != null ? placeMap.get(placeId) : null;
+                            if (planBPlace == null) {
+                                log.warn("PlanB 장소 조회 실패. placeId={}, templatePlaceId={}", placeId, travelTemplatePlace.getId());
+                                return null;
+                            }
+                            return new PlanBInfo(
+                                planBPlace.getGooglePlaceId(),
+                                planBPlace.getName(),
+                                planBPlace.getThumbnail(),
+                                planBPlace.getCategory() != null ? planBPlace.getCategory().name() : null
+                            );
+                        })
+                        .filter(Objects::nonNull)
                         .toList();
+                    planB = parsed.isEmpty() ? null : parsed;
                 } catch (Exception e) {
-                    // JSON 파싱 실패 시 null
+                    log.error(e.getMessage());
+                    throw new GlobalException(CommonErrorCode.INTERNAL_SERVER_ERROR);
                 }
             }
 
@@ -137,10 +158,14 @@ public record TravelTemplateItineraryResponse(
     }
 
     public record PlanBInfo(
-        @Schema(description = "대체 장소명", example = "Noi Bai Airport Lounge", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "Google Place ID", example = "ChIJN1t_tDeuEmsRUsoyG83frY4", requiredMode = Schema.RequiredMode.REQUIRED)
+        String googlePlaceId,
+        @Schema(description = "장소명", example = "콜로세움 (Colosseo)", requiredMode = Schema.RequiredMode.REQUIRED)
         String name,
-        @Schema(description = "특징", example = "시내로 나가기 전 간단히 허기를 채우거나 휴식을 취하기 좋은 라운지", nullable = true)
-        String feature
+        @Schema(description = "장소 썸네일 이미지 URL", example = "https://places.googleapis.com/v1/places/ChIJN1t_tDeuEmsRUsoyG83frY4/photos/...", nullable = true)
+        String thumbnail,
+        @Schema(description = "장소 카테고리", example = "TOURIST_ATTRACTION", nullable = true)
+        String category
     ) {
     }
 }
