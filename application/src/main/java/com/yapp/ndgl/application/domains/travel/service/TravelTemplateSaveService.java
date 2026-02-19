@@ -95,6 +95,7 @@ public class TravelTemplateSaveService {
 			profileImage,
 			programType,
 			request.country(),
+			request.countryName(),
 			request.city(),
 			request.summary(),
 			title,
