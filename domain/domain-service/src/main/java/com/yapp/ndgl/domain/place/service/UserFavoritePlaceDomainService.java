@@ -4,7 +4,6 @@ import com.yapp.ndgl.domain.place.entity.UserFavoritePlaceEntity;
 import com.yapp.ndgl.domain.place.repository.UserFavoritePlaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +21,12 @@ public class UserFavoritePlaceDomainService {
             return;
         }
 
-        try {
-            userFavoritePlaceRepository.save(
-                UserFavoritePlaceEntity.builder()
-                    .userId(userId)
-                    .placeId(placeId)
-                    .build()
-            );
-        } catch (DataIntegrityViolationException e) {
-            log.info("즐겨찾기 추가 중 경합이 발생했습니다. userId = {}, placeId = {}", userId, placeId);
-        }
+        userFavoritePlaceRepository.save(
+            UserFavoritePlaceEntity.builder()
+                .userId(userId)
+                .placeId(placeId)
+                .build()
+        );
     }
 
     @Transactional
