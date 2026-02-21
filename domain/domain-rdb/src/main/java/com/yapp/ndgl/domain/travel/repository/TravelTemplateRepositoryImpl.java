@@ -42,6 +42,7 @@ public class TravelTemplateRepositoryImpl implements TravelTemplateRepositoryCus
         if (keyword != null) {
             where.and(
                 travelTemplate.country.containsIgnoreCase(keyword)
+                    .or(travelTemplate.countryName.containsIgnoreCase(keyword))
                     .or(travelTemplate.city.containsIgnoreCase(keyword))
                     .or(travelTemplate.travelProgram.name.containsIgnoreCase(keyword))
             );

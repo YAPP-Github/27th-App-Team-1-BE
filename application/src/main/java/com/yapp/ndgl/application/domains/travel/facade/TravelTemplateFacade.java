@@ -9,6 +9,7 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateIti
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
+import com.yapp.ndgl.application.domains.place.service.PlacePhotoService;
 import com.yapp.ndgl.application.domains.travel.service.TravelTemplateSaveService;
 import com.yapp.ndgl.application.domains.travel.service.TravelTemplateService;
 import com.yapp.ndgl.application.domains.travel.service.dto.YouTubeVideoInfo;
@@ -26,6 +27,7 @@ public class TravelTemplateFacade {
 
     private final TravelTemplateService travelTemplateService;
     private final TravelTemplateSaveService travelTemplateSaveService;
+    private final PlacePhotoService placePhotoService;
 
     public Long saveTravelTemplate(final SaveTravelTemplateRequest request) {
         log.info("여행 템플릿을 저장합니다. type = {}", request.travelProgramType());
@@ -39,7 +41,15 @@ public class TravelTemplateFacade {
         Map<String, Place> resolvedPlaces = travelTemplateService.resolveAllPlaces(request);
 
         // Phase 2: DB 저장 (트랜잭션)
-        return travelTemplateSaveService.persistTravelTemplate(request, resolvedPlaces, youTubeVideoInfo);
+        Long templateId = travelTemplateSaveService.persistTravelTemplate(request, resolvedPlaces, youTubeVideoInfo);
+
+        // Phase 3: 장소 사진 비동기 저장 (트랜잭션 커밋 이후 실행)
+        resolvedPlaces.values().stream()
+            .map(Place::getGooglePlaceId)
+            .distinct()
+            .forEach(placePhotoService::savePhotosIfNotExists);
+
+        return templateId;
     }
 
     public TravelTemplateHighlightsResponse readTravelTemplateHighlights(final Long id) {

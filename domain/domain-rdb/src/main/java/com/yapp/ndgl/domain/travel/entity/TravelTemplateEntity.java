@@ -31,6 +31,9 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String country;
 
+    @Column(name = "country_name", length = 100)
+    private String countryName;
+
     @Column(nullable = false, length = 100)
     private String city;
 
@@ -70,6 +73,7 @@ public class TravelTemplateEntity extends BaseEntity {
         final TravelProgramEntity travelProgram,
         final String traveler,
         final String country,
+        final String countryName,
         final String city,
         final String continent,
         final String thumbnail,
@@ -85,6 +89,7 @@ public class TravelTemplateEntity extends BaseEntity {
         this.travelProgram = travelProgram;
         this.traveler = traveler;
         this.country = country;
+        this.countryName = countryName;
         this.city = city;
         this.continent = continent;
         this.thumbnail = thumbnail;
