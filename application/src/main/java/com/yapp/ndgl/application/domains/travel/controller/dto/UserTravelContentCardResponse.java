@@ -13,8 +13,10 @@ public record UserTravelContentCardResponse(
 	Long templateId,
 	@Schema(description = "여행 제목", example = "도쿄 3박 4일", requiredMode = Schema.RequiredMode.REQUIRED)
 	String title,
-	@Schema(description = "국가", example = "JP", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "국가 코드", example = "JP", requiredMode = Schema.RequiredMode.REQUIRED)
 	String country,
+	@Schema(description = "국가명", example = "일본", nullable = true)
+	String countryName,
 	@Schema(description = "도시", example = "도쿄", requiredMode = Schema.RequiredMode.REQUIRED)
 	String city,
 	@Schema(description = "여행 시작일", example = "2026-03-01", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -33,6 +35,7 @@ public record UserTravelContentCardResponse(
 			userTravel.getTemplateId(),
 			userTravel.getTitle(),
 			userTravel.getCountry(),
+			userTravel.getCountryName(),
 			userTravel.getCity(),
 			userTravel.getStartDate(),
 			userTravel.getEndDate(),

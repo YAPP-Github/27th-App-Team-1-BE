@@ -56,6 +56,7 @@ public class UserTravelDomainService {
 			template.getId(),
 			template.getTitle(),
 			template.getCountry(),
+			template.getCountryName(),
 			template.getCity(),
 			startDate,
 			endDate,

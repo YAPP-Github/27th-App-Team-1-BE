@@ -30,6 +30,7 @@ public class UserTravelRepositoryImpl implements UserTravelRepositoryCustom {
 				userTravel.id,
 				userTravel.title,
 				userTravel.country,
+				userTravel.countryName,
 				userTravel.city,
 				userTravel.startDate,
 				userTravel.endDate,

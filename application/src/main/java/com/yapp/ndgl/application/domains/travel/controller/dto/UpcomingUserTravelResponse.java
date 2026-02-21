@@ -13,8 +13,10 @@ public record UpcomingUserTravelResponse(
     long userTravelId,
     @Schema(description = "여행 제목", example = "여행 제목", requiredMode = Schema.RequiredMode.REQUIRED)
     String title,
-    @Schema(description = "여행 국가", example = "IN", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "여행 국가 코드", example = "IN", requiredMode = Schema.RequiredMode.REQUIRED)
     String country,
+    @Schema(description = "국가명", example = "인도", nullable = true)
+    String countryName,
     @Schema(description = "여행 도시", example = "뭄바이", requiredMode = Schema.RequiredMode.REQUIRED)
     String city,
     @Schema(description = "여행 시작 날짜", example = "2023-08-01", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -45,6 +47,7 @@ public record UpcomingUserTravelResponse(
             upcomingTravel.getId(),
             upcomingTravel.getTitle(),
             upcomingTravel.getCountry(),
+            upcomingTravel.getCountryName(),
             upcomingTravel.getCity(),
             upcomingTravel.getStartDate(),
             upcomingTravel.getEndDate(),
