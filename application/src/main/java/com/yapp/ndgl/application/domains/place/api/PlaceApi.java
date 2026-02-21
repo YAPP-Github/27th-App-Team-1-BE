@@ -1,15 +1,18 @@
 package com.yapp.ndgl.application.domains.place.api;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.place.controller.request.SearchPlaceRequest;
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
 import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
+import com.yapp.ndgl.common.response.SuccessResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,8 +21,11 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @Tag(name = "Place", description = "장소 관련 API")
 public interface PlaceApi {
@@ -417,5 +423,105 @@ public interface PlaceApi {
 	ResponseEntity<?> readPlacePhotos(
 		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
 		@RequestParam("googlePlaceId") final String googlePlaceId
+	);
+
+	@Operation(
+		summary = "장소 즐겨찾기 추가",
+		description = "사용자 본인의 장소 즐겨찾기를 추가합니다. 이미 즐겨찾기인 경우에도 성공으로 처리합니다.",
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(
+				schema = @Schema(implementation = SuccessResponse.class),
+				examples = @ExampleObject(
+					name = "SUCCESS",
+					value = """
+						{
+						  "code": "2000",
+						  "message": "요청에 성공하였습니다.",
+						  "data": {}
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "404",
+			description = "장소를 찾을 수 없음",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "NOT_FOUND_PLACE",
+					value = """
+						{
+						  "code": "PLACE-02-001",
+						  "message": "장소를 찾을 수 없습니다",
+						  "errors": []
+						}
+						"""
+				)
+			)
+		)
+	})
+	@PostMapping("/favorite")
+	ResponseEntity<SuccessResponse> addFavoritePlace(
+		@CurrentUuid String uuid,
+		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
+		@RequestParam("googlePlaceId")
+		@NotBlank(message = "googlePlaceId는 비어 있을 수 없습니다.")
+		final String googlePlaceId
+	);
+
+	@Operation(
+		summary = "장소 즐겨찾기 삭제",
+		description = "사용자 본인의 장소 즐겨찾기를 삭제합니다. 즐겨찾기 대상이 없어도 성공으로 처리합니다.",
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(
+				schema = @Schema(implementation = SuccessResponse.class),
+				examples = @ExampleObject(
+					name = "SUCCESS",
+					value = """
+						{
+						  "code": "2000",
+						  "message": "요청에 성공하였습니다.",
+						  "data": {}
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "404",
+			description = "장소를 찾을 수 없음",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "NOT_FOUND_PLACE",
+					value = """
+						{
+						  "code": "PLACE-02-001",
+						  "message": "장소를 찾을 수 없습니다",
+						  "errors": []
+						}
+						"""
+				)
+			)
+		)
+	})
+	@DeleteMapping("/favorite")
+	ResponseEntity<SuccessResponse> removeFavoritePlace(
+		@CurrentUuid String uuid,
+		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
+		@RequestParam("googlePlaceId")
+		@NotBlank(message = "googlePlaceId는 비어 있을 수 없습니다.")
+		final String googlePlaceId
 	);
 }

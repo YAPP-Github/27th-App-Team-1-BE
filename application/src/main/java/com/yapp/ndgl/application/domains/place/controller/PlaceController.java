@@ -1,6 +1,9 @@
 package com.yapp.ndgl.application.domains.place.controller;
 
+import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +16,7 @@ import com.yapp.ndgl.application.domains.place.controller.request.SearchPlaceReq
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
 import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.application.domains.place.facade.PlaceDetailFacade;
+import com.yapp.ndgl.application.domains.place.facade.PlaceFavoriteFacade;
 import com.yapp.ndgl.application.domains.place.facade.PlacePhotoFacade;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
@@ -22,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/places")
@@ -29,6 +34,7 @@ public class PlaceController implements PlaceApi {
 
 	private final PlaceDetailFacade placeDetailFacade;
 	private final PlacePhotoFacade placePhotoFacade;
+	private final PlaceFavoriteFacade placeFavoriteFacade;
 
 	@Override
 	@GetMapping("/detail")
@@ -55,5 +61,25 @@ public class PlaceController implements PlaceApi {
 	) {
 		PlacePhotoResponse response = placePhotoFacade.readPlacePhotos(googlePlaceId);
 		return ResponseEntity.ok(SuccessResponse.success(response));
+	}
+
+	@Override
+	@PostMapping("/favorite")
+	public ResponseEntity<SuccessResponse> addFavoritePlace(
+		@CurrentUuid String uuid,
+		@RequestParam("googlePlaceId") final String googlePlaceId
+	) {
+		placeFavoriteFacade.addFavoritePlace(uuid, googlePlaceId);
+		return ResponseEntity.ok(SuccessResponse.noContent());
+	}
+
+	@Override
+	@DeleteMapping("/favorite")
+	public ResponseEntity<SuccessResponse> removeFavoritePlace(
+		@CurrentUuid String uuid,
+		@RequestParam("googlePlaceId") final String googlePlaceId
+	) {
+		placeFavoriteFacade.removeFavoritePlace(uuid, googlePlaceId);
+		return ResponseEntity.ok(SuccessResponse.noContent());
 	}
 }
