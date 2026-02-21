@@ -21,6 +21,8 @@ public enum TravelErrorCode implements BaseErrorCode {
      */
     ALREADY_EXISTS_TRAVEL_PROGRAM(StatusCode.CONFLICT, DomainCode.TRAVEL,
         CategoryCode.RESOURCE_CONFLICT, "001", "이미 존재하는 여행 프로그램입니다"),
+    ALREADY_EXISTS_TRAVEL_TEMPLATE(StatusCode.CONFLICT, DomainCode.TRAVEL,
+        CategoryCode.RESOURCE_CONFLICT, "002", "이미 저장된 영상입니다"),
 
     /**
      * TRAVEL-04-xxx

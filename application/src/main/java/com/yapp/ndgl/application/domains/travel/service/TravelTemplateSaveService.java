@@ -49,12 +49,20 @@ public class TravelTemplateSaveService {
 		final Map<String, Place> resolvedPlaces,
 		final YouTubeVideoInfo youTubeVideoInfo
 	) {
-		// 1. 아직 저장되지 않은 Place를 DB에 저장
+		// 1. 이미 저장된 영상인지 확인
+		travelTemplateDomainService.validateNotExistsByLink(request.link());
+
+		// 2. Place를 googlePlaceId로 선 조회 후 없으면 저장, 있으면 기존 장소 사용
 		Map<String, Place> savedPlaces = new HashMap<>();
 		for (Map.Entry<String, Place> entry : resolvedPlaces.entrySet()) {
-			Place place = entry.getValue();
-			if (place.getId() == null) {
-				place = placeDomainService.save(place);
+			final Place resolved = entry.getValue();
+			Place place;
+			if (resolved.getId() == null) {
+				String googlePlaceId = resolved.getGooglePlaceId();
+				place = placeDomainService.findByGooglePlaceId(googlePlaceId)
+					.orElseGet(() -> placeDomainService.save(resolved));
+			} else {
+				place = resolved;
 			}
 			savedPlaces.put(entry.getKey(), place);
 		}

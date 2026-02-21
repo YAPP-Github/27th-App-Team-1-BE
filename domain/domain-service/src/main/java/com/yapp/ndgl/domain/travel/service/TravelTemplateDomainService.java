@@ -116,6 +116,13 @@ public class TravelTemplateDomainService {
         return SliceResponse.of(content, hasNext);
     }
 
+    @Transactional(readOnly = true)
+    public void validateNotExistsByLink(final String link) {
+        if (link != null && travelTemplateRepository.existsByLink(link)) {
+            throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_TRAVEL_TEMPLATE);
+        }
+    }
+
     /**
      * 여행 템플릿과 여행 프로그램을 함께 생성한다.
      */
