@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yapp.ndgl.application.domains.place.api.PlaceApi;
 import com.yapp.ndgl.application.domains.place.controller.request.SearchPlaceRequest;
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceFavoriteListResponse;
 import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.application.domains.place.facade.PlaceDetailFacade;
 import com.yapp.ndgl.application.domains.place.facade.PlaceFavoriteFacade;
 import com.yapp.ndgl.application.domains.place.facade.PlacePhotoFacade;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
 import jakarta.validation.Valid;
@@ -60,6 +62,17 @@ public class PlaceController implements PlaceApi {
 		final @RequestParam("googlePlaceId") String googlePlaceId
 	) {
 		PlacePhotoResponse response = placePhotoFacade.readPlacePhotos(googlePlaceId);
+		return ResponseEntity.ok(SuccessResponse.success(response));
+	}
+
+	@Override
+	@GetMapping("/favorite")
+	public ResponseEntity<SuccessResponse<SliceResponse<PlaceFavoriteListResponse>>> readFavoritePlaces(
+		@CurrentUuid String uuid,
+		@RequestParam(value = "page", defaultValue = "0") final int page,
+		@RequestParam(value = "size", defaultValue = "20") final int size
+	) {
+		SliceResponse<PlaceFavoriteListResponse> response = placeFavoriteFacade.readFavoritePlaces(uuid, page, size);
 		return ResponseEntity.ok(SuccessResponse.success(response));
 	}
 

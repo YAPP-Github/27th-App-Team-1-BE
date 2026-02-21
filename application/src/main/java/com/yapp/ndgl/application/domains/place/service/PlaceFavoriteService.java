@@ -1,5 +1,7 @@
 package com.yapp.ndgl.application.domains.place.service;
 
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceFavoriteListResponse;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.place.service.UserFavoritePlaceDomainService;
@@ -29,5 +31,19 @@ public class PlaceFavoriteService {
         User user = userDomainService.findByUuid(uuid);
         Place place = placeDomainService.readPlaceDetailByGooglePLaceId(googlePlaceId);
         userFavoritePlaceDomainService.removeFavoritePlace(user.getId(), place.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public SliceResponse<PlaceFavoriteListResponse> readFavoritePlaces(final String uuid, final int page, final int size) {
+        User user = userDomainService.findByUuid(uuid);
+        SliceResponse<Place> favoritePlaces = userFavoritePlaceDomainService.findFavoritePlacesByUserId(
+            user.getId(), page, size
+        );
+        return SliceResponse.of(
+            favoritePlaces.getContent().stream()
+                .map(PlaceFavoriteListResponse::from)
+                .toList(),
+            favoritePlaces.isHasNext()
+        );
     }
 }
