@@ -26,9 +26,13 @@ public record SaveTravelTemplateRequest(
     @Schema(description = "대륙", example = "아시아")
     String continent,
 
-    @Schema(description = "국가", example = "TH", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "국가 코드", example = "TH", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "국가는 필수입니다.")
     String country,
+
+    @Schema(description = "국가명", example = "태국")
+    @JsonProperty("country_name")
+    String countryName,
 
     @Schema(description = "도시", example = "방콕", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "도시는 필수입니다.")

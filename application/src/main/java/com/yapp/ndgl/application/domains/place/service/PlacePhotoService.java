@@ -99,13 +99,84 @@ public class PlacePhotoService {
 		}
 	}
 
+	/**
+	 * googlePlaceId에 해당하는 장소의 사진 URI 목록을 조회한다.
+	 * DB에 저장된 사진을 반환하되, photosJson에는 존재하지만 DB에는 없는 미저장 사진이 있으면
+	 * Google API를 호출하여 조회 후 반환 및 DB에 저장한다.
+	 *
+	 * @param googlePlaceId 장소 ID
+	 * @return 사진 URI 목록
+	 */
 	public PlacePhotoResponse readPlacePhotoUris(final String googlePlaceId) {
-		List<PlacePhoto> photos = placePhotoDomainService.findByGooglePlaceId(googlePlaceId);
-		if (photos.isEmpty()) {
+		// Place 조회 - 존재하지 않는 googlePlaceId인 경우 예외 전파
+		Place place = placeDomainService.readPlaceDetailByGooglePLaceId(googlePlaceId);
+
+		List<PlacePhoto> existingPhotos = placePhotoDomainService.findByGooglePlaceId(googlePlaceId);
+		List<PlacePhoto> missingPhotos = fetchAndSaveMissingPhotos(googlePlaceId, place, existingPhotos);
+
+		List<PlacePhoto> allPhotos = new ArrayList<>(existingPhotos);
+		allPhotos.addAll(missingPhotos);
+
+		if (allPhotos.isEmpty()) {
 			return PlacePhotoResponse.empty();
 		}
 
-		return PlacePhotoResponse.toResponse(photos);
+		return PlacePhotoResponse.toResponse(allPhotos);
+	}
+
+	/**
+	 * photosJson에는 존재하지만 DB에는 없는 미저장 사진을 Google API로 조회 후 저장한다.
+	 *
+	 * @param googlePlaceId 장소 ID
+	 * @param place 장소 엔티티
+	 * @param existingPhotos DB에 이미 저장된 사진 목록
+	 * @return 새로 조회 및 저장된 사진 목록
+	 */
+	private List<PlacePhoto> fetchAndSaveMissingPhotos(final String googlePlaceId, final Place place,
+		final List<PlacePhoto> existingPhotos) {
+		try {
+			if (place.getPhotosJson() == null || place.getPhotosJson().isEmpty()) {
+				return List.of();
+			}
+
+			List<PhotoMeta> photoMetas = objectMapper.readValue(
+				place.getPhotosJson(),
+				new TypeReference<>() {}
+			);
+
+			if (photoMetas == null || photoMetas.isEmpty()) {
+				return List.of();
+			}
+
+			Map<String, PlacePhoto> existingPhotoMap = existingPhotos.stream()
+				.collect(Collectors.toMap(PlacePhoto::getPhotoName, p -> p));
+
+			List<PlacePhoto> newPhotos = new ArrayList<>();
+			for (PhotoMeta photoMeta : photoMetas) {
+				if (!existingPhotoMap.containsKey(photoMeta.name())) {
+					String uri = fetchPhotoUri(photoMeta);
+					PlacePhoto placePhoto = PlacePhoto.create(
+						googlePlaceId,
+						photoMeta.name(),
+						uri,
+						photoMeta.widthPx(),
+						photoMeta.heightPx()
+					);
+					newPhotos.add(placePhoto);
+				}
+			}
+
+			if (!newPhotos.isEmpty()) {
+				placePhotoDomainService.saveAllIfNotExists(newPhotos);
+				log.info("사진 조회 시 {}개의 미저장 사진 저장 완료. googlePlaceId={}", newPhotos.size(), googlePlaceId);
+			}
+
+			return newPhotos;
+		} catch (Exception e) {
+			log.error("미저장 사진 조회 및 저장 중 오류 발생. googlePlaceId={}. 기존 저장된 사진만 반환합니다.",
+				googlePlaceId, e);
+			return List.of();
+		}
 	}
 
 	private String fetchPhotoUri(final PhotoMeta meta) {
