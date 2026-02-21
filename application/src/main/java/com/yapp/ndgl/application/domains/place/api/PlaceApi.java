@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.place.controller.request.SearchPlaceRequest;
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
+import com.yapp.ndgl.application.domains.place.controller.response.PlaceFavoriteListResponse;
 import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.common.response.ErrorResponse;
+import com.yapp.ndgl.common.response.SliceResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -423,6 +425,55 @@ public interface PlaceApi {
 	ResponseEntity<?> readPlacePhotos(
 		@Parameter(description = "Google Places 장소 ID", example = "ChIJSc8jdZORQTURu6BMwxrKbGg", required = true)
 		@RequestParam("googlePlaceId") final String googlePlaceId
+	);
+
+	@Operation(
+		summary = "장소 즐겨찾기 목록 조회",
+		description = "사용자 본인의 장소 즐겨찾기 목록을 조회합니다.",
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(
+				schema = @Schema(implementation = PlaceFavoriteListResponse.class),
+				examples = @ExampleObject(
+					name = "SUCCESS",
+					value = """
+						{
+						  "code": "2000",
+						  "message": "요청에 성공하였습니다.",
+						  "data": {
+						    "content": [
+						      {
+						        "id": 1,
+						        "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
+						        "formattedAddress": "일본 도쿄 신주쿠 ...",
+						        "latitude": 35.6946268,
+						        "longitude": 139.7016497,
+						        "rating": 4.9,
+						        "userRatingCount": 7306,
+						        "name": "규카츠 모토무라 신주쿠 본점",
+						        "thumbnail": "https://example.com/thumbnail.jpg",
+						        "category": "RESTAURANT"
+						      }
+						    ],
+						    "hasNext": true
+						  }
+						}
+						"""
+				)
+			)
+		)
+	})
+	@GetMapping("/favorite")
+	ResponseEntity<SuccessResponse<SliceResponse<PlaceFavoriteListResponse>>> readFavoritePlaces(
+		@CurrentUuid String uuid,
+		@Parameter(description = "페이지 번호 (0부터 시작)", example = "0", required = false)
+		@RequestParam(value = "page", defaultValue = "0") @Min(value = 0, message = "page는 0 이상 입니다.") final int page,
+		@Parameter(description = "페이지 사이즈", example = "20", required = false)
+		@RequestParam(value = "size", defaultValue = "20") @Min(value = 1, message = "size는 1 이상 입니다.") final int size
 	);
 
 	@Operation(
