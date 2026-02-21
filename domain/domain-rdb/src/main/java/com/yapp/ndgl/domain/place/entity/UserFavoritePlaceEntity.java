@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Table(
     name = "user_favorite_places",
     indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id"),
-        @Index(name = "idx_place_id", columnList = "place_id")
+        @Index(name = "idx_user_favorite_places_user_id", columnList = "user_id"),
+        @Index(name = "idx_user_favorite_places_place_id", columnList = "place_id")
     },
     uniqueConstraints = {
         @UniqueConstraint(
