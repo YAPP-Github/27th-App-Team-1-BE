@@ -71,13 +71,14 @@ public class TravelTemplateService {
      */
     public Map<String, Place> resolveAllPlaces(final SaveTravelTemplateRequest request) {
         Map<String, Place> resolvedPlaces = new HashMap<>();
-        String city = request.city();
         String country = request.country();
+        String fallbackCity = request.city();
         Double lastLatitude = null;
         Double lastLongitude = null;
 
         for (SaveTravelTemplateRequest.ItineraryRequest itinerary : request.itinerary()) {
             for (SaveTravelTemplateRequest.ActivityRequest activity : itinerary.activities()) {
+                String city = (activity.cityEn() != null && !activity.cityEn().isBlank()) ? activity.cityEn() : fallbackCity;
                 if (!resolvedPlaces.containsKey(activity.placeName())) {
                     resolvedPlaces.put(activity.placeName(), resolvePlace(activity.placeName(), city, country, lastLatitude, lastLongitude));
                 }
@@ -91,7 +92,8 @@ public class TravelTemplateService {
                 if (activity.planB() != null) {
                     for (SaveTravelTemplateRequest.PlanBRequest planB : activity.planB()) {
                         if (!resolvedPlaces.containsKey(planB.name())) {
-                            resolvedPlaces.put(planB.name(), resolvePlace(planB.name(), city, country, lastLatitude, lastLongitude));
+                            String planBCity = (planB.cityEn() != null && !planB.cityEn().isBlank()) ? planB.cityEn() : city;
+                            resolvedPlaces.put(planB.name(), resolvePlace(planB.name(), planBCity, country, lastLatitude, lastLongitude));
                         }
                     }
                 }

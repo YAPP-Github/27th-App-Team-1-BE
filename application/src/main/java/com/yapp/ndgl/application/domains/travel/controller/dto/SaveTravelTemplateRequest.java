@@ -78,6 +78,10 @@ public record SaveTravelTemplateRequest(
         @JsonProperty("place_name")
         String placeName,
 
+        @Schema(description = "도시 영문명 (구글맵 검색용)", example = "Bangkok")
+        @JsonProperty("city_en")
+        String cityEn,
+
         @Schema(description = "예상 소요 시간(분)", example = "60")
         @JsonProperty("estimated_time")
         Integer estimatedTime,
@@ -114,7 +118,11 @@ public record SaveTravelTemplateRequest(
     public record PlanBRequest(
         @Schema(description = "장소명", example = "요요기 공원", requiredMode = Schema.RequiredMode.REQUIRED)
         @NotBlank(message = "대안 장소명은 필수입니다.")
-        String name
+        String name,
+
+        @Schema(description = "도시 영문명 (구글맵 검색용)", example = "Tokyo")
+        @JsonProperty("city_en")
+        String cityEn
     ) {
     }
 }
