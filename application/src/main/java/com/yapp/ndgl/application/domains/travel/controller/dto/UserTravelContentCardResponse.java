@@ -61,7 +61,7 @@ public record UserTravelContentCardResponse(
 
 		return new UserTravelContentCardResponse(
 			userTravel.getId(),
-			userTravel.getId(),
+			travelTemplate.getId(),
 			userTravel.getTemplateId(),
 			userTravel.getTitle(),
 			userTravel.getCountry(),
