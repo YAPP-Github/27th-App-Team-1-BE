@@ -11,4 +11,10 @@ public interface UserTravelRepository extends JpaRepository<UserTravelEntity, Lo
         Long userId, LocalDate startDate);
 
     Optional<UserTravelEntity> findByIdAndUserId(Long id, Long userId);
+
+    boolean existsByUserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+        Long userId, LocalDate endDate, LocalDate startDate);
+
+    boolean existsByUserIdAndIdNotAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+        Long userId, Long id, LocalDate endDate, LocalDate startDate);
 }
