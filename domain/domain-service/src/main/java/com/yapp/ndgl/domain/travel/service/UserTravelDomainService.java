@@ -151,6 +151,15 @@ public class UserTravelDomainService {
 			.toList();
 	}
 
+	@Transactional(readOnly = true)
+	public Optional<UserTravelPlace> findUpcomingPlaceByUserTravelIdAndDayAfterTime(
+		final Long userTravelId, final int day, final LocalTime now
+	) {
+		return userTravelPlaceRepository
+			.findTopByUserTravelIdAndDayAndStartTimeGreaterThanOrderByStartTimeAsc(userTravelId, day, now)
+			.map(UserTravelPlaceMapper::toDomain);
+	}
+
 	@Transactional
 	public void bulkUpdateStartTime(
 		final Long userTravelId,
