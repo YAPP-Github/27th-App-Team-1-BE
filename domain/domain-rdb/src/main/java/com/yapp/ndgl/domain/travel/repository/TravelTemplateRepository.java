@@ -18,4 +18,6 @@ public interface TravelTemplateRepository extends JpaRepository<TravelTemplateEn
 
     Slice<TravelTemplateEntity> findByTravelProgramIdOrderByViewCountDesc(Long travelProgramId, Pageable pageable);
 
+    boolean existsByLink(String link);
+
 }

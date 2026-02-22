@@ -36,6 +36,9 @@ public class UserTravelEntity extends BaseEntity {
     @Column(name = "country", nullable = false, length = 100)
     private String country;
 
+    @Column(name = "country_name", length = 100)
+    private String countryName;
+
     @Column(name = "city", nullable = false, length = 100)
     private String city;
 
@@ -60,6 +63,7 @@ public class UserTravelEntity extends BaseEntity {
         final Long templateId,
         final String title,
         final String country,
+        final String countryName,
         final String city,
         final LocalDate startDate,
         final LocalDate endDate,
@@ -71,6 +75,7 @@ public class UserTravelEntity extends BaseEntity {
         this.templateId = templateId;
         this.title = title;
         this.country = country;
+        this.countryName = countryName;
         this.city = city;
         this.startDate = startDate;
         this.endDate = endDate;

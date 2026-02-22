@@ -15,6 +15,7 @@ public class UserTravel {
     private Long templateId;
     private String title;
     private String country;
+    private String countryName;
     private String city;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -29,6 +30,7 @@ public class UserTravel {
         final Long templateId,
         final String title,
         final String country,
+        final String countryName,
         final String city,
         final LocalDate startDate,
         final LocalDate endDate,
@@ -43,6 +45,7 @@ public class UserTravel {
             .templateId(templateId)
             .title(title)
             .country(country)
+            .countryName(countryName)
             .city(city)
             .startDate(startDate)
             .endDate(endDate)

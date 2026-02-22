@@ -12,6 +12,7 @@ public class UserUpcomingTravel {
     private Long id;
     private String title;
     private String country;
+    private String countryName;
     private String city;
     private LocalDate startDate;
     private LocalDate endDate;

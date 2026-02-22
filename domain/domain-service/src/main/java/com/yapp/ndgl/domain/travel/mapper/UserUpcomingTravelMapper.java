@@ -14,6 +14,7 @@ public class UserUpcomingTravelMapper {
 			.id(summary.getId())
 			.title(summary.getTitle())
 			.country(summary.getCountry())
+			.countryName(summary.getCountryName())
 			.city(summary.getCity())
 			.startDate(summary.getStartDate())
 			.endDate(summary.getEndDate())

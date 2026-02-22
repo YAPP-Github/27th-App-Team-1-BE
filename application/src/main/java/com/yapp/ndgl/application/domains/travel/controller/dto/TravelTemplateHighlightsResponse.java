@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record TravelTemplateHighlightsResponse(
 	@Schema(description = "여행 템플릿 ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
 	Long travelId,
-	@Schema(description = "국가", example = "JP", requiredMode = Schema.RequiredMode.REQUIRED)
+	@Schema(description = "국가 코드", example = "JP", requiredMode = Schema.RequiredMode.REQUIRED)
 	String country,
+	@Schema(description = "국가명", example = "일본", nullable = true)
+	String countryName,
 	@Schema(description = "도시", example = "도쿄", requiredMode = Schema.RequiredMode.REQUIRED)
 	String city,
 	@Schema(description = "1인 기준 총 예산 (원)", example = "1200000", nullable = true)
@@ -52,6 +54,7 @@ public record TravelTemplateHighlightsResponse(
 		return new TravelTemplateHighlightsResponse(
 			travelTemplate.getId(),
 			travelTemplate.getCountry(),
+			travelTemplate.getCountryName(),
 			travelTemplate.getCity(),
 			travelTemplate.getBudgetPerPerson(),
 			travelTemplate.getNights(),

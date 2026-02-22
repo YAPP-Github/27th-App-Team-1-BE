@@ -12,6 +12,7 @@ public class UserUpcomingTravelSummary {
 	private final Long id;
 	private final String title;
 	private final String country;
+	private final String countryName;
 	private final String city;
 	private final LocalDate startDate;
 	private final LocalDate endDate;
@@ -28,6 +29,7 @@ public class UserUpcomingTravelSummary {
 		final Long id,
 		final String title,
 		final String country,
+		final String countryName,
 		final String city,
 		final LocalDate startDate,
 		final LocalDate endDate,
@@ -40,6 +42,7 @@ public class UserUpcomingTravelSummary {
 		this.id = id;
 		this.title = title;
 		this.country = country;
+		this.countryName = countryName;
 		this.city = city;
 		this.startDate = startDate;
 		this.endDate = endDate;
