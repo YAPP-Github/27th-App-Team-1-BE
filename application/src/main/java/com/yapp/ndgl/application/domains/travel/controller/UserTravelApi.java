@@ -445,28 +445,30 @@ public interface UserTravelApi {
 						  "code": "2000",
 						  "message": "요청에 성공하였습니다.",
 						  "data": {
-						    "userTravelId": 1,
-						    "title": "여행 제목",
-						    "country": "IN",
-						    "city": "뭄바이",
-						    "startDate": "2023-08-01",
-						    "endDate": "2023-08-10",
-						    "nights": 6,
-						    "days": 7,
-						    "thumbnail": "https://i.ytimg.com/vi/example/mqdefault.jpg",
+						    "userTravelId": 3,
+						    "title": "세계에서 가장 추운 도시",
+						    "country": "RU",
+						    "countryName": "러시아",
+						    "city": "야쿠츠크",
+						    "startDate": "2026-03-01",
+						    "endDate": "2026-03-05",
+						    "nights": 4,
+						    "days": 5,
+						    "thumbnail": "https://i.ytimg.com/vi/umCW_TFNTPI/maxresdefault.jpg",
 						    "upcomingUserTravelPlace": {
-						                                  "id": 1,
-						                                  "estimatedDuration": 60,
-						                                  "place": {
-						                                    "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
-						                                    "thumbnail": "https://lh3.googleusercontent.com/place-photos/AEkURDym40I4XyqXUosRz8bTu9aPvDUklxkfM79KCa03C0SQTnDaTu_RXXiWQjCRZ3-yK4dTbzoySqMrucj1ubPQNUZ5yKseTRfmaME5C--5jLYB0rU-MLXqUabNEk3myTWywzIuEHcKz_I-H4Xtdg=s4800-w4800-h3600",
-						                                    "latitude": 35.6762,
-						                                    "longitude": 139.6503,
-						                                    "name": "도쿄타워",
-						                                    "regularOpeningHours": "09:00~23:00",
-						                                    "googleMapsUri": "https://maps.google.com/?cid=14776686710302251978"
-						                                  }
-						                                }
+						      "id": 12,
+						      "estimatedDuration": 60,
+						      "place": {
+						        "googlePlaceId": "ChIJfavmvuFL9lsRsFs_r_9Zoq8",
+						        "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNGUyYW3K-Ar0KVPtDG5HMa8BwygccVS3n30vZ2gwcEjNcHQ85StpWn65JCJw8aD9u6xCjh6N5cf1gQj17LsSg4Gs7EwyXYsy7n5djO3VqcnAsttWoK5wnOPof7oOpRJE7pIRETVh_chQH2tGw=s4800-w4032-h3024",
+						        "latitude": 62.086598099999996,
+						        "longitude": 129.7500322,
+						        "name": "야쿠츠크 공항",
+						        "regularOpeningHours": "AM 12:00 ~ PM 2:00",
+						        "googleMapsUri": "https://maps.google.com/?cid=12655776857556212656&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						        "category": "AIRPORT"
+						      }
+						    }
 						  }
 						}
 						"""
