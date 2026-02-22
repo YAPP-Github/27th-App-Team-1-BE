@@ -631,7 +631,19 @@ public interface UserTravelApi {
 						        "id": 101,
 						        "day": 1,
 						        "sequence": 1,
-						        "travelerTip": null,
+						        "distanceKm": 1.2,
+						        "transportation": [
+						          {
+						            "mode": "WALKING",
+						            "timeMin": 15
+						          }
+						        ],
+						        "travelerTip": "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
+						        "travelerTips": [
+						          "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
+						          "야경 감상을 원하면 일몰 30분 전에 도착하세요."
+						        ],
+						        "planB": [],
 						        "startTime": "08:30:00",
 						        "estimatedDuration": 60,
 						        "place": {
