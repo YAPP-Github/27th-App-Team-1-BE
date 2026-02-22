@@ -8,12 +8,15 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.service.dto.YouTubeVideoInfo;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
+import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelProgram;
@@ -56,9 +59,17 @@ public class TravelTemplateSaveService {
 		Map<String, Place> savedPlaces = new HashMap<>();
 		for (Map.Entry<String, Place> entry : resolvedPlaces.entrySet()) {
 			final Place resolved = entry.getValue();
+			if (resolved == null) {
+				log.warn("장소 정보가 null이어서 건너뜁니다. placeName = {}", entry.getKey());
+				continue;
+			}
 			Place place;
 			if (resolved.getId() == null) {
 				String googlePlaceId = resolved.getGooglePlaceId();
+				if (googlePlaceId == null) {
+					log.warn("googlePlaceId가 null이어서 건너뜁니다. placeName = {}", entry.getKey());
+					continue;
+				}
 				place = placeDomainService.findByGooglePlaceId(googlePlaceId)
 					.orElseGet(() -> placeDomainService.save(resolved));
 			} else {
@@ -114,7 +125,12 @@ public class TravelTemplateSaveService {
 			days
 		);
 
-		TravelTemplate savedTemplate = travelTemplateDomainService.createTravelTemplate(travelTemplate, travelProgram);
+		TravelTemplate savedTemplate;
+		try {
+			savedTemplate = travelTemplateDomainService.createTravelTemplate(travelTemplate, travelProgram);
+		} catch (DataIntegrityViolationException e) {
+			throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_TRAVEL_TEMPLATE);
+		}
 		log.info("여행 템플릿 저장 완료. templateId = {}", savedTemplate.getId());
 
 		// 5. TravelTemplatePlace 일괄 저장
