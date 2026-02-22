@@ -156,7 +156,7 @@ public class UserTravelDomainService {
 		final Long userTravelId, final int day, final LocalTime now
 	) {
 		return userTravelPlaceRepository
-			.findTopByUserTravelIdAndDayAndStartTimeGreaterThanOrderByStartTimeAsc(userTravelId, day, now)
+			.findTopByUserTravelIdAndDayAndStartTimeGreaterThanOrderByStartTimeAscSequenceAsc(userTravelId, day, now)
 			.map(UserTravelPlaceMapper::toDomain);
 	}
 
