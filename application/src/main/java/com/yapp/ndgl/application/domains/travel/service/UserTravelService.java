@@ -1,6 +1,7 @@
 package com.yapp.ndgl.application.domains.travel.service;
 
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -207,9 +208,17 @@ public class UserTravelService {
 			return null;
 		}
 
-		// TODO 현재 시간 기준으로 조회
-		UserTravelPlace upcomingPlace =
-			userTravelDomainService.findFirstPlaceByUserTravelId(upcomingTravel.getId()).orElse(null);
+		LocalDate today = LocalDate.now();
+		UserTravelPlace upcomingPlace;
+
+		if (upcomingTravel.getStartDate().isAfter(today)) {
+			upcomingPlace = userTravelDomainService.findFirstPlaceByUserTravelId(upcomingTravel.getId()).orElse(null);
+		} else {
+			int day = (int)ChronoUnit.DAYS.between(upcomingTravel.getStartDate(), today) + 1;
+			upcomingPlace = userTravelDomainService
+				.findUpcomingPlaceByUserTravelIdAndDayAfterTime(upcomingTravel.getId(), day, LocalTime.now())
+				.orElse(null);
+		}
 
 		Place place = upcomingPlace == null ? null : placeDomainService.findById(upcomingPlace.getPlaceId());
 
