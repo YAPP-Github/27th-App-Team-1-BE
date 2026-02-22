@@ -81,6 +81,23 @@ public interface UserTravelApi {
 			)
 		),
 		@ApiResponse(
+			responseCode = "400",
+			description = "기존 내 여행 일정과 기간이 겹침",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "ALREADY_EXISTS_USER_TRAVEL_SCHEDULE",
+					value = """
+						{
+						  "code": "TRAVEL-04-003",
+						  "message": "이미 해당 기간에 내 여행 일정이 존재합니다",
+						  "errors": []
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
 			responseCode = "404",
 			description = "여행 템플릿을 찾을 수 없음",
 			content = @Content(
@@ -168,6 +185,23 @@ public interface UserTravelApi {
 						{
 						  "code": "TRAVEL-04-001",
 						  "message": "여행 종료일이 시작일보다 앞설 수 없습니다",
+						  "errors": []
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "400",
+			description = "기존 내 여행 일정과 기간이 겹침",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "ALREADY_EXISTS_USER_TRAVEL_SCHEDULE",
+					value = """
+						{
+						  "code": "TRAVEL-04-003",
+						  "message": "이미 해당 기간에 내 여행 일정이 존재합니다",
 						  "errors": []
 						}
 						"""

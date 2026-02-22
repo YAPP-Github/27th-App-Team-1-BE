@@ -50,6 +50,7 @@ public class UserTravelDomainService {
 		final int nights,
 		final int days,
 		final String thumbnail) {
+		validateNoOverlappingTravel(user.getId(), startDate, endDate);
 
 		UserTravel userTravel = UserTravel.create(
 			user.getId(),
@@ -121,6 +122,9 @@ public class UserTravelDomainService {
 	) {
 		UserTravelEntity userTravelEntity = userTravelRepository.findByIdAndUserId(userTravelId, userId)
 			.orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL));
+
+		validateNoOverlappingTravelForUpdate(userId, userTravelId, startDate, endDate);
+
 		userTravelEntity.updateTravelInfo(title, startDate, endDate, nights, days);
 	}
 
@@ -190,5 +194,28 @@ public class UserTravelDomainService {
 			.toList();
 
 		return SliceResponse.of(content, hasNext);
+	}
+
+	private void validateNoOverlappingTravel(
+		final Long userId, final LocalDate startDate, final LocalDate endDate
+	) {
+		boolean hasOverlappingTravel = userTravelRepository
+			.existsByUserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(userId, endDate, startDate);
+		if (hasOverlappingTravel) {
+			log.warn("내 여행 생성 실패 - 일정 겹침. userId = {}, startDate = {}, endDate = {}", userId, startDate, endDate);
+			throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_USER_TRAVEL_SCHEDULE);
+		}
+	}
+
+	private void validateNoOverlappingTravelForUpdate(
+		final Long userId, final Long userTravelId, final LocalDate startDate, final LocalDate endDate
+	) {
+		boolean hasOverlappingTravel = userTravelRepository
+			.existsByUserIdAndIdNotAndStartDateLessThanEqualAndEndDateGreaterThanEqual(userId, userTravelId, endDate, startDate);
+		if (hasOverlappingTravel) {
+			log.warn("내 여행 수정 실패 - 일정 겹침. userId = {}, userTravelId = {}, startDate = {}, endDate = {}",
+				userId, userTravelId, startDate, endDate);
+			throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_USER_TRAVEL_SCHEDULE);
+		}
 	}
 }
