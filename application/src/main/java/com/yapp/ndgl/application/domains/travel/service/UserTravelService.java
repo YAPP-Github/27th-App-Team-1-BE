@@ -243,7 +243,8 @@ public class UserTravelService {
 	public UserTravelContentCardResponse readUserTravelContentCard(final String uuid, final Long userTravelId) {
 		User user = userDomainService.findByUuid(uuid);
 		UserTravel userTravel = userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
-		return UserTravelContentCardResponse.from(userTravel);
+		TravelTemplate travelTemplate = travelTemplateDomainService.findById(userTravel.getTemplateId());
+		return UserTravelContentCardResponse.from(userTravel, travelTemplate);
 	}
 
 	@Transactional(readOnly = true)

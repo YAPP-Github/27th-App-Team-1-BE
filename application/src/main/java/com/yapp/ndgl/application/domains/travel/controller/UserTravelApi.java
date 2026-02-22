@@ -547,22 +547,40 @@ public interface UserTravelApi {
 				examples = @ExampleObject(
 					name = "SUCCESS",
 					value = """
-						{
-						  "code": "2000",
-						  "message": "요청에 성공하였습니다.",
-						  "data": {
-						    "userTravelId": 1,
-						    "templateId": 3,
-						    "title": "도쿄 3박 4일",
-						    "country": "JP",
-						    "city": "도쿄",
-						    "startDate": "2026-03-01",
-						    "endDate": "2026-03-04",
-						    "nights": 3,
-						    "days": 4
-						  }
-						}
-						"""
+							{
+							  "code": "2000",
+							  "message": "요청에 성공하였습니다.",
+							  "data": {
+							    "userTravelId": 1,
+							    "travelId": 1,
+							    "templateId": 3,
+							    "title": "도쿄 3박 4일",
+							    "country": "JP",
+							    "city": "도쿄",
+							    "startDate": "2026-03-01",
+							    "endDate": "2026-03-04",
+							    "budgetPerPerson": 1200000,
+							    "nights": 3,
+							    "days": 4,
+							    "youtube": {
+							      "title": "도쿄 3박 4일 완벽 여행 가이드",
+							      "name": "빠니보틀",
+							      "profileImage": "https://example.com/thumbnail/panibottle.jpg",
+							      "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
+							      "link": "https://www.youtube.com/watch?v=tokyo-travel",
+							      "summary": "도쿄 3박 4일 여행의 모든 것."
+							    },
+							    "program": {
+							      "title": "도쿄 3박 4일 완벽 여행 가이드",
+							      "name": "빠니보틀",
+							      "profileImage": "https://example.com/thumbnail/panibottle.jpg",
+							      "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
+							      "link": "https://www.youtube.com/watch?v=tokyo-travel",
+							      "summary": "도쿄 3박 4일 여행의 모든 것."
+							    }
+							  }
+							}
+							"""
 				)
 			)
 		),
