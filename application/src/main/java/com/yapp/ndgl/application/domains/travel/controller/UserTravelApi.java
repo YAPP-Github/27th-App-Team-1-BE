@@ -547,22 +547,40 @@ public interface UserTravelApi {
 				examples = @ExampleObject(
 					name = "SUCCESS",
 					value = """
-						{
-						  "code": "2000",
-						  "message": "요청에 성공하였습니다.",
-						  "data": {
-						    "userTravelId": 1,
-						    "templateId": 3,
-						    "title": "도쿄 3박 4일",
-						    "country": "JP",
-						    "city": "도쿄",
-						    "startDate": "2026-03-01",
-						    "endDate": "2026-03-04",
-						    "nights": 3,
-						    "days": 4
-						  }
-						}
-						"""
+							{
+							  "code": "2000",
+							  "message": "요청에 성공하였습니다.",
+							  "data": {
+							    "userTravelId": 1,
+							    "travelId": 1,
+							    "templateId": 3,
+							    "title": "도쿄 3박 4일",
+							    "country": "JP",
+							    "city": "도쿄",
+							    "startDate": "2026-03-01",
+							    "endDate": "2026-03-04",
+							    "budgetPerPerson": 1200000,
+							    "nights": 3,
+							    "days": 4,
+							    "youtube": {
+							      "title": "도쿄 3박 4일 완벽 여행 가이드",
+							      "name": "빠니보틀",
+							      "profileImage": "https://example.com/thumbnail/panibottle.jpg",
+							      "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
+							      "link": "https://www.youtube.com/watch?v=tokyo-travel",
+							      "summary": "도쿄 3박 4일 여행의 모든 것."
+							    },
+							    "program": {
+							      "title": "도쿄 3박 4일 완벽 여행 가이드",
+							      "name": "빠니보틀",
+							      "profileImage": "https://example.com/thumbnail/panibottle.jpg",
+							      "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
+							      "link": "https://www.youtube.com/watch?v=tokyo-travel",
+							      "summary": "도쿄 3박 4일 여행의 모든 것."
+							    }
+							  }
+							}
+							"""
 				)
 			)
 		),
@@ -613,7 +631,19 @@ public interface UserTravelApi {
 						        "id": 101,
 						        "day": 1,
 						        "sequence": 1,
-						        "travelerTip": null,
+						        "distanceKm": 1.2,
+						        "transportation": [
+						          {
+						            "mode": "WALKING",
+						            "timeMin": 15
+						          }
+						        ],
+						        "travelerTip": "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
+						        "travelerTips": [
+						          "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
+						          "야경 감상을 원하면 일몰 30분 전에 도착하세요."
+						        ],
+						        "planB": [],
 						        "startTime": "08:30:00",
 						        "estimatedDuration": 60,
 						        "place": {

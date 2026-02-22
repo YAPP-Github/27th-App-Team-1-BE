@@ -3,6 +3,7 @@ package com.yapp.ndgl.application.domains.travel.service;
 import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
@@ -243,7 +245,8 @@ public class UserTravelService {
 	public UserTravelContentCardResponse readUserTravelContentCard(final String uuid, final Long userTravelId) {
 		User user = userDomainService.findByUuid(uuid);
 		UserTravel userTravel = userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
-		return UserTravelContentCardResponse.from(userTravel);
+		TravelTemplate travelTemplate = travelTemplateDomainService.findById(userTravel.getTemplateId());
+		return UserTravelContentCardResponse.from(userTravel, travelTemplate);
 	}
 
 	@Transactional(readOnly = true)
@@ -256,12 +259,57 @@ public class UserTravelService {
 		List<UserTravelPlace> userTravelPlaces = userTravelDomainService
 			.findPlacesByUserTravelIdAndDay(userTravel.getId(), day);
 
-		List<Long> placeIds = userTravelPlaces.stream()
-			.map(UserTravelPlace::getPlaceId)
+		List<TravelTemplatePlace> templatePlaces = travelTemplateDomainService
+			.findPlacesByTravelTemplateId(userTravel.getTemplateId())
+			.stream()
+			.filter(templatePlace -> templatePlace.getDay() == day)
 			.toList();
-		Map<Long, Place> placeMap = placeDomainService.findByIds(placeIds).stream()
+
+		Map<String, TravelTemplatePlace> templatePlaceMap = templatePlaces.stream()
+			.collect(Collectors.toMap(
+				templatePlace -> buildTemplatePlaceKey(templatePlace.getDay(), templatePlace.getSequence()),
+				templatePlace -> templatePlace,
+				(existing, replacement) -> existing
+			));
+
+		List<Long> placeIds = new ArrayList<>(userTravelPlaces.stream()
+			.map(UserTravelPlace::getPlaceId)
+			.toList());
+		placeIds.addAll(extractPlanBPlaceIds(templatePlaces));
+		List<Long> distinctPlaceIds = placeIds.stream().distinct().toList();
+
+		Map<Long, Place> placeMap = placeDomainService.findByIds(distinctPlaceIds).stream()
 			.collect(Collectors.toMap(Place::getId, place -> place));
 
-		return UserTravelItineraryResponse.of(userTravelPlaces, placeMap, objectMapper);
+		return UserTravelItineraryResponse.of(userTravelPlaces, templatePlaceMap, placeMap, objectMapper);
+	}
+
+	private String buildTemplatePlaceKey(final Integer day, final Integer sequence) {
+		return day + ":" + sequence;
+	}
+
+	private List<Long> extractPlanBPlaceIds(final List<TravelTemplatePlace> templatePlaces) {
+		List<Long> planBPlaceIds = new ArrayList<>();
+		for (TravelTemplatePlace templatePlace : templatePlaces) {
+			if (templatePlace.getPlanBJson() == null) {
+				continue;
+			}
+
+			try {
+				List<Map<String, Object>> planBList = objectMapper.readValue(
+					templatePlace.getPlanBJson(),
+					new TypeReference<List<Map<String, Object>>>() {
+					}
+				);
+				for (Map<String, Object> planB : planBList) {
+					if (planB.get("placeId") != null) {
+						planBPlaceIds.add(((Number)planB.get("placeId")).longValue());
+					}
+				}
+			} catch (Exception e) {
+				log.warn("PlanB JSON 파싱 실패. templatePlaceId={}", templatePlace.getId(), e);
+			}
+		}
+		return planBPlaceIds;
 	}
 }

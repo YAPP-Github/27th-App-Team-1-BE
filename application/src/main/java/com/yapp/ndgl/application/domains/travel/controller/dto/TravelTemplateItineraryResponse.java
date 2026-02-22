@@ -45,14 +45,14 @@ public record TravelTemplateItineraryResponse(
         @Schema(description = "이전 장소로부터의 거리 (km)", example = "2.5", nullable = true)
         Double distanceKm,
         @Schema(description = "교통수단 목록", nullable = true)
-        List<TransportationInfo> transportation,
+        List<ItineraryTransportationInfo> transportation,
         @Deprecated
         @Schema(description = "여행자 팁 (Deprecated: travelerTips 사용 권장)", example = "저녁 시간대 방문 추천", nullable = true, deprecated = true)
         String travelerTip,
         @Schema(description = "여행자 팁 목록", example = "[\"저녁 시간대 방문 추천\", \"현지인 맛집\"]", nullable = true)
         List<String> travelerTips,
         @Schema(description = "대체 장소 목록 (Plan B)", nullable = true)
-        List<PlanBInfo> planB,
+        List<ItineraryPlanBInfo> planB,
         @Schema(description = "예상 소요 시간 (분)", example = "60", requiredMode = Schema.RequiredMode.REQUIRED)
         Integer estimatedDuration,
         @Schema(description = "장소 정보", nullable = true)
@@ -82,7 +82,7 @@ public record TravelTemplateItineraryResponse(
             }
 
             // transportationJson 파싱
-            List<TransportationInfo> transportation = null;
+            List<ItineraryTransportationInfo> transportation = null;
             if (travelTemplatePlace.getTransportationJson() != null) {
                 try {
                     List<Map<String, Object>> transportList = objectMapper.readValue(
@@ -94,7 +94,7 @@ public record TravelTemplateItineraryResponse(
                             String modeStr = (String) t.get("mode");
                             TransportationMode mode = modeStr != null ? TransportationMode.valueOf(modeStr) : null;
                             Integer timeMin = t.get("time_min") != null ? ((Number) t.get("time_min")).intValue() : null;
-                            return new TransportationInfo(mode, timeMin);
+                            return new ItineraryTransportationInfo(mode, timeMin);
                         })
                         .toList();
                 } catch (Exception e) {
@@ -103,14 +103,14 @@ public record TravelTemplateItineraryResponse(
             }
 
             // planBJson 파싱 - placeId로 Place 조회하여 필드 보강
-            List<PlanBInfo> planB = null;
+            List<ItineraryPlanBInfo> planB = null;
             if (travelTemplatePlace.getPlanBJson() != null) {
                 try {
                     List<Map<String, Object>> planBList = objectMapper.readValue(
                         travelTemplatePlace.getPlanBJson(),
                         new TypeReference<List<Map<String, Object>>>() {}
                     );
-                    List<PlanBInfo> parsed = planBList.stream()
+                    List<ItineraryPlanBInfo> parsed = planBList.stream()
                         .map(p -> {
                             Long placeId = p.get("placeId") != null ? ((Number) p.get("placeId")).longValue() : null;
                             Place planBPlace = placeId != null ? placeMap.get(placeId) : null;
@@ -118,7 +118,7 @@ public record TravelTemplateItineraryResponse(
                                 log.warn("PlanB 장소 조회 실패. placeId={}, templatePlaceId={}", placeId, travelTemplatePlace.getId());
                                 return null;
                             }
-                            return new PlanBInfo(
+                            return new ItineraryPlanBInfo(
                                 planBPlace.getGooglePlaceId(),
                                 planBPlace.getName(),
                                 planBPlace.getThumbnail(),
@@ -147,25 +147,5 @@ public record TravelTemplateItineraryResponse(
                 place == null ? null : PlaceInfo.from(place, objectMapper)
             );
         }
-    }
-
-    public record TransportationInfo(
-        @Schema(description = "교통수단", example = "TAXI", requiredMode = Schema.RequiredMode.REQUIRED)
-        TransportationMode mode,
-        @Schema(description = "소요 시간 (분)", example = "45", requiredMode = Schema.RequiredMode.REQUIRED)
-        Integer timeMin
-    ) {
-    }
-
-    public record PlanBInfo(
-        @Schema(description = "Google Place ID", example = "ChIJN1t_tDeuEmsRUsoyG83frY4", requiredMode = Schema.RequiredMode.REQUIRED)
-        String googlePlaceId,
-        @Schema(description = "장소명", example = "콜로세움 (Colosseo)", requiredMode = Schema.RequiredMode.REQUIRED)
-        String name,
-        @Schema(description = "장소 썸네일 이미지 URL", example = "https://places.googleapis.com/v1/places/ChIJN1t_tDeuEmsRUsoyG83frY4/photos/...", nullable = true)
-        String thumbnail,
-        @Schema(description = "장소 카테고리", example = "TOURIST_ATTRACTION", nullable = true)
-        String category
-    ) {
     }
 }
