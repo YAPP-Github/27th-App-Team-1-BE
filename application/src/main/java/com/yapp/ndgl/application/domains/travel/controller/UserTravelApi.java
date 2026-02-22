@@ -420,7 +420,7 @@ public interface UserTravelApi {
 		)
 	})
 	@PatchMapping("/{id}/start-time/bulk")
-	ResponseEntity<SuccessResponse> bulkUpdateUserTravelPlaceStartTimes(
+	ResponseEntity<?> bulkUpdateUserTravelPlaceStartTimes(
 		@CurrentUuid String uuid,
 		@Parameter(description = "사용자 여행 ID", example = "1", required = true)
 		@PathVariable("id") final Long id,

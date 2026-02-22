@@ -62,7 +62,7 @@ public class UserTravelController implements UserTravelApi {
 
     @Override
     @PatchMapping("/{id}/start-time/bulk")
-    public ResponseEntity<SuccessResponse> bulkUpdateUserTravelPlaceStartTimes(
+    public ResponseEntity<?> bulkUpdateUserTravelPlaceStartTimes(
         @CurrentUuid String uuid,
         @PathVariable("id") final Long id,
         @Valid @RequestBody UpdateUserTravelPlaceStartTimesRequest request

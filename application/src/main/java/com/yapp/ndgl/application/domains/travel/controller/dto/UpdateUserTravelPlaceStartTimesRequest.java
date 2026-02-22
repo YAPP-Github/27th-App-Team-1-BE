@@ -14,6 +14,7 @@ public record UpdateUserTravelPlaceStartTimesRequest(
 	@NotEmpty(message = "업데이트 목록은 최소 1개 이상이어야 합니다.")
 	List<@Valid Item> updates
 ) {
+	@Schema(name = "StartTimeUpdateItem")
 	public record Item(
 		@Schema(description = "유저 여행 장소 ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
 		@NotNull(message = "id는 필수입니다.")

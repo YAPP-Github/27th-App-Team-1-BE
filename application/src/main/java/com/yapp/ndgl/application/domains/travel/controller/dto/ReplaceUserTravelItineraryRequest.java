@@ -18,6 +18,7 @@ public record ReplaceUserTravelItineraryRequest(
 	@NotEmpty(message = "일정 목록은 최소 1개 이상이어야 합니다.")
 	List<@NotNull(message = "일정 항목은 null일 수 없습니다.") @Valid Item> itineraries
 ) {
+	@Schema(name = "ItineraryItem")
 	public record Item(
 		@Schema(description = "장소 ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
 		@NotNull(message = "placeId는 필수입니다.")
