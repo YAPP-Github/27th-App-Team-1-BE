@@ -237,13 +237,14 @@ public class TravelTemplateService {
 
     @Transactional(readOnly = true)
     public TravelTemplateHighlightsResponse readTravelTemplateHighlights(final Long id) {
-
-        // 템플릿 상단에 보여줄 핵심 요약 묶음
         TravelTemplate travelTemplate = travelTemplateDomainService.findById(id);
-
-        // 조회수 증가 이벤트 발행
         eventPublisher.publishEvent(new TravelTemplateViewCountEvent(id));
+        return TravelTemplateHighlightsResponse.toResponse(travelTemplate);
+    }
 
+    @Transactional(readOnly = true)
+    public TravelTemplateHighlightsResponse readTravelTemplateHighlightsForAdmin(final Long id) {
+        TravelTemplate travelTemplate = travelTemplateDomainService.findById(id);
         return TravelTemplateHighlightsResponse.toResponse(travelTemplate);
     }
 

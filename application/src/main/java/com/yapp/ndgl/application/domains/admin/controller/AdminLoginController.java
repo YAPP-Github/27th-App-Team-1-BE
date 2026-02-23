@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yapp.ndgl.application.config.AdminAuthInterceptor;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +39,14 @@ public class AdminLoginController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("token") String token, HttpSession session, Model model) {
+    public String login(@RequestParam("token") String token, HttpServletRequest request, Model model) {
         if (adminAuthInterceptor.validateToken(token)) {
-            session.setAttribute("adminAuthenticated", true);
+            // 세션 고정 공격 방지: 기존 세션 무효화 후 새 세션 발급
+            HttpSession oldSession = request.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate();
+            }
+            request.getSession(true).setAttribute("adminAuthenticated", true);
             log.info("관리자 인증 성공");
             return "redirect:/admin/travel-templates";
         }
@@ -49,7 +55,7 @@ public class AdminLoginController {
         return "admin/login";
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         log.info("관리자 로그아웃");

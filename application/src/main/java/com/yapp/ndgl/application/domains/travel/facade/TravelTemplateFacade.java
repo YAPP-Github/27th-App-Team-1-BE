@@ -57,6 +57,11 @@ public class TravelTemplateFacade {
         return travelTemplateService.readTravelTemplateHighlights(id);
     }
 
+    public TravelTemplateHighlightsResponse readTravelTemplateHighlightsForAdmin(final Long id) {
+        log.info("어드민 여행 템플릿의 상단 내역을 조회합니다. templateId = {}", id);
+        return travelTemplateService.readTravelTemplateHighlightsForAdmin(id);
+    }
+
     public TravelTemplateItineraryResponse readTravelTemplateItinerary(final Long id, final Integer day) {
         log.info("여행 템플릿의 일정을 조회합니다. templateId = {}", id);
         return travelTemplateService.readTravelTemplateItinerary(id, day);

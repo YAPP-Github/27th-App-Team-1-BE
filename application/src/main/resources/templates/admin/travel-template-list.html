@@ -163,7 +163,9 @@
             <h1>여행 템플릿 목록</h1>
             <div class="nav-links">
                 <a href="/admin/travel-templates/new" class="nav-link">+ 새 템플릿 등록</a>
-                <a href="/admin/logout" class="logout-link">로그아웃</a>
+                <form action="/admin/logout" method="POST" style="margin:0;">
+                    <button type="submit" class="logout-link" style="background:none; border:none; cursor:pointer; padding:0;">로그아웃</button>
+                </form>
             </div>
         </div>
 

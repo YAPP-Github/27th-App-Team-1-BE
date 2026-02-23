@@ -1,5 +1,8 @@
 package com.yapp.ndgl.application.config;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,6 +28,9 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
     }
 
     public boolean validateToken(String token) {
-        return accessToken.equals(token);
+        if (token == null) return false;
+        byte[] a = this.accessToken.getBytes(StandardCharsets.UTF_8);
+        byte[] b = token.getBytes(StandardCharsets.UTF_8);
+        return MessageDigest.isEqual(a, b);
     }
 }
