@@ -33,5 +33,7 @@ public interface UserTravelPlaceRepository extends JpaRepository<UserTravelPlace
 
     List<UserTravelPlaceEntity> findByIdIn(List<Long> ids);
 
+    Optional<UserTravelPlaceEntity> findByIdAndUserTravelId(Long id, Long userTravelId);
+
     void deleteByUserTravelId(Long userTravelId);
 }

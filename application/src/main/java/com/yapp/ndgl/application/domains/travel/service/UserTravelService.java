@@ -21,6 +21,7 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelR
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserTravelContentCardResponse;
@@ -166,6 +167,24 @@ public class UserTravelService {
 			.keySet().stream()
 			.toList();
 		userTravelDomainService.bulkUpdateStartTime(userTravelId, userTravelPlaceIds, startTimeByUserTravelPlaceId);
+	}
+
+	@Transactional
+	public void updateUserTravelPlace(final String uuid, final Long userTravelId, final Long userTravelPlaceId,
+		final UpdateUserTravelPlaceRequest request
+	) {
+		log.info("내 여행 장소 정보를 수정합니다. uuid = {}, userTravelId = {}, userTravelPlaceId = {}",
+			uuid, userTravelId, userTravelPlaceId);
+		User user = userDomainService.findByUuid(uuid);
+		userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
+		userTravelDomainService.updateTravelerTipAndBudget(
+			userTravelId,
+			userTravelPlaceId,
+			request.travelerTip(),
+			request.budget()
+		);
+		log.info("내 여행 장소 정보를 수정했습니다. uuid = {}, userTravelId = {}, userTravelPlaceId = {}",
+			uuid, userTravelId, userTravelPlaceId);
 	}
 
 	private void validateReplaceUserTravelItineraryRequest(

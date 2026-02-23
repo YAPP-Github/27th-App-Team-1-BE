@@ -80,4 +80,9 @@ public class UserTravelPlaceEntity extends BaseEntity {
     public void updateStartTime(final LocalTime startTime) {
         this.startTime = startTime;
     }
+
+    public void updateTravelerTipAndBudget(final String travelerTip, final Integer budget) {
+        this.travelerTip = travelerTip;
+        this.budget = budget;
+    }
 }

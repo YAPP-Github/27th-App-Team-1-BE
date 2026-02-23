@@ -188,6 +188,20 @@ public class UserTravelDomainService {
 		}
 	}
 
+	@Transactional
+	public void updateTravelerTipAndBudget(
+		final Long userTravelId,
+		final Long userTravelPlaceId,
+		final String travelerTip,
+		final Integer budget
+	) {
+		UserTravelPlaceEntity placeEntity = userTravelPlaceRepository
+			.findByIdAndUserTravelId(userTravelPlaceId, userTravelId)
+			.orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL));
+
+		placeEntity.updateTravelerTipAndBudget(travelerTip, budget);
+	}
+
 	@Transactional(readOnly = true)
 	public SliceResponse<UserUpcomingTravel> findUpcomingTravelsByUserId(
 		final Long userId, final int page, final int size

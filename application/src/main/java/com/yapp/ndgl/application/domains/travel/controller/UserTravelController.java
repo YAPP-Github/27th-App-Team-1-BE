@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
@@ -68,6 +69,18 @@ public class UserTravelController implements UserTravelApi {
         @Valid @RequestBody UpdateUserTravelPlaceStartTimesRequest request
     ) {
         userTravelFacade.bulkUpdateUserTravelPlaceStartTimes(uuid, id, request);
+        return ResponseEntity.ok(SuccessResponse.noContent());
+    }
+
+    @Override
+    @PatchMapping("/{id}/itinerary/{userTravelPlaceId}")
+    public ResponseEntity<SuccessResponse> updateUserTravelPlace(
+        @CurrentUuid String uuid,
+        @PathVariable("id") final Long id,
+        @PathVariable("userTravelPlaceId") final Long userTravelPlaceId,
+        @Valid @RequestBody UpdateUserTravelPlaceRequest request
+    ) {
+        userTravelFacade.updateUserTravelPlace(uuid, id, userTravelPlaceId, request);
         return ResponseEntity.ok(SuccessResponse.noContent());
     }
 
