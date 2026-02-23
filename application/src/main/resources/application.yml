@@ -7,6 +7,11 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -33,3 +38,6 @@ google:
     api-key: ${GOOGLE_MAPS_API_KEY:default_google_maps_api_key}
   youtube:
     api-key: ${YOUTUBE_DATA_API_KEY:default_youtube_api_key}
+
+admin:
+  access-token: ${ADMIN_ACCESS_TOKEN}

@@ -26,6 +26,9 @@ dependencies {
     // Transaction
     implementation 'org.springframework:spring-tx'
 
+    // Thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     // Swagger (SpringDoc OpenAPI)
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.15'
 
