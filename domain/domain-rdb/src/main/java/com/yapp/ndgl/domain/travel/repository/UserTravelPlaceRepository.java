@@ -35,5 +35,7 @@ public interface UserTravelPlaceRepository extends JpaRepository<UserTravelPlace
 
     Optional<UserTravelPlaceEntity> findByIdAndUserTravelId(Long id, Long userTravelId);
 
+    boolean existsByUserTravelIdAndDayAndSequence(Long userTravelId, Integer day, Integer sequence);
+
     void deleteByUserTravelId(Long userTravelId);
 }

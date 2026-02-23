@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelPlaceRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
@@ -355,6 +356,106 @@ public interface UserTravelApi {
 		@Parameter(description = "사용자 여행 ID", example = "1", required = true)
 		@PathVariable("id") final Long id,
 		@Valid @RequestBody ReplaceUserTravelItineraryRequest request
+	);
+
+	@Operation(
+		summary = "내 여행 장소 단건 추가",
+		description = "사용자 본인 여행에 장소를 1건 추가합니다.",
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(
+				schema = @Schema(implementation = SuccessResponse.class),
+				examples = @ExampleObject(
+					name = "SUCCESS",
+					value = """
+						{
+						  "code": "2000",
+						  "message": "요청에 성공하였습니다.",
+						  "data": {}
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "400",
+			description = "일정 요청 값이 잘못됨",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "INVALID_ITINERARY_REQUEST",
+					value = """
+						{
+						  "code": "TRAVEL-04-002",
+						  "message": "여행 일정 요청 값이 올바르지 않습니다",
+						  "errors": []
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "404",
+			description = "내 여행 또는 장소를 찾을 수 없음",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = {
+					@ExampleObject(
+						name = "NOT_FOUND_USER_TRAVEL",
+						value = """
+							{
+							  "code": "TRAVEL-02-002",
+							  "message": "내 여행 정보를 찾을 수 없습니다",
+							  "errors": []
+							}
+							"""
+					),
+					@ExampleObject(
+						name = "NOT_FOUND_PLACE",
+						value = """
+							{
+							  "code": "PLACE-02-001",
+							  "message": "장소를 찾을 수 없습니다",
+							  "errors": []
+							}
+							"""
+					)
+				}
+			)
+		),
+		@ApiResponse(
+			responseCode = "422",
+			description = "유효성 검증 실패",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "VALIDATION_ERROR",
+					value = """
+						{
+						  "code": "COMM-01-005",
+						  "message": "유효성 검증에 실패하였습니다",
+						  "errors": [
+						    {
+						      "field": "googlePlaceId",
+						      "message": "googlePlaceId는 필수입니다."
+						    }
+						  ]
+						}
+						"""
+				)
+			)
+		)
+	})
+	@PostMapping("/{id}/itinerary")
+	ResponseEntity<SuccessResponse> createUserTravelPlace(
+		@CurrentUuid String uuid,
+		@Parameter(description = "사용자 여행 ID", example = "1", required = true)
+		@PathVariable("id") final Long id,
+		@Valid @RequestBody CreateUserTravelPlaceRequest request
 	);
 
 	@Operation(
