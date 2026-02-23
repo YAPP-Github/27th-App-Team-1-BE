@@ -52,6 +52,15 @@ public class PlaceDomainService {
 			.toList();
 	}
 
+	public List<Place> findByGooglePlaceIds(final List<String> googlePlaceIds) {
+		if (googlePlaceIds == null || googlePlaceIds.isEmpty()) {
+			return List.of();
+		}
+		return placeRepository.findByGooglePlaceIdIn(googlePlaceIds).stream()
+			.map(PlaceMapper::toDomain)
+			.toList();
+	}
+
 	public Place findById(final Long id) {
 		if (id == null) {
 			return null;

@@ -5,10 +5,7 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record ReplaceUserTravelItineraryRequest(
 	@Schema(
@@ -20,9 +17,9 @@ public record ReplaceUserTravelItineraryRequest(
 ) {
 	@Schema(name = "ItineraryItem")
 	public record Item(
-		@Schema(description = "장소 ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
-		@NotNull(message = "placeId는 필수입니다.")
-		Long placeId,
+		@Schema(description = "Google Place ID", example = "ChIJN1t_tDeuEmsRUsoyG83frY4", requiredMode = Schema.RequiredMode.REQUIRED)
+		@NotBlank(message = "googlePlaceId는 필수입니다.")
+		String googlePlaceId,
 		@Schema(description = "일차", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
 		@NotNull(message = "day는 필수입니다.")
 		@Min(value = 1, message = "day는 1 이상이어야 합니다.")

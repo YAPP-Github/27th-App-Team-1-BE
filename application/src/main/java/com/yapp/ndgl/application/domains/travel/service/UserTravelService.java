@@ -129,12 +129,13 @@ public class UserTravelService {
 		User user = userDomainService.findByUuid(uuid);
 		UserTravel userTravel = userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
 
-		validateReplaceUserTravelItineraryRequest(userTravel, request.itineraries());
+		Map<String, Long> placeIdByGooglePlaceId =
+			validateAndResolveReplaceUserTravelItineraryRequest(userTravel, request.itineraries());
 
 		List<UserTravelPlace> userTravelPlaces = request.itineraries().stream()
 			.map(itinerary -> UserTravelPlace.create(
 				userTravelId,
-				itinerary.placeId(),
+				placeIdByGooglePlaceId.get(itinerary.googlePlaceId()),
 				itinerary.day(),
 				itinerary.sequence(),
 				itinerary.travelerTip(),
@@ -187,11 +188,11 @@ public class UserTravelService {
 			uuid, userTravelId, userTravelPlaceId);
 	}
 
-	private void validateReplaceUserTravelItineraryRequest(
+	private Map<String, Long> validateAndResolveReplaceUserTravelItineraryRequest(
 		final UserTravel userTravel,
 		final List<ReplaceUserTravelItineraryRequest.Item> itineraries
 	) {
-		Set<Long> placeIds = new HashSet<>();
+		Set<String> googlePlaceIds = new HashSet<>();
 		Map<Integer, Set<Integer>> sequencesByDay = new HashMap<>();
 
 		for (ReplaceUserTravelItineraryRequest.Item itinerary : itineraries) {
@@ -200,11 +201,7 @@ public class UserTravelService {
 					userTravel.getId(), userTravel.getDays(), itinerary.day());
 				throw new GlobalException(TravelErrorCode.INVALID_ITINERARY_REQUEST);
 			}
-			if (!placeIds.add(itinerary.placeId())) {
-				log.warn("내 여행 일정 교체 검증 실패 - 중복 placeId. userTravelId = {}, placeId = {}",
-					userTravel.getId(), itinerary.placeId());
-				throw new GlobalException(TravelErrorCode.INVALID_ITINERARY_REQUEST);
-			}
+			googlePlaceIds.add(itinerary.googlePlaceId());
 
 			Set<Integer> daySequences = sequencesByDay.computeIfAbsent(itinerary.day(), day -> new HashSet<>());
 			if (!daySequences.add(itinerary.sequence())) {
@@ -214,12 +211,15 @@ public class UserTravelService {
 			}
 		}
 
-		int foundPlaceCount = placeDomainService.findByIds(placeIds.stream().toList()).size();
-		if (foundPlaceCount != placeIds.size()) {
-			log.warn("내 여행 일정 교체 검증 실패 - 존재하지 않는 placeId 포함. userTravelId = {}, requestedCount = {}, foundCount = {}",
-				userTravel.getId(), placeIds.size(), foundPlaceCount);
+		List<Place> places = placeDomainService.findByGooglePlaceIds(googlePlaceIds.stream().toList());
+		if (places.size() != googlePlaceIds.size()) {
+			log.warn("내 여행 일정 교체 검증 실패 - 존재하지 않는 googlePlaceId 포함. userTravelId = {}, requestedCount = {}, foundCount = {}",
+				userTravel.getId(), googlePlaceIds.size(), places.size());
 			throw new GlobalException(PlaceErrorCode.NOT_FOUND_PLACE);
 		}
+
+		return places.stream()
+			.collect(Collectors.toMap(Place::getGooglePlaceId, Place::getId));
 	}
 
 	@Transactional(readOnly = true)
