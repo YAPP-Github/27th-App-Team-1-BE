@@ -262,10 +262,11 @@ public interface TravelTemplateApi {
 						  "code": "2000",
 						  "message": "요청에 성공하였습니다.",
 						  "data": {
-						    "travelId": 1,
-						    "country": "오스트리아",
+						  	"travelId": 1,
+						    "country": "AT",
+						    "countryName": "오스트리아",
 						    "city": "빈",
-						    "budgetPerPerson": 300000,
+						    "budgetPerPerson": 350000,
 						    "nights": 0,
 						    "days": 1,
 						    "program": {
