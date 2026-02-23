@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelPlaceRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
@@ -146,6 +147,48 @@ public class UserTravelService {
 		userTravelDomainService.replaceUserTravelPlaces(userTravelId, userTravelPlaces);
 		log.info("내 여행 일정을 전체 교체했습니다. uuid = {}, userTravelId = {}, itineraryCount = {}",
 			uuid, userTravelId, userTravelPlaces.size());
+	}
+
+	@Transactional
+	public void createUserTravelPlace(
+		final String uuid, final Long userTravelId, final CreateUserTravelPlaceRequest request
+	) {
+		log.info("내 여행에 장소를 추가합니다. uuid = {}, userTravelId = {}, googlePlaceId = {}, day = {}, sequence = {}",
+			uuid, userTravelId, request.googlePlaceId(), request.day(), request.sequence());
+
+		User user = userDomainService.findByUuid(uuid);
+		UserTravel userTravel = userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
+
+		if (request.day() > userTravel.getDays()) {
+			log.warn("내 여행 장소 추가 검증 실패 - 일차 범위 초과. userTravelId = {}, maxDay = {}, requestDay = {}",
+				userTravelId, userTravel.getDays(), request.day());
+			throw new GlobalException(TravelErrorCode.INVALID_ITINERARY_REQUEST);
+		}
+
+		Place place = placeDomainService.findByGooglePlaceId(request.googlePlaceId())
+			.orElseThrow(() -> new GlobalException(PlaceErrorCode.NOT_FOUND_PLACE));
+
+		if (userTravelDomainService.existsByUserTravelIdAndDayAndSequence(userTravelId, request.day(), request.sequence())) {
+			log.warn("내 여행 장소 추가 검증 실패 - 동일 일차 sequence 중복. userTravelId = {}, day = {}, sequence = {}",
+				userTravelId, request.day(), request.sequence());
+			throw new GlobalException(TravelErrorCode.INVALID_ITINERARY_REQUEST);
+		}
+
+		UserTravelPlace createdUserTravelPlace = userTravelDomainService.createUserTravelPlace(
+			UserTravelPlace.create(
+				userTravelId,
+				place.getId(),
+				request.day(),
+				request.sequence(),
+				request.travelerTip(),
+				request.startTime(),
+				request.estimatedDuration(),
+				request.budget()
+			)
+		);
+
+		log.info("내 여행에 장소를 추가했습니다. uuid = {}, userTravelId = {}, userTravelPlaceId = {}",
+			uuid, userTravelId, createdUserTravelPlace.getId());
 	}
 
 	@Transactional

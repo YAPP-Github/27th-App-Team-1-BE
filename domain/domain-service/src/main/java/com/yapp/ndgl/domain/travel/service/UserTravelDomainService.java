@@ -143,6 +143,19 @@ public class UserTravelDomainService {
 		userTravelPlaceRepository.saveAll(entities);
 	}
 
+	@Transactional
+	public UserTravelPlace createUserTravelPlace(final UserTravelPlace userTravelPlace) {
+		UserTravelPlaceEntity savedEntity = userTravelPlaceRepository.save(UserTravelPlaceMapper.toEntity(userTravelPlace));
+		return UserTravelPlaceMapper.toDomain(savedEntity);
+	}
+
+	@Transactional(readOnly = true)
+	public boolean existsByUserTravelIdAndDayAndSequence(
+		final Long userTravelId, final Integer day, final Integer sequence
+	) {
+		return userTravelPlaceRepository.existsByUserTravelIdAndDayAndSequence(userTravelId, day, sequence);
+	}
+
 	@Transactional(readOnly = true)
 	public List<UserTravelPlace> findPlacesByUserTravelIdAndDay(final Long userTravelId, final int day) {
 		List<UserTravelPlaceEntity> placeEntities =
