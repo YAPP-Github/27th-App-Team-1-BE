@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 템플릿 목록 - NDGL 관리자</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .header h1 { font-size: 24px; color: #333; }
+        .nav-links { display: flex; gap: 16px; align-items: center; }
+        .nav-link {
+            font-size: 14px;
+            color: #4a90d9;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .nav-link:hover { text-decoration: underline; }
+        .logout-link { font-size: 14px; color: #888; text-decoration: none; }
+        .logout-link:hover { color: #cf1322; }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        .card h2 { font-size: 16px; color: #333; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .template-card {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: box-shadow 0.2s, transform 0.15s;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+        .template-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+        .template-thumbnail {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #e8edf2;
+            display: block;
+        }
+        .thumbnail-placeholder {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #e8edf2, #d0d7de);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #aaa;
+        }
+        .template-body { padding: 14px; }
+        .template-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .template-meta {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+        .template-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 99px;
+            font-weight: 500;
+        }
+        .tag-country { background: #e8f4fd; color: #1a73e8; }
+        .tag-type { background: #f0fdf4; color: #16a34a; }
+        .tag-days { background: #fdf4ff; color: #9333ea; }
+        .template-id { font-size: 11px; color: #bbb; margin-top: 6px; }
+        .card-footer {
+            padding: 10px 14px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-delete-card {
+            font-size: 12px;
+            padding: 5px 12px;
+            background: #fff2f0;
+            color: #cf1322;
+            border: 1px solid #ffccc7;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-delete-card:hover { background: #ffe7e4; }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .page-btn {
+            padding: 8px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .page-btn:hover { background: #f5f5f5; }
+        .page-btn.disabled { color: #ccc; cursor: default; pointer-events: none; }
+        .page-info { font-size: 14px; color: #888; }
+        .empty-state {
+            text-align: center;
+            padding: 60px 0;
+            color: #aaa;
+            font-size: 15px;
+        }
+        .program-type-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            vertical-align: middle;
+        }
+        .badge-youtube { background: #ffebeb; color: #e53e3e; }
+        .badge-tv { background: #ebf8ff; color: #3182ce; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>여행 템플릿 목록</h1>
+            <div class="nav-links">
+                <a href="/admin/travel-templates/new" class="nav-link">+ 새 템플릿 등록</a>
+                <form action="/admin/logout" method="POST" style="margin:0;">
+                    <button type="submit" class="logout-link" style="background:none; border:none; cursor:pointer; padding:0;">로그아웃</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>등록된 여행 템플릿 <span th:if="${templates != null}" th:text="'(' + ${#lists.size(templates)} + '개 조회됨)'"></span></h2>
+
+            <div th:if="${templates == null or #lists.isEmpty(templates)}" class="empty-state">
+                등록된 여행 템플릿이 없습니다.
+            </div>
+
+            <div class="template-grid" th:if="${templates != null and not #lists.isEmpty(templates)}">
+                <div th:each="t : ${templates}" class="template-card" style="cursor:default;">
+                    <a th:href="@{/admin/travel-templates/{id}(id=${t.id})}" style="text-decoration:none; color:inherit; display:block;">
+                        <img th:if="${t.thumbnail != null and not #strings.isEmpty(t.thumbnail)}"
+                             th:src="${t.thumbnail}" class="template-thumbnail" alt="썸네일"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="thumbnail-placeholder"
+                             th:style="${t.thumbnail != null and not #strings.isEmpty(t.thumbnail)} ? 'display:none' : 'display:flex'">
+                            🗺️
+                        </div>
+                        <div class="template-body">
+                            <div class="template-title" th:text="${t.title ?: '(제목 없음)'}"></div>
+                            <div class="template-meta">
+                                <span th:text="${t.programName}"></span>
+                                <span class="program-type-badge"
+                                      th:classappend="${t.programType != null and t.programType.name() == 'YOUTUBE'} ? 'badge-youtube' : 'badge-tv'"
+                                      th:text="${t.programType}"></span>
+                            </div>
+                            <div class="template-tags">
+                                <span class="tag tag-country"
+                                      th:text="${t.countryName ?: t.country} + ' · ' + ${t.city}"></span>
+                                <span class="tag tag-days"
+                                      th:text="${t.nights} + '박' + ${t.days} + '일'"></span>
+                            </div>
+                            <div class="template-id" th:text="'ID: ' + ${t.id}"></div>
+                        </div>
+                    </a>
+                    <div class="card-footer">
+                        <span></span>
+                        <form th:action="@{/admin/travel-templates/{id}/delete(id=${t.id})}" method="POST"
+                              onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                            <button type="submit" class="btn-delete-card">삭제</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <a th:href="@{/admin/travel-templates(page=${currentPage - 1}, size=${size})}"
+               class="page-btn"
+               th:classappend="${currentPage == 0} ? ' disabled'">&larr; 이전</a>
+            <span class="page-info" th:text="(${currentPage + 1}) + ' 페이지'"></span>
+            <a th:href="@{/admin/travel-templates(page=${currentPage + 1}, size=${size})}"
+               class="page-btn"
+               th:classappend="${!hasNext} ? ' disabled'">다음 &rarr;</a>
+        </div>
+    </div>
+</body>
+</html>

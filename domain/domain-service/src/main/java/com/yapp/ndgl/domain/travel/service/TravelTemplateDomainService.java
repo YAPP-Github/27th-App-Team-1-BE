@@ -124,6 +124,18 @@ public class TravelTemplateDomainService {
     }
 
     /**
+     * 여행 템플릿과 연관된 일정을 모두 삭제한다.
+     */
+    @Transactional
+    public void deleteTravelTemplate(final Long id) {
+        if (!travelTemplateRepository.existsById(id)) {
+            throw new GlobalException(TravelErrorCode.NOT_FOUND_TRAVEL_TEMPLATE);
+        }
+        travelTemplatePlaceRepository.deleteByTravelTemplateId(id);
+        travelTemplateRepository.deleteById(id);
+    }
+
+    /**
      * 여행 템플릿과 여행 프로그램을 함께 생성한다.
      */
     @Transactional
