@@ -138,7 +138,8 @@ public class UserTravelService {
 				itinerary.sequence(),
 				itinerary.travelerTip(),
 				itinerary.startTime(),
-				itinerary.estimatedDuration()
+				itinerary.estimatedDuration(),
+				itinerary.budget()
 			)).toList();
 
 		userTravelDomainService.replaceUserTravelPlaces(userTravelId, userTravelPlaces);

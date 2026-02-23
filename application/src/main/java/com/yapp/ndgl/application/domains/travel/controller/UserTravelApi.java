@@ -648,6 +648,7 @@ public interface UserTravelApi {
 						        "planB": [],
 						        "startTime": "08:30:00",
 						        "estimatedDuration": 60,
+						        "budget": 50000,
 						        "place": {
 						          "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
 						          "thumbnail": "https://example.com/thumbnail/tokyo.jpg",

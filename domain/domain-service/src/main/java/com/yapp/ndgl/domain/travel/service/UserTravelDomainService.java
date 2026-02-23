@@ -78,7 +78,8 @@ public class UserTravelDomainService {
 				templatePlace.getSequence(),
 				null, // TODO: UserTravel 정규화 시 travelerTipsJson에서 변환 필요
 				null,
-				templatePlace.getEstimatedDuration()
+				templatePlace.getEstimatedDuration(),
+				null
 			))
 			.toList();
 

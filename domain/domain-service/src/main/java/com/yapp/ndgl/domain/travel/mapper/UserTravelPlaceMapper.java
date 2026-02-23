@@ -18,6 +18,7 @@ public class UserTravelPlaceMapper {
 			.travelerTip(userTravelPlace.getTravelerTip())
 			.startTime(userTravelPlace.getStartTime())
 			.estimatedDuration(userTravelPlace.getEstimatedDuration())
+			.budget(userTravelPlace.getBudget())
 			.build();
 	}
 
@@ -35,6 +36,7 @@ public class UserTravelPlaceMapper {
 			.travelerTip(entity.getTravelerTip())
 			.startTime(entity.getStartTime())
 			.estimatedDuration(entity.getEstimatedDuration())
+			.budget(entity.getBudget())
 			.build();
 	}
 }

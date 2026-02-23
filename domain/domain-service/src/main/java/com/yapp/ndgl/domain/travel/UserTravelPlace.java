@@ -17,6 +17,7 @@ public class UserTravelPlace {
     private String travelerTip;
     private LocalTime startTime;
     private Integer estimatedDuration;
+    private Integer budget;
 
     public static UserTravelPlace create(
         final Long userTravelId,
@@ -25,7 +26,8 @@ public class UserTravelPlace {
         final Integer sequence,
         final String travelerTip,
         final LocalTime startTime,
-        final Integer estimatedDuration
+        final Integer estimatedDuration,
+        final Integer budget
     ) {
         return UserTravelPlace.builder()
             .userTravelId(userTravelId)
@@ -35,6 +37,7 @@ public class UserTravelPlace {
             .travelerTip(travelerTip)
             .startTime(startTime)
             .estimatedDuration(estimatedDuration)
+            .budget(budget)
             .build();
     }
 }

@@ -53,6 +53,9 @@ public class UserTravelPlaceEntity extends BaseEntity {
     @Column(name = "estimated_duration")
     private Integer estimatedDuration;
 
+    @Column(name = "budget")
+    private Integer budget;
+
     @Builder
     public UserTravelPlaceEntity(
         final Long userTravelId,
@@ -61,7 +64,8 @@ public class UserTravelPlaceEntity extends BaseEntity {
         final Integer sequence,
         final String travelerTip,
         final LocalTime startTime,
-        final Integer estimatedDuration
+        final Integer estimatedDuration,
+        final Integer budget
     ) {
         this.userTravelId = userTravelId;
         this.placeId = placeId;
@@ -70,6 +74,7 @@ public class UserTravelPlaceEntity extends BaseEntity {
         this.travelerTip = travelerTip;
         this.startTime = startTime;
         this.estimatedDuration = estimatedDuration;
+        this.budget = budget;
     }
 
     public void updateStartTime(final LocalTime startTime) {
