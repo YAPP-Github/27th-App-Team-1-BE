@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 템플릿 등록 - NDGL 관리자</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #333333;
+        }
+        .logout-link {
+            font-size: 14px;
+            color: #888888;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .logout-link:hover {
+            color: #cf1322;
+        }
+        .success-message {
+            background-color: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #389e0d;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            background-color: #fff2f0;
+            border: 1px solid #ffccc7;
+            color: #cf1322;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #333333;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            flex: 1;
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555555;
+            margin-bottom: 6px;
+        }
+        .form-group label .required {
+            color: #cf1322;
+            margin-left: 2px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fff;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #4a90d9;
+        }
+        .day-box {
+            background: #fafbfc;
+            border: 1px solid #e1e4e8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .day-box .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .day-box .day-header h3 {
+            font-size: 16px;
+            color: #333;
+        }
+        .activity-box {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .activity-box .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .activity-box .activity-header h4 {
+            font-size: 14px;
+            color: #555;
+        }
+        .sub-section {
+            background: #f8f9fa;
+            border: 1px dashed #ccc;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        .sub-section .sub-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .sub-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .sub-item input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        .sub-item input:focus {
+            border-color: #4a90d9;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+        .btn:hover {
+            opacity: 0.85;
+        }
+        .btn-primary {
+            background-color: #4a90d9;
+            color: #ffffff;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #357abd;
+        }
+        .btn-add {
+            background-color: #e8f4fd;
+            color: #1a73e8;
+            border: 1px solid #b3d7f5;
+        }
+        .btn-add:hover {
+            background-color: #d0e9fa;
+        }
+        .btn-add-small {
+            background-color: #f0f0f0;
+            color: #555;
+            border: 1px solid #ddd;
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+        .btn-add-small:hover {
+            background-color: #e4e4e4;
+        }
+        .btn-delete {
+            background-color: #fff2f0;
+            color: #cf1322;
+            border: 1px solid #ffccc7;
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+        .btn-delete:hover {
+            background-color: #ffe7e4;
+        }
+        .btn-delete-day {
+            background-color: #fff2f0;
+            color: #cf1322;
+            border: 1px solid #ffccc7;
+        }
+        .btn-delete-day:hover {
+            background-color: #ffe7e4;
+        }
+        .actions-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .transport-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .transport-row input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        .transport-row input:focus {
+            border-color: #4a90d9;
+        }
+        .planb-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .planb-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        .planb-row input:focus {
+            border-color: #4a90d9;
+        }
+        .tab-bar {
+            display: flex;
+            gap: 0;
+            margin-bottom: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            background: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn:hover {
+            color: #555;
+            background: #fafafa;
+        }
+        .tab-btn.active {
+            color: #4a90d9;
+            border-bottom-color: #4a90d9;
+            background: #f0f7ff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .json-textarea {
+            width: 100%;
+            min-height: 500px;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            outline: none;
+            resize: vertical;
+            tab-size: 2;
+        }
+        .json-textarea:focus {
+            border-color: #4a90d9;
+        }
+        .json-help {
+            font-size: 12px;
+            color: #888;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        /* 로딩 오버레이 */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading-overlay.active {
+            display: flex;
+        }
+        .loading-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 48px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+            min-width: 320px;
+        }
+        .loading-card .loading-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .loading-card .loading-desc {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 28px;
+        }
+        /* 스켈레톤 바 */
+        .skeleton-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .skeleton-bar {
+            height: 14px;
+            border-radius: 7px;
+            background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+        .skeleton-bar.w-full  { width: 100%; }
+        .skeleton-bar.w-3q    { width: 75%; }
+        .skeleton-bar.w-half  { width: 50%; }
+        .skeleton-bar.w-2q    { width: 40%; }
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        /* 스피너 */
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 4px solid #e0eaf8;
+            border-top-color: #4a90d9;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* 저장 버튼 비활성화 */
+        .btn-primary:disabled {
+            background-color: #a0bfdf;
+            cursor: not-allowed;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- 등록 중 로딩 오버레이 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-card">
+            <div class="spinner"></div>
+            <div class="loading-title">여행 템플릿 등록 중...</div>
+            <div class="loading-desc">YouTube·Google Maps API 연동 중입니다. 잠시만 기다려주세요.</div>
+            <div class="skeleton-list">
+                <div class="skeleton-bar w-full"></div>
+                <div class="skeleton-bar w-3q"></div>
+                <div class="skeleton-bar w-half"></div>
+                <div class="skeleton-bar w-2q"></div>
+                <div class="skeleton-bar w-3q"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>여행 템플릿 등록</h1>
+            <div style="display:flex; gap:16px; align-items:center;">
+                <a href="/admin/travel-templates" style="font-size:14px; color:#4a90d9; text-decoration:none; font-weight:500;">📋 목록 보기</a>
+                <a href="/admin/logout" class="logout-link">로그아웃</a>
+            </div>
+        </div>
+
+        <div th:if="${successMessage}" class="success-message">
+            <span th:text="${successMessage}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="error-message">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- 입력 방식 선택 탭 -->
+        <div class="tab-bar">
+            <button type="button" class="tab-btn active" onclick="switchTab('form')">폼 입력</button>
+            <button type="button" class="tab-btn" onclick="switchTab('json')">JSON 입력</button>
+        </div>
+
+        <!-- JSON 입력 탭 -->
+        <div id="jsonTab" class="tab-content">
+            <form action="/admin/travel-templates/json" method="POST" id="jsonForm">
+                <div class="card">
+                    <h2>JSON 직접 입력</h2>
+                    <textarea class="json-textarea" name="jsonBody" id="jsonBody" placeholder='기존 API와 동일한 JSON 형식으로 입력하세요...'
+                              th:text="${savedJsonBody}"></textarea>
+                    <div class="json-help">
+                        기존 <code>POST /api/v1/travel-templates</code> API와 동일한 JSON 형식을 사용합니다.
+                        <button type="button" class="btn btn-add-small" style="margin-left: 8px;" onclick="loadJsonSample()">샘플 JSON 불러오기</button>
+                        <button type="button" class="btn btn-add-small" style="margin-left: 4px;" onclick="formatJson()">JSON 정렬</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">여행 템플릿 저장 (JSON)</button>
+            </form>
+        </div>
+
+        <!-- 폼 입력 탭 -->
+        <div id="formTab" class="tab-content active">
+        <form action="/admin/travel-templates" method="POST" id="templateForm">
+
+            <input type="hidden" name="dayCount" id="dayCount" value="1">
+
+            <!-- 기본 정보 -->
+            <div class="card">
+                <h2>기본 정보</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>여행자 (크리에이터)</label>
+                        <input type="text" name="traveler" placeholder="예: 빠니보틀">
+                    </div>
+                    <div class="form-group">
+                        <label>요약 <span class="required">*</span></label>
+                        <input type="text" name="summary" placeholder="여행 요약" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>1인당 예산 (원)</label>
+                        <input type="number" name="budgetPerPerson" placeholder="예: 1500000">
+                    </div>
+                    <div class="form-group">
+                        <label>프로그램 유형</label>
+                        <select name="travelProgramType">
+                            <option th:each="type : ${programTypes}" th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>대륙</label>
+                        <input type="text" name="continent" placeholder="예: 아시아">
+                    </div>
+                    <div class="form-group">
+                        <label>국가 코드 <span class="required">*</span></label>
+                        <input type="text" name="country" placeholder="예: TH" required>
+                    </div>
+                    <div class="form-group">
+                        <label>국가명</label>
+                        <input type="text" name="countryName" placeholder="예: 태국">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>도시 <span class="required">*</span></label>
+                        <input type="text" name="city" placeholder="예: 방콕" required>
+                    </div>
+                    <div class="form-group">
+                        <label>YouTube 링크</label>
+                        <input type="text" name="link" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 일정 -->
+            <div class="card">
+                <h2>일정</h2>
+                <div id="daysContainer">
+                    <!-- 기본 1일차 -->
+                    <div class="day-box" data-day-index="0">
+                        <div class="day-header">
+                            <h3>1일차</h3>
+                            <button type="button" class="btn btn-delete-day" onclick="removeDay(this)">일차 삭제</button>
+                        </div>
+                        <div class="form-group">
+                            <label>교통 팁</label>
+                            <input type="text" name="day[0].transportationTip" placeholder="예: 공항에서 그랩 택시 이용 추천">
+                        </div>
+                        <div class="activities-container">
+                            <!-- 기본 활동 1 -->
+                            <div class="activity-box" data-act-index="0">
+                                <div class="activity-header">
+                                    <h4>활동 1</h4>
+                                    <button type="button" class="btn btn-delete" onclick="removeActivity(this)">활동 삭제</button>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>장소명 <span class="required">*</span></label>
+                                        <input type="text" name="day[0].activity[0].placeName" placeholder="예: 왓 아룬" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>도시 (영문)</label>
+                                        <input type="text" name="day[0].activity[0].cityEn" placeholder="예: Bangkok">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>예상 소요 시간 (분)</label>
+                                        <input type="number" name="day[0].activity[0].estimatedTime" placeholder="예: 60">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>이동 거리 (km)</label>
+                                        <input type="number" name="day[0].activity[0].distanceKm" placeholder="예: 5" step="0.1">
+                                    </div>
+                                </div>
+
+                                <!-- 교통수단 -->
+                                <div class="sub-section">
+                                    <div class="sub-title">교통수단</div>
+                                    <div class="transport-container">
+                                    </div>
+                                    <button type="button" class="btn btn-add-small" onclick="addTransport(0, 0)">+ 교통수단 추가</button>
+                                </div>
+
+                                <!-- 팁 -->
+                                <div class="sub-section">
+                                    <div class="sub-title">팁</div>
+                                    <div class="tips-container">
+                                    </div>
+                                    <button type="button" class="btn btn-add-small" onclick="addTip(0, 0)">+ 팁 추가</button>
+                                </div>
+
+                                <!-- 대안 장소 -->
+                                <div class="sub-section">
+                                    <div class="sub-title">대안 장소 (Plan B)</div>
+                                    <div class="planb-container">
+                                    </div>
+                                    <button type="button" class="btn btn-add-small" onclick="addPlanB(0, 0)">+ 대안 장소 추가</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-add" onclick="addActivity(0)">+ 활동 추가</button>
+                    </div>
+                </div>
+                <div style="margin-top: 12px;">
+                    <button type="button" class="btn btn-add" onclick="addDay()">+ 일차 추가</button>
+                </div>
+            </div>
+
+            <!-- 저장 버튼 -->
+            <button type="submit" class="btn btn-primary">여행 템플릿 저장</button>
+        </form>
+        </div><!-- /formTab -->
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(function(btn) { btn.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            if (tab === 'json') {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('jsonTab').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('formTab').classList.add('active');
+            }
+        }
+
+        function loadJsonSample() {
+            var sample = {
+                "traveler": "빠니보틀",
+                "summary": "방콕 3박 4일 여행",
+                "budget_per_person": 1500000,
+                "continent": "아시아",
+                "country": "TH",
+                "country_name": "태국",
+                "city": "방콕",
+                "travel_program_type": "YOUTUBE",
+                "link": "https://www.youtube.com/watch?v=example",
+                "itinerary": [
+                    {
+                        "day": 1,
+                        "transportation_tip": "공항에서 그랩 택시 이용 추천",
+                        "activities": [
+                            {
+                                "sequence": 1,
+                                "place_name": "왓 아룬",
+                                "city_en": "Bangkok",
+                                "estimated_time": 60,
+                                "distance_km": 5.0,
+                                "transportation": [{"mode": "TAXI", "time_min": 15}],
+                                "traveler_tips": ["일몰 시간에 방문 추천"],
+                                "plan_b": [{"name": "왓 포", "city_en": "Bangkok"}]
+                            }
+                        ]
+                    }
+                ]
+            };
+            document.getElementById('jsonBody').value = JSON.stringify(sample, null, 2);
+        }
+
+        function formatJson() {
+            var textarea = document.getElementById('jsonBody');
+            try {
+                var parsed = JSON.parse(textarea.value);
+                textarea.value = JSON.stringify(parsed, null, 2);
+            } catch (e) {
+                alert('JSON 형식이 올바르지 않습니다: ' + e.message);
+            }
+        }
+
+        function getDayCount() {
+            return document.querySelectorAll('#daysContainer .day-box').length;
+        }
+
+        function updateDayCount() {
+            document.getElementById('dayCount').value = getDayCount();
+        }
+
+        function reindexAll() {
+            var dayBoxes = document.querySelectorAll('#daysContainer .day-box');
+            dayBoxes.forEach(function(dayBox, di) {
+                dayBox.setAttribute('data-day-index', di);
+                dayBox.querySelector('.day-header h3').textContent = (di + 1) + '일차';
+
+                // 교통 팁
+                var tipInput = dayBox.querySelector(':scope > .form-group input[type="text"]');
+                if (tipInput) {
+                    tipInput.name = 'day[' + di + '].transportationTip';
+                }
+
+                // 활동 추가 버튼
+                var addActBtn = dayBox.querySelector(':scope > .btn-add');
+                if (addActBtn) {
+                    addActBtn.setAttribute('onclick', 'addActivity(' + di + ')');
+                }
+
+                // 활동들
+                var actBoxes = dayBox.querySelectorAll('.activities-container .activity-box');
+                actBoxes.forEach(function(actBox, ai) {
+                    actBox.setAttribute('data-act-index', ai);
+                    actBox.querySelector('.activity-header h4').textContent = '활동 ' + (ai + 1);
+
+                    // 메인 필드들
+                    var inputs = actBox.querySelectorAll(':scope > .form-row input');
+                    inputs.forEach(function(inp) {
+                        var oldName = inp.name;
+                        if (oldName) {
+                            inp.name = oldName.replace(/day\[\d+\]\.activity\[\d+\]/, 'day[' + di + '].activity[' + ai + ']');
+                        }
+                    });
+
+                    // 교통수단
+                    var transportItems = actBox.querySelectorAll('.transport-container .transport-row');
+                    transportItems.forEach(function(row, ti) {
+                        var modeInput = row.querySelector('input:first-child');
+                        var timeInput = row.querySelector('input:nth-child(2)');
+                        if (modeInput) modeInput.name = 'day[' + di + '].activity[' + ai + '].transport[' + ti + '].mode';
+                        if (timeInput) timeInput.name = 'day[' + di + '].activity[' + ai + '].transport[' + ti + '].timeMin';
+                    });
+                    var addTransBtn = actBox.querySelector('.transport-container + .btn-add-small');
+                    if (addTransBtn) addTransBtn.setAttribute('onclick', 'addTransport(' + di + ',' + ai + ')');
+
+                    // 팁
+                    var tipItems = actBox.querySelectorAll('.tips-container .sub-item');
+                    tipItems.forEach(function(row, ti) {
+                        var inp = row.querySelector('input');
+                        if (inp) inp.name = 'day[' + di + '].activity[' + ai + '].tip[' + ti + ']';
+                    });
+                    var addTipBtn = actBox.querySelector('.tips-container + .btn-add-small');
+                    if (addTipBtn) addTipBtn.setAttribute('onclick', 'addTip(' + di + ',' + ai + ')');
+
+                    // 대안 장소
+                    var planbItems = actBox.querySelectorAll('.planb-container .planb-row');
+                    planbItems.forEach(function(row, pi) {
+                        var nameInput = row.querySelector('input:first-child');
+                        var cityInput = row.querySelector('input:nth-child(2)');
+                        if (nameInput) nameInput.name = 'day[' + di + '].activity[' + ai + '].planB[' + pi + '].name';
+                        if (cityInput) cityInput.name = 'day[' + di + '].activity[' + ai + '].planB[' + pi + '].cityEn';
+                    });
+                    var addPlanbBtn = actBox.querySelector('.planb-container + .btn-add-small');
+                    if (addPlanbBtn) addPlanbBtn.setAttribute('onclick', 'addPlanB(' + di + ',' + ai + ')');
+                });
+            });
+            updateDayCount();
+        }
+
+        function addDay() {
+            var di = getDayCount();
+            var html = '<div class="day-box" data-day-index="' + di + '">'
+                + '<div class="day-header">'
+                + '<h3>' + (di + 1) + '일차</h3>'
+                + '<button type="button" class="btn btn-delete-day" onclick="removeDay(this)">일차 삭제</button>'
+                + '</div>'
+                + '<div class="form-group">'
+                + '<label>교통 팁</label>'
+                + '<input type="text" name="day[' + di + '].transportationTip" placeholder="예: 지하철 이용 추천">'
+                + '</div>'
+                + '<div class="activities-container">'
+                + buildActivityHtml(di, 0)
+                + '</div>'
+                + '<button type="button" class="btn btn-add" onclick="addActivity(' + di + ')">+ 활동 추가</button>'
+                + '</div>';
+            document.getElementById('daysContainer').insertAdjacentHTML('beforeend', html);
+            updateDayCount();
+        }
+
+        function removeDay(btn) {
+            var dayBox = btn.closest('.day-box');
+            dayBox.remove();
+            reindexAll();
+        }
+
+        function buildActivityHtml(di, ai) {
+            return '<div class="activity-box" data-act-index="' + ai + '">'
+                + '<div class="activity-header">'
+                + '<h4>활동 ' + (ai + 1) + '</h4>'
+                + '<button type="button" class="btn btn-delete" onclick="removeActivity(this)">활동 삭제</button>'
+                + '</div>'
+                + '<div class="form-row">'
+                + '<div class="form-group">'
+                + '<label>장소명 <span class="required">*</span></label>'
+                + '<input type="text" name="day[' + di + '].activity[' + ai + '].placeName" placeholder="예: 왓 아룬" required>'
+                + '</div>'
+                + '<div class="form-group">'
+                + '<label>도시 (영문)</label>'
+                + '<input type="text" name="day[' + di + '].activity[' + ai + '].cityEn" placeholder="예: Bangkok">'
+                + '</div>'
+                + '</div>'
+                + '<div class="form-row">'
+                + '<div class="form-group">'
+                + '<label>예상 소요 시간 (분)</label>'
+                + '<input type="number" name="day[' + di + '].activity[' + ai + '].estimatedTime" placeholder="예: 60">'
+                + '</div>'
+                + '<div class="form-group">'
+                + '<label>이동 거리 (km)</label>'
+                + '<input type="number" name="day[' + di + '].activity[' + ai + '].distanceKm" placeholder="예: 5" step="0.1">'
+                + '</div>'
+                + '</div>'
+                + '<div class="sub-section">'
+                + '<div class="sub-title">교통수단</div>'
+                + '<div class="transport-container"></div>'
+                + '<button type="button" class="btn btn-add-small" onclick="addTransport(' + di + ',' + ai + ')">+ 교통수단 추가</button>'
+                + '</div>'
+                + '<div class="sub-section">'
+                + '<div class="sub-title">팁</div>'
+                + '<div class="tips-container"></div>'
+                + '<button type="button" class="btn btn-add-small" onclick="addTip(' + di + ',' + ai + ')">+ 팁 추가</button>'
+                + '</div>'
+                + '<div class="sub-section">'
+                + '<div class="sub-title">대안 장소 (Plan B)</div>'
+                + '<div class="planb-container"></div>'
+                + '<button type="button" class="btn btn-add-small" onclick="addPlanB(' + di + ',' + ai + ')">+ 대안 장소 추가</button>'
+                + '</div>'
+                + '</div>';
+        }
+
+        function addActivity(dayIndex) {
+            var dayBox = document.querySelectorAll('#daysContainer .day-box')[dayIndex];
+            var container = dayBox.querySelector('.activities-container');
+            var ai = container.querySelectorAll('.activity-box').length;
+            container.insertAdjacentHTML('beforeend', buildActivityHtml(dayIndex, ai));
+        }
+
+        function removeActivity(btn) {
+            var actBox = btn.closest('.activity-box');
+            actBox.remove();
+            reindexAll();
+        }
+
+        function addTransport(dayIndex, actIndex) {
+            var dayBox = document.querySelectorAll('#daysContainer .day-box')[dayIndex];
+            var actBox = dayBox.querySelectorAll('.activities-container .activity-box')[actIndex];
+            var container = actBox.querySelector('.transport-container');
+            var ti = container.querySelectorAll('.transport-row').length;
+            var html = '<div class="transport-row">'
+                + '<input type="text" name="day[' + dayIndex + '].activity[' + actIndex + '].transport[' + ti + '].mode" placeholder="이동수단 (예: 택시)" style="flex:1;">'
+                + '<input type="number" name="day[' + dayIndex + '].activity[' + actIndex + '].transport[' + ti + '].timeMin" placeholder="소요시간(분)" style="width:120px;">'
+                + '<button type="button" class="btn btn-delete" onclick="removeTransport(this)">삭제</button>'
+                + '</div>';
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeTransport(btn) {
+            btn.closest('.transport-row').remove();
+            reindexAll();
+        }
+
+        function addTip(dayIndex, actIndex) {
+            var dayBox = document.querySelectorAll('#daysContainer .day-box')[dayIndex];
+            var actBox = dayBox.querySelectorAll('.activities-container .activity-box')[actIndex];
+            var container = actBox.querySelector('.tips-container');
+            var ti = container.querySelectorAll('.sub-item').length;
+            var html = '<div class="sub-item">'
+                + '<input type="text" name="day[' + dayIndex + '].activity[' + actIndex + '].tip[' + ti + ']" placeholder="팁 내용">'
+                + '<button type="button" class="btn btn-delete" onclick="removeTip(this)">삭제</button>'
+                + '</div>';
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeTip(btn) {
+            btn.closest('.sub-item').remove();
+            reindexAll();
+        }
+
+        function addPlanB(dayIndex, actIndex) {
+            var dayBox = document.querySelectorAll('#daysContainer .day-box')[dayIndex];
+            var actBox = dayBox.querySelectorAll('.activities-container .activity-box')[actIndex];
+            var container = actBox.querySelector('.planb-container');
+            var pi = container.querySelectorAll('.planb-row').length;
+            var html = '<div class="planb-row">'
+                + '<input type="text" name="day[' + dayIndex + '].activity[' + actIndex + '].planB[' + pi + '].name" placeholder="대안 장소명">'
+                + '<input type="text" name="day[' + dayIndex + '].activity[' + actIndex + '].planB[' + pi + '].cityEn" placeholder="도시 (영문)">'
+                + '<button type="button" class="btn btn-delete" onclick="removePlanB(this)">삭제</button>'
+                + '</div>';
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removePlanB(btn) {
+            btn.closest('.planb-row').remove();
+            reindexAll();
+        }
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+            document.querySelectorAll('.btn-primary').forEach(function(btn) {
+                btn.disabled = true;
+            });
+        }
+
+        document.getElementById('templateForm').addEventListener('submit', showLoading);
+        document.getElementById('jsonForm').addEventListener('submit', function(e) {
+            var json = document.getElementById('jsonBody').value.trim();
+            if (!json) {
+                alert('JSON을 입력해주세요.');
+                e.preventDefault();
+                return;
+            }
+            try {
+                JSON.parse(json);
+            } catch (err) {
+                alert('JSON 형식이 올바르지 않습니다: ' + err.message);
+                e.preventDefault();
+                return;
+            }
+            showLoading();
+        });
+    </script>
+</body>
+</html>

@@ -314,6 +314,11 @@ public class TravelTemplateService {
         return SliceResponse.of(content, templates.isHasNext());
     }
 
+    @Transactional
+    public void deleteTravelTemplate(final Long id) {
+        travelTemplateDomainService.deleteTravelTemplate(id);
+    }
+
     @Transactional(readOnly = true)
     public SliceResponse<TravelTemplateSearchResponse> searchTravelTemplates(
         final String keyword, final int page, final int size

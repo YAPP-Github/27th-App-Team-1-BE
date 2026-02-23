@@ -3,13 +3,13 @@ package com.yapp.ndgl.application.domains.travel.facade;
 import java.util.Map;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
+import com.yapp.ndgl.application.domains.place.service.PlacePhotoService;
 import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplatePopularResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRecommendationResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
-import com.yapp.ndgl.application.domains.place.service.PlacePhotoService;
 import com.yapp.ndgl.application.domains.travel.service.TravelTemplateSaveService;
 import com.yapp.ndgl.application.domains.travel.service.TravelTemplateService;
 import com.yapp.ndgl.application.domains.travel.service.dto.YouTubeVideoInfo;
@@ -74,6 +74,11 @@ public class TravelTemplateFacade {
     ) {
         log.info("추천 여행 템플릿 목록을 조회합니다. uuid = {}, page = {}, size = {}", uuid, page, size);
         return travelTemplateService.readRecommendedTravelTemplates(uuid, page, size);
+    }
+
+    public void deleteTravelTemplate(final Long id) {
+        log.info("여행 템플릿을 삭제합니다. id = {}", id);
+        travelTemplateService.deleteTravelTemplate(id);
     }
 
     public SliceResponse<TravelTemplateSearchResponse> searchTravelTemplates(
