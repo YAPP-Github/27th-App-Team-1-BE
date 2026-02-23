@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
@@ -428,6 +429,79 @@ public interface UserTravelApi {
 	);
 
 	@Operation(
+		summary = "내 여행 장소 정보 수정",
+		description = "사용자 본인 여행의 특정 장소에 대해 travelerTip, budget 값을 수정합니다. null로 전달하면 해당 필드는 null로 저장됩니다.",
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(
+				schema = @Schema(implementation = SuccessResponse.class),
+				examples = @ExampleObject(
+					name = "SUCCESS",
+					value = """
+						{
+						  "code": "2000",
+						  "message": "요청에 성공하였습니다.",
+						  "data": {}
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "404",
+			description = "내 여행 또는 내 여행 장소를 찾을 수 없음",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "NOT_FOUND_USER_TRAVEL",
+					value = """
+						{
+						  "code": "TRAVEL-02-002",
+						  "message": "내 여행 정보를 찾을 수 없습니다",
+						  "errors": []
+						}
+						"""
+				)
+			)
+		),
+		@ApiResponse(
+			responseCode = "422",
+			description = "유효성 검증 실패",
+			content = @Content(
+				schema = @Schema(implementation = ErrorResponse.class),
+				examples = @ExampleObject(
+					name = "VALIDATION_ERROR",
+					value = """
+						{
+						  "code": "COMM-01-005",
+						  "message": "유효성 검증에 실패하였습니다",
+						  "errors": [
+						    {
+						      "field": "budget",
+						      "message": "budget은 0 이상이어야 합니다."
+						    }
+						  ]
+						}
+						"""
+				)
+			)
+		)
+	})
+	@PatchMapping("/{id}/itinerary/{userTravelPlaceId}")
+	ResponseEntity<SuccessResponse> updateUserTravelPlace(
+		@CurrentUuid String uuid,
+		@Parameter(description = "사용자 여행 ID", example = "1", required = true)
+		@PathVariable("id") final Long id,
+		@Parameter(description = "유저 여행 장소 ID", example = "10", required = true)
+		@PathVariable("userTravelPlaceId") final Long userTravelPlaceId,
+		@Valid @RequestBody UpdateUserTravelPlaceRequest request
+	);
+
+	@Operation(
 		summary = "다가오는 여행 조회",
 		description = "사용자의 가장 가까운 예정 여행과 첫 일정 정보를 조회합니다.",
 		security = @SecurityRequirement(name = "bearerAuth")
@@ -648,6 +722,7 @@ public interface UserTravelApi {
 						        "planB": [],
 						        "startTime": "08:30:00",
 						        "estimatedDuration": 60,
+						        "budget": 50000,
 						        "place": {
 						          "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
 						          "thumbnail": "https://example.com/thumbnail/tokyo.jpg",

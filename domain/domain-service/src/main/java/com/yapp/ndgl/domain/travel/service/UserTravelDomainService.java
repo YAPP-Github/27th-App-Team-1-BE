@@ -78,7 +78,8 @@ public class UserTravelDomainService {
 				templatePlace.getSequence(),
 				null, // TODO: UserTravel 정규화 시 travelerTipsJson에서 변환 필요
 				null,
-				templatePlace.getEstimatedDuration()
+				templatePlace.getEstimatedDuration(),
+				null
 			))
 			.toList();
 
@@ -185,6 +186,20 @@ public class UserTravelDomainService {
 		for (UserTravelPlaceEntity placeEntity : placeEntities) {
 			placeEntity.updateStartTime(startTimeByUserTravelPlaceId.get(placeEntity.getId()));
 		}
+	}
+
+	@Transactional
+	public void updateTravelerTipAndBudget(
+		final Long userTravelId,
+		final Long userTravelPlaceId,
+		final String travelerTip,
+		final Integer budget
+	) {
+		UserTravelPlaceEntity placeEntity = userTravelPlaceRepository
+			.findByIdAndUserTravelId(userTravelPlaceId, userTravelId)
+			.orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL));
+
+		placeEntity.updateTravelerTipAndBudget(travelerTip, budget);
 	}
 
 	@Transactional(readOnly = true)

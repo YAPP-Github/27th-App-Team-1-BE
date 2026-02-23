@@ -4,6 +4,7 @@ import com.yapp.ndgl.application.common.annotation.Facade;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceStartTimesRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelPlaceRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpdateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
@@ -47,6 +48,14 @@ public class UserTravelFacade {
     ) {
         log.info("사용자 여행 장소 startTime을 일괄 수정합니다. uuid = {}, userTravelId = {}", uuid, userTravelId);
         userTravelService.bulkUpdateUserTravelPlaceStartTimes(uuid, userTravelId, request);
+    }
+
+    public void updateUserTravelPlace(final String uuid, final Long userTravelId, final Long userTravelPlaceId,
+        final UpdateUserTravelPlaceRequest request
+    ) {
+        log.info("사용자 여행 장소 정보를 수정합니다. uuid = {}, userTravelId = {}, userTravelPlaceId = {}",
+            uuid, userTravelId, userTravelPlaceId);
+        userTravelService.updateUserTravelPlace(uuid, userTravelId, userTravelPlaceId, request);
     }
 
     public UpcomingUserTravelResponse getUpcomingUserTravel(final String uuid) {

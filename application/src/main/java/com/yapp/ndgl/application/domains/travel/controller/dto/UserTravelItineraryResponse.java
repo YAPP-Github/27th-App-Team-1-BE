@@ -58,6 +58,8 @@ public record UserTravelItineraryResponse(
 		LocalTime startTime,
 		@Schema(description = "예상 소요 시간 (분)", example = "60", nullable = true)
 		Integer estimatedDuration,
+		@Schema(description = "예산 (원)", example = "50000", nullable = true)
+		Integer budget,
 		@Schema(description = "장소 정보", nullable = true)
 		PlaceInfo place
 	) {
@@ -101,6 +103,7 @@ public record UserTravelItineraryResponse(
 				userTravelPlace.getEstimatedDuration() != null
 					? userTravelPlace.getEstimatedDuration()
 					: templateItinerary == null ? null : templateItinerary.estimatedDuration(),
+				userTravelPlace.getBudget(),
 				place == null ? null : PlaceInfo.from(place, objectMapper)
 			);
 		}

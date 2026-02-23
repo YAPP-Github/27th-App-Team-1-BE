@@ -36,6 +36,9 @@ public record ReplaceUserTravelItineraryRequest(
 		@Schema(description = "예상 소요 시간(분)", example = "60", nullable = true)
 		@Min(value = 1, message = "estimatedDuration은 1 이상이어야 합니다.")
 		Integer estimatedDuration,
+		@Schema(description = "예산(원)", example = "50000", nullable = true)
+		@Min(value = 0, message = "budget은 0 이상이어야 합니다.")
+		Integer budget,
 		@Schema(description = "여행자 팁", example = "오전 시간 방문 추천", nullable = true)
 		@Size(max = 1000, message = "travelerTip은 최대 1000자까지 입력할 수 있습니다.")
 		String travelerTip
