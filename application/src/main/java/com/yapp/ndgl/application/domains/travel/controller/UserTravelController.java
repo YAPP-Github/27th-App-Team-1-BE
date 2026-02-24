@@ -64,13 +64,14 @@ public class UserTravelController implements UserTravelApi {
 
     @Override
     @PostMapping("/{id}/itinerary")
-    public ResponseEntity<SuccessResponse> createUserTravelPlace(
+    public ResponseEntity<SuccessResponse<UserTravelItineraryResponse.ItineraryPlaceResponse>> createUserTravelPlace(
         @CurrentUuid String uuid,
         @PathVariable("id") final Long id,
         @Valid @RequestBody CreateUserTravelPlaceRequest request
     ) {
-        userTravelFacade.createUserTravelPlace(uuid, id, request);
-        return ResponseEntity.ok(SuccessResponse.noContent());
+        UserTravelItineraryResponse.ItineraryPlaceResponse response =
+            userTravelFacade.createUserTravelPlace(uuid, id, request);
+        return ResponseEntity.ok(SuccessResponse.success(response));
     }
 
     @Override

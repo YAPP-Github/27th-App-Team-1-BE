@@ -155,7 +155,7 @@ public class UserTravelService {
 	}
 
 	@Transactional
-	public void createUserTravelPlace(
+	public UserTravelItineraryResponse.ItineraryPlaceResponse createUserTravelPlace(
 		final String uuid, final Long userTravelId, final CreateUserTravelPlaceRequest request
 	) {
 		log.info("내 여행에 장소를 추가합니다. uuid = {}, userTravelId = {}, googlePlaceId = {}, day = {}, sequence = {}",
@@ -196,6 +196,13 @@ public class UserTravelService {
 
 		log.info("내 여행에 장소를 추가했습니다. uuid = {}, userTravelId = {}, userTravelPlaceId = {}",
 			uuid, userTravelId, createdUserTravelPlace.getId());
+
+		return UserTravelItineraryResponse.ItineraryPlaceResponse.of(
+			createdUserTravelPlace,
+			null,
+			Map.of(place.getId(), place),
+			objectMapper
+		);
 	}
 
 	@Transactional

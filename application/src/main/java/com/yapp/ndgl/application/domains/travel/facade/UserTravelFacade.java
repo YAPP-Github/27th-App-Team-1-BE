@@ -43,11 +43,11 @@ public class UserTravelFacade {
         userTravelService.replaceUserTravelItinerary(uuid, userTravelId, request);
     }
 
-    public void createUserTravelPlace(
+    public UserTravelItineraryResponse.ItineraryPlaceResponse createUserTravelPlace(
         final String uuid, final Long userTravelId, final CreateUserTravelPlaceRequest request
     ) {
         log.info("사용자 여행에 장소를 추가합니다. uuid = {}, userTravelId = {}", uuid, userTravelId);
-        userTravelService.createUserTravelPlace(uuid, userTravelId, request);
+        return userTravelService.createUserTravelPlace(uuid, userTravelId, request);
     }
 
     public void bulkUpdateUserTravelPlaceStartTimes(
