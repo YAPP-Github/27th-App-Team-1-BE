@@ -531,7 +531,7 @@ public interface UserTravelApi {
 
 	@Operation(
 		summary = "내 여행 장소 정보 수정",
-		description = "사용자 본인 여행의 특정 장소에 대해 travelerTip, budget 값을 수정합니다. null로 전달하면 해당 필드는 null로 저장됩니다.",
+		description = "사용자 본인 여행의 특정 장소에 대해 memo, budget 값을 수정합니다. null로 전달하면 해당 필드는 null로 저장됩니다.",
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
 	@ApiResponses({
@@ -815,7 +815,7 @@ public interface UserTravelApi {
 						            "timeMin": 15
 						          }
 						        ],
-						        "travelerTip": "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
+						        "memo": "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
 						        "travelerTips": [
 						          "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
 						          "야경 감상을 원하면 일몰 30분 전에 도착하세요."

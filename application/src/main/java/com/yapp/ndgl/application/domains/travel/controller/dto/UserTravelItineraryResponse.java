@@ -4,7 +4,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.UserTravelPlace;
@@ -47,9 +49,8 @@ public record UserTravelItineraryResponse(
 		Double distanceKm,
 		@Schema(description = "교통수단 목록", nullable = true)
 		List<ItineraryTransportationInfo> transportation,
-		@Deprecated
-		@Schema(description = "여행자 팁 (Deprecated: travelerTips 사용 권장)", example = "오전 시간 방문 추천", nullable = true, deprecated = true)
-		String travelerTip,
+		@Schema(description = "메모", example = "오전 시간 방문 추천", nullable = true)
+		String memo,
 		@Schema(description = "여행자 팁 목록", example = "[\"오전 시간 방문 추천\", \"현지인 맛집\"]", nullable = true)
 		List<String> travelerTips,
 		@Schema(description = "대체 장소 목록 (Plan B)", nullable = true)
@@ -74,20 +75,21 @@ public record UserTravelItineraryResponse(
 				? null
 				: TravelTemplateItineraryResponse.ItineraryPlaceResponse.of(templatePlace, placeMap, objectMapper);
 
-			Double distanceKm = null;
-			List<ItineraryTransportationInfo> transportation = null;
+			Double distanceKm = userTravelPlace.getDistanceKm();
+			List<ItineraryTransportationInfo> transportation =
+				parseTransportation(userTravelPlace.getTransportationJson(), objectMapper);
 			List<ItineraryPlanBInfo> planB = null;
-			String travelerTip = userTravelPlace.getTravelerTip();
-			List<String> travelerTips = travelerTip == null ? null : List.of(travelerTip);
+			String memo = userTravelPlace.getMemo();
+			List<String> travelerTips = templateItinerary.travelerTips();
 
 			if (templateItinerary != null) {
-				distanceKm = templateItinerary.distanceKm();
-				transportation = templateItinerary.transportation();
-				planB = templateItinerary.planB();
-				if (travelerTip == null) {
-					travelerTips = templateItinerary.travelerTips();
-					travelerTip = travelerTips == null || travelerTips.isEmpty() ? null : travelerTips.get(0);
+				if (distanceKm == null) {
+					distanceKm = templateItinerary.distanceKm();
 				}
+				if (transportation == null) {
+					transportation = templateItinerary.transportation();
+				}
+				planB = templateItinerary.planB();
 			}
 
 			return new ItineraryPlaceResponse(
@@ -96,7 +98,7 @@ public record UserTravelItineraryResponse(
 				userTravelPlace.getSequence(),
 				distanceKm,
 				transportation,
-				travelerTip,
+				memo,
 				travelerTips,
 				planB,
 				userTravelPlace.getStartTime(),
@@ -106,6 +108,37 @@ public record UserTravelItineraryResponse(
 				userTravelPlace.getBudget(),
 				place == null ? null : PlaceInfo.from(place, objectMapper)
 			);
+		}
+
+		private static List<ItineraryTransportationInfo> parseTransportation(
+			final String transportationJson,
+			final ObjectMapper objectMapper
+		) {
+			if (transportationJson == null) {
+				return null;
+			}
+
+			try {
+				List<Map<String, Object>> transportList = objectMapper.readValue(
+					transportationJson,
+					new TypeReference<List<Map<String, Object>>>() {
+					}
+				);
+				return transportList.stream()
+					.map(transport -> {
+						String modeStr = (String)transport.get("mode");
+						TransportationMode mode = modeStr != null ? TransportationMode.valueOf(modeStr) : null;
+						Object timeMinRaw = transport.get("time_min");
+						if (timeMinRaw == null) {
+							timeMinRaw = transport.get("timeMin");
+						}
+						Integer timeMin = timeMinRaw != null ? ((Number)timeMinRaw).intValue() : null;
+						return new ItineraryTransportationInfo(mode, timeMin);
+					})
+					.toList();
+			} catch (Exception e) {
+				return null;
+			}
 		}
 	}
 }
