@@ -76,7 +76,9 @@ public class UserTravelDomainService {
 				templatePlace.getPlaceId(),
 				templatePlace.getDay(),
 				templatePlace.getSequence(),
-				null, // TODO: UserTravel 정규화 시 travelerTipsJson에서 변환 필요
+				null, // TODO: UserTravel 정규화 시 travelerTipsJson에서 memo로 변환 필요
+				templatePlace.getDistanceKm(),
+				templatePlace.getTransportationJson(),
 				null,
 				templatePlace.getEstimatedDuration(),
 				null
@@ -202,17 +204,17 @@ public class UserTravelDomainService {
 	}
 
 	@Transactional
-	public void updateTravelerTipAndBudget(
+	public void updateMemoAndBudget(
 		final Long userTravelId,
 		final Long userTravelPlaceId,
-		final String travelerTip,
+		final String memo,
 		final Integer budget
 	) {
 		UserTravelPlaceEntity placeEntity = userTravelPlaceRepository
 			.findByIdAndUserTravelId(userTravelPlaceId, userTravelId)
 			.orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_USER_TRAVEL));
 
-		placeEntity.updateTravelerTipAndBudget(travelerTip, budget);
+		placeEntity.updateMemoAndBudget(memo, budget);
 	}
 
 	@Transactional(readOnly = true)

@@ -7,6 +7,7 @@ import com.yapp.ndgl.domain.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -44,8 +45,15 @@ public class UserTravelPlaceEntity extends BaseEntity {
     @Column(name = "sequence", nullable = false)
     private Integer sequence;
 
-    @Column(name = "traveler_tip", length = 1000)
-    private String travelerTip;
+    @Column(name = "memo", length = 1000)
+    private String memo;
+
+    @Column(name = "distance_km")
+    private Double distanceKm;
+
+    @Lob
+    @Column(name = "transportation_json", columnDefinition = "JSON")
+    private String transportationJson;
 
     @Column(name = "start_time")
     private LocalTime startTime;
@@ -62,7 +70,9 @@ public class UserTravelPlaceEntity extends BaseEntity {
         final Long placeId,
         final Integer day,
         final Integer sequence,
-        final String travelerTip,
+        final String memo,
+        final Double distanceKm,
+        final String transportationJson,
         final LocalTime startTime,
         final Integer estimatedDuration,
         final Integer budget
@@ -71,7 +81,9 @@ public class UserTravelPlaceEntity extends BaseEntity {
         this.placeId = placeId;
         this.day = day;
         this.sequence = sequence;
-        this.travelerTip = travelerTip;
+        this.memo = memo;
+        this.distanceKm = distanceKm;
+        this.transportationJson = transportationJson;
         this.startTime = startTime;
         this.estimatedDuration = estimatedDuration;
         this.budget = budget;
@@ -81,8 +93,8 @@ public class UserTravelPlaceEntity extends BaseEntity {
         this.startTime = startTime;
     }
 
-    public void updateTravelerTipAndBudget(final String travelerTip, final Integer budget) {
-        this.travelerTip = travelerTip;
+    public void updateMemoAndBudget(final String memo, final Integer budget) {
+        this.memo = memo;
         this.budget = budget;
     }
 }

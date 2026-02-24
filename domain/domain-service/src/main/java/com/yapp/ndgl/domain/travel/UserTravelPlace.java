@@ -14,7 +14,9 @@ public class UserTravelPlace {
     private Long placeId;
     private Integer day;
     private Integer sequence;
-    private String travelerTip;
+    private String memo;
+    private Double distanceKm;
+    private String transportationJson;
     private LocalTime startTime;
     private Integer estimatedDuration;
     private Integer budget;
@@ -24,7 +26,9 @@ public class UserTravelPlace {
         final Long placeId,
         final Integer day,
         final Integer sequence,
-        final String travelerTip,
+        final String memo,
+        final Double distanceKm,
+        final String transportationJson,
         final LocalTime startTime,
         final Integer estimatedDuration,
         final Integer budget
@@ -34,7 +38,9 @@ public class UserTravelPlace {
             .placeId(placeId)
             .day(day)
             .sequence(sequence)
-            .travelerTip(travelerTip)
+            .memo(memo)
+            .distanceKm(distanceKm)
+            .transportationJson(transportationJson)
             .startTime(startTime)
             .estimatedDuration(estimatedDuration)
             .budget(budget)

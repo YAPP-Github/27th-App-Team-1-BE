@@ -15,8 +15,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ndgl.common.exception.CommonErrorCode;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelPlaceRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
@@ -139,7 +141,9 @@ public class UserTravelService {
 				placeIdByGooglePlaceId.get(itinerary.googlePlaceId()),
 				itinerary.day(),
 				itinerary.sequence(),
-				itinerary.travelerTip(),
+				itinerary.memo(),
+				itinerary.distanceKm(),
+				serializeToJson(itinerary.transportation()),
 				itinerary.startTime(),
 				itinerary.estimatedDuration(),
 				itinerary.budget()
@@ -151,7 +155,7 @@ public class UserTravelService {
 	}
 
 	@Transactional
-	public void createUserTravelPlace(
+	public UserTravelItineraryResponse.ItineraryPlaceResponse createUserTravelPlace(
 		final String uuid, final Long userTravelId, final CreateUserTravelPlaceRequest request
 	) {
 		log.info("내 여행에 장소를 추가합니다. uuid = {}, userTravelId = {}, googlePlaceId = {}, day = {}, sequence = {}",
@@ -181,7 +185,9 @@ public class UserTravelService {
 				place.getId(),
 				request.day(),
 				request.sequence(),
-				request.travelerTip(),
+				request.memo(),
+				request.distanceKm(),
+				serializeToJson(request.transportation()),
 				request.startTime(),
 				request.estimatedDuration(),
 				request.budget()
@@ -190,6 +196,13 @@ public class UserTravelService {
 
 		log.info("내 여행에 장소를 추가했습니다. uuid = {}, userTravelId = {}, userTravelPlaceId = {}",
 			uuid, userTravelId, createdUserTravelPlace.getId());
+
+		return UserTravelItineraryResponse.ItineraryPlaceResponse.of(
+			createdUserTravelPlace,
+			null,
+			Map.of(place.getId(), place),
+			objectMapper
+		);
 	}
 
 	@Transactional
@@ -221,10 +234,10 @@ public class UserTravelService {
 			uuid, userTravelId, userTravelPlaceId);
 		User user = userDomainService.findByUuid(uuid);
 		userTravelDomainService.findByIdAndUserId(userTravelId, user.getId());
-		userTravelDomainService.updateTravelerTipAndBudget(
+		userTravelDomainService.updateMemoAndBudget(
 			userTravelId,
 			userTravelPlaceId,
-			request.travelerTip(),
+			request.memo(),
 			request.budget()
 		);
 		log.info("내 여행 장소 정보를 수정했습니다. uuid = {}, userTravelId = {}, userTravelPlaceId = {}",
@@ -374,5 +387,17 @@ public class UserTravelService {
 			}
 		}
 		return planBPlaceIds;
+	}
+
+	private String serializeToJson(final Object value) {
+		if (value == null) {
+			return null;
+		}
+		try {
+			return objectMapper.writeValueAsString(value);
+		} catch (JsonProcessingException e) {
+			log.error("replaceUserTravelItinerary transportation 직렬화 실패", e);
+			throw new GlobalException(CommonErrorCode.INTERNAL_SERVER_ERROR);
+		}
 	}
 }

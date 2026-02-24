@@ -375,7 +375,36 @@ public interface UserTravelApi {
 						{
 						  "code": "2000",
 						  "message": "요청에 성공하였습니다.",
-						  "data": {}
+						  "data": {
+						    "id": 101,
+						    "day": 1,
+						    "sequence": 2,
+						    "distanceKm": 1.2,
+						    "transportation": [
+						      {
+						        "mode": "WALKING",
+						        "timeMin": 15
+						      }
+						    ],
+						    "memo": "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
+						    "travelerTips": [
+						      "전망대는 오전 일찍 가면 대기 시간이 짧아요."
+						    ],
+						    "planB": null,
+						    "startTime": "10:00:00",
+						    "estimatedDuration": 60,
+						    "budget": 30000,
+						    "place": {
+						      "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
+						      "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
+						      "latitude": 35.6585805,
+						      "longitude": 139.7454329,
+						      "name": "Tokyo Tower",
+						      "regularOpeningHours": "09:00~23:00",
+						      "googleMapsUri": "https://maps.google.com/?cid=10281119591005088802",
+						      "category": "ATTRACTION"
+						    }
+						  }
 						}
 						"""
 				)
@@ -451,7 +480,7 @@ public interface UserTravelApi {
 		)
 	})
 	@PostMapping("/{id}/itinerary")
-	ResponseEntity<SuccessResponse> createUserTravelPlace(
+	ResponseEntity<SuccessResponse<UserTravelItineraryResponse.ItineraryPlaceResponse>> createUserTravelPlace(
 		@CurrentUuid String uuid,
 		@Parameter(description = "사용자 여행 ID", example = "1", required = true)
 		@PathVariable("id") final Long id,
@@ -531,7 +560,7 @@ public interface UserTravelApi {
 
 	@Operation(
 		summary = "내 여행 장소 정보 수정",
-		description = "사용자 본인 여행의 특정 장소에 대해 travelerTip, budget 값을 수정합니다. null로 전달하면 해당 필드는 null로 저장됩니다.",
+		description = "사용자 본인 여행의 특정 장소에 대해 memo, budget 값을 수정합니다. null로 전달하면 해당 필드는 null로 저장됩니다.",
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
 	@ApiResponses({
@@ -815,7 +844,7 @@ public interface UserTravelApi {
 						            "timeMin": 15
 						          }
 						        ],
-						        "travelerTip": "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
+						        "memo": "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
 						        "travelerTips": [
 						          "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
 						          "야경 감상을 원하면 일몰 30분 전에 도착하세요."

@@ -1,8 +1,11 @@
 package com.yapp.ndgl.application.domains.travel.controller.dto;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,8 +31,13 @@ public record CreateUserTravelPlaceRequest(
 	@Schema(description = "예산(원)", example = "50000", nullable = true)
 	@Min(value = 0, message = "budget은 0 이상이어야 합니다.")
 	Integer budget,
-	@Schema(description = "여행자 팁", example = "오전 시간 방문 추천", nullable = true)
-	@Size(max = 1000, message = "travelerTip은 최대 1000자까지 입력할 수 있습니다.")
-	String travelerTip
+	@Schema(description = "이전 장소로부터의 거리(km)", example = "2.5", nullable = true)
+	@DecimalMin(value = "0.0", message = "distanceKm은 0 이상이어야 합니다.")
+	Double distanceKm,
+	@Schema(description = "교통수단 목록", nullable = true)
+	List<@Valid ItineraryTransportationInfo> transportation,
+	@Schema(description = "메모", example = "오전 시간 방문 추천", nullable = true)
+	@Size(max = 1000, message = "memo는 최대 1000자까지 입력할 수 있습니다.")
+	String memo
 ) {
 }
