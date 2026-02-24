@@ -80,7 +80,7 @@ public record UserTravelItineraryResponse(
 				parseTransportation(userTravelPlace.getTransportationJson(), objectMapper);
 			List<ItineraryPlanBInfo> planB = null;
 			String memo = userTravelPlace.getMemo();
-			List<String> travelerTips = templateItinerary.travelerTips();
+			List<String> travelerTips = templateItinerary == null ? List.of() : templateItinerary.travelerTips();
 
 			if (templateItinerary != null) {
 				if (distanceKm == null) {
