@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.yapp.ndgl.domain.travel.entity.UserTravelPlaceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -37,5 +38,7 @@ public interface UserTravelPlaceRepository extends JpaRepository<UserTravelPlace
 
     boolean existsByUserTravelIdAndDayAndSequence(Long userTravelId, Integer day, Integer sequence);
 
-    void deleteByUserTravelId(Long userTravelId);
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("DELETE FROM UserTravelPlaceEntity utp WHERE utp.userTravelId = :userTravelId")
+    void deleteByUserTravelId(@Param("userTravelId") Long userTravelId);
 }
