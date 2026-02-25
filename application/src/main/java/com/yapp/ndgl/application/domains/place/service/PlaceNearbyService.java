@@ -59,7 +59,7 @@ public class PlaceNearbyService {
 			}
 
 			GooglePlaceNearbySearchResponse nearbyResponse = googleMapsPlaceDetailClient.searchNearbyPlaces(
-				place.getLatitude(), place.getLongitude());
+				place.getLatitude(), place.getLongitude(), place.getPrimaryType());
 
 			if (nearbyResponse == null || nearbyResponse.places() == null || nearbyResponse.places().isEmpty()) {
 				log.info("인근 장소 조회 결과가 없습니다. googlePlaceId={}", googlePlaceId);
@@ -153,7 +153,8 @@ public class PlaceNearbyService {
 				priceCurrencyCode,
 				priceStartUnits,
 				priceEndUnits,
-				category
+				category,
+				result.primaryType()
 			);
 		} catch (Exception e) {
 			log.error("인근 장소 변환 실패. googlePlaceId={}", result.id(), e);
