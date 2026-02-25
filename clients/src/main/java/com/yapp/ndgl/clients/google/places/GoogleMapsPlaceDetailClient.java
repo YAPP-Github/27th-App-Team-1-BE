@@ -5,14 +5,17 @@ import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
+import com.yapp.ndgl.clients.google.places.dto.request.PlaceNearbySearchRequest;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceTextSearchRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsResponse;
+import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceNearbySearchResponse;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceTextSearchResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
@@ -33,6 +36,23 @@ public class GoogleMapsPlaceDetailClient {
 	private static final String GOOGLE_MAPS_KEY_HEADER = "X-Goog-Api-Key";
 	private static final String FIELD_MASK_HEADER = "X-Goog-FieldMask";
 	private static final String TEXT_SEARCH_FIELD_MASK = "places.id,places.displayName";
+	private static final String NEARBY_SEARCH_FIELD_MASK = String.join(",",
+		"places.id",
+		"places.displayName",
+		"places.rating",
+		"places.photos",
+		"places.location",
+		"places.websiteUri",
+		"places.googleMapsUri",
+		"places.formattedAddress",
+		"places.nationalPhoneNumber",
+		"places.internationalPhoneNumber",
+		"places.regularOpeningHours",
+		"places.userRatingCount",
+		"places.primaryType",
+		"places.types",
+		"places.priceRange"
+	);
 	private static final String DEFAULT_FIELD_MASK = String.join(",",
 		"displayName",
 		"id",
@@ -120,13 +140,54 @@ public class GoogleMapsPlaceDetailClient {
 				})
 				.body(GooglePlaceTextSearchResponse.class);
 
+
 			if (response == null) {
 				throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
 			}
+
+			log.info("Google Maps Text Search 결과 = {}", response.places().get(0).displayName());
+
 			return response;
 
 		} catch (ResourceAccessException e) {
 			log.error("Google Maps Text Search API 요청 실패: {}", e.getMessage(), e);
+			if (e.getCause() instanceof SocketTimeoutException) {
+				throw new GlobalException(GoogleMapsErrorCode.API_TIMEOUT);
+			}
+			throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
+		}
+	}
+
+	public GooglePlaceNearbySearchResponse searchNearbyPlaces(final double latitude, final double longitude) {
+		try {
+			log.info("Google Maps NearbySearch API 호출: latitude={}, longitude={}", latitude, longitude);
+
+			final GooglePlaceNearbySearchResponse response = googleMapsPlaceRestClient.post()
+				.uri(uriBuilder -> {
+					return uriBuilder
+						.path("/places:searchNearby")
+						.queryParam("languageCode", "ko")
+						.build();
+				})
+				.header(GOOGLE_MAPS_KEY_HEADER, apiKey)
+				.header(FIELD_MASK_HEADER, NEARBY_SEARCH_FIELD_MASK)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(PlaceNearbySearchRequest.of(latitude, longitude))
+				.retrieve()
+				.onStatus(HttpStatusCode::isError, (req, res) -> {
+					log.error("Google Maps NearbySearch API 응답 오류 (status={})", res.getStatusCode());
+					throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
+				})
+				.body(GooglePlaceNearbySearchResponse.class);
+
+			if (response == null) {
+				throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
+			}
+
+			return response;
+
+		} catch (ResourceAccessException e) {
+			log.error("Google Maps NearbySearch API 요청 실패: {}", e.getMessage(), e);
 			if (e.getCause() instanceof SocketTimeoutException) {
 				throw new GlobalException(GoogleMapsErrorCode.API_TIMEOUT);
 			}

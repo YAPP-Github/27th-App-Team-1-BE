@@ -9,11 +9,13 @@ import lombok.Builder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record PlaceTextSearchRequest(
 	@JsonProperty("textQuery") String textQuery,
-	@JsonProperty("locationBias") LocationBias locationBias) {
+	@JsonProperty("locationBias") LocationBias locationBias,
+	@JsonProperty("maxResultCount") int maxResultCount) {
 
 	public static PlaceTextSearchRequest of(final String textQuery) {
 		return PlaceTextSearchRequest.builder()
 			.textQuery(textQuery)
+			.maxResultCount(1)
 			.build();
 	}
 
@@ -21,6 +23,7 @@ public record PlaceTextSearchRequest(
 		return PlaceTextSearchRequest.builder()
 			.textQuery(textQuery)
 			.locationBias(LocationBias.ofCircle(latitude, longitude))
+			.maxResultCount(1)
 			.build();
 	}
 
