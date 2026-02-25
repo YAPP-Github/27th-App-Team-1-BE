@@ -145,7 +145,8 @@ public class PlaceDetailService {
 				priceCurrencyCode,
 				priceStartUnits,
 				priceEndUnits,
-				category
+				category,
+				response.primaryType()
 			);
 		} catch (Exception e) {
 			log.error("Place 변환 실패: googlePlaceId={}", response.id(), e);
