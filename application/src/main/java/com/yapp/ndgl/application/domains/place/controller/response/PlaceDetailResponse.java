@@ -42,7 +42,9 @@ public record PlaceDetailResponse(
 		allowableValues = {"AIRPORT", "TRANSPORT", "ATTRACTION", "RESTAURANT", "CAFE", "ACCOMMODATION"})
 	PlaceCategory category,
 	@Schema(description = "가격 범위", nullable = true)
-	PriceRange priceRange
+	PriceRange priceRange,
+	@Schema(description = "인근 장소 목록", nullable = true)
+	List<NearbyPlaceInfo> nearbyPlaces
 ) {
 
 	public record Location(
@@ -101,7 +103,7 @@ public record PlaceDetailResponse(
 		}
 	}
 
-	public static PlaceDetailResponse toResponse(final Place place, final ObjectMapper objectMapper) {
+	public static PlaceDetailResponse toResponse(final Place place, final List<Place> nearbyPlaces, final ObjectMapper objectMapper) {
 		try {
 			Location location = Location.of(place.getLatitude(), place.getLongitude());
 
@@ -122,6 +124,10 @@ public record PlaceDetailResponse(
 				);
 			}
 
+			List<NearbyPlaceInfo> nearbyPlaceInfos = nearbyPlaces != null && !nearbyPlaces.isEmpty()
+				? nearbyPlaces.stream().map(NearbyPlaceInfo::from).toList()
+				: null;
+
 			return new PlaceDetailResponse(
 				place.getGooglePlaceId(),
 				place.getName(),
@@ -136,7 +142,8 @@ public record PlaceDetailResponse(
 				place.getGoogleMapsUri(),
 				place.getWebsiteUri(),
 				place.getCategory(),
-				priceRange
+				priceRange,
+				nearbyPlaceInfos
 			);
 		} catch (Exception e) {
 			throw new RuntimeException("PlaceDetailResponse 변환 실패: googlePlaceId=" + place.getGooglePlaceId(), e);

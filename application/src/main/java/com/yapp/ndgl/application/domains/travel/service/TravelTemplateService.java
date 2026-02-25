@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -283,7 +285,26 @@ public class TravelTemplateService {
         Map<Long, Place> placeMap = placeList.stream()
             .collect(Collectors.toMap(Place::getId, place -> place));
 
-        return TravelTemplateItineraryResponse.of(travelTemplatePlaces, placeMap, objectMapper);
+        // 인근 장소 배치 로드
+        List<String> nearbyGooglePlaceIds = placeList.stream()
+            .filter(p -> StringUtils.hasText(p.getNearbyPlacesJson()))
+            .flatMap(p -> {
+                try {
+                    List<String> ids = objectMapper.readValue(p.getNearbyPlacesJson(),
+                        new TypeReference<List<String>>() {});
+                    return ids.stream();
+                } catch (Exception e) {
+                    return Stream.empty();
+                }
+            })
+            .distinct()
+            .collect(Collectors.toList());
+
+        Map<String, Place> nearbyPlaceMap = placeDomainService.findByGooglePlaceIds(nearbyGooglePlaceIds)
+            .stream()
+            .collect(Collectors.toMap(Place::getGooglePlaceId, place -> place));
+
+        return TravelTemplateItineraryResponse.of(travelTemplatePlaces, placeMap, nearbyPlaceMap, objectMapper);
     }
 
     @Transactional(readOnly = true)

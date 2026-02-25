@@ -1,6 +1,7 @@
 package com.yapp.ndgl.application.domains.travel.controller.dto;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.domain.place.Place;
@@ -81,7 +82,7 @@ public record UpcomingUserTravelResponse(
             return new UserTravelPlace(
                 upcomingPlace.getId(),
                 upcomingPlace.getEstimatedDuration(),
-                PlaceInfo.from(place, objectMapper)
+                PlaceInfo.from(place, Map.of(), objectMapper)
             );
         }
 
