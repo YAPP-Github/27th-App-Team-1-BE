@@ -26,6 +26,7 @@ public class PlaceMapper {
 			.priceStartUnits(place.getPriceStartUnits())
 			.priceEndUnits(place.getPriceEndUnits())
 			.category(place.getCategory() != null ? place.getCategory() : PlaceCategory.ATTRACTION)
+			.nearbyPlacesJson(place.getNearbyPlacesJson())
 			.build();
 	}
 
@@ -50,6 +51,7 @@ public class PlaceMapper {
 			.priceStartUnits(entity.getPriceStartUnits())
 			.priceEndUnits(entity.getPriceEndUnits())
 			.category(entity.getCategory() != null ? entity.getCategory() : PlaceCategory.ATTRACTION)
+			.nearbyPlacesJson(entity.getNearbyPlacesJson())
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
 			.build();

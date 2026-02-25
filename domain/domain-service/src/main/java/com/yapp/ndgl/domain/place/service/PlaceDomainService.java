@@ -88,4 +88,17 @@ public class PlaceDomainService {
 		PlaceEntity savedEntity = placeRepository.save(PlaceMapper.toEntity(place));
 		return PlaceMapper.toDomain(savedEntity);
 	}
+
+	@Transactional
+	public void saveIfNotExists(final Place place) {
+		if (!placeRepository.existsByGooglePlaceId(place.getGooglePlaceId())) {
+			placeRepository.save(PlaceMapper.toEntity(place));
+		}
+	}
+
+	@Transactional
+	public void updateNearbyPlaces(final String googlePlaceId, final String nearbyPlacesJson) {
+		log.info("[PlaceDomainService] nearbyPlacesJson 업데이트. googlePlaceId={}", googlePlaceId);
+		placeRepository.updateNearbyPlacesJson(googlePlaceId, nearbyPlacesJson);
+	}
 }

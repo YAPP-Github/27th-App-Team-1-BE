@@ -30,6 +30,7 @@ public class Place {
 	private final String priceStartUnits;
 	private final String priceEndUnits;
 	private final PlaceCategory category;
+	private final String nearbyPlacesJson;
 	private final LocalDateTime createdAt;
 	private final LocalDateTime updatedAt;
 
