@@ -292,7 +292,7 @@ public class UserTravelService {
 		LocalDate today = LocalDate.now();
 		UserTravelPlace upcomingPlace;
 
-		if (upcomingTravel.getStartDate().isAfter(today)) {
+		if (!upcomingTravel.getStartDate().isBefore(today)) {
 			upcomingPlace = userTravelDomainService.findFirstPlaceByUserTravelId(upcomingTravel.getId()).orElse(null);
 		} else {
 			int day = (int)ChronoUnit.DAYS.between(upcomingTravel.getStartDate(), today) + 1;

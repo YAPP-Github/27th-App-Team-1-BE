@@ -834,34 +834,144 @@ public interface UserTravelApi {
 						  "data": {
 						    "itineraries": [
 						      {
-						        "id": 101,
+						        "id": 31,
 						        "day": 1,
 						        "sequence": 1,
-						        "distanceKm": 1.2,
+						        "distanceKm": 0,
+						        "transportation": [],
+						        "memo": null,
+						        "travelerTips": [
+						          "김포공항에서 일본 항공 비즈니스석을 이용하면 쾌적하게 여행을 시작할 수 있어요."
+						        ],
+						        "startTime": null,
+						        "estimatedDuration": 120,
+						        "budget": null,
+						        "place": {
+						          "googlePlaceId": "ChIJF6qs-dCcfDURVMw5Ij-Qd6w",
+						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNHi7y_J3VIsTJZIOTITwK2s7SBN6ZJYwG0WowjcU9Jvz7WOwL1kBSAl-PTwGZHGSHlUxwZIDmXpjt3C-wKKEb5KXv3EmErU3dwuYa9YVqSaUxCHRxTLaXe6ycZDALgqs03P8rJsXtXY86H7iA=s4800-w4032-h3024",
+						          "latitude": 37.5655383,
+						          "longitude": 126.8013282,
+						          "name": "김포국제공항",
+						          "regularOpeningHours": null,
+						          "googleMapsUri": "https://maps.google.com/?cid=12427560297583725652&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						          "category": "AIRPORT",
+						          "nearbyPlaces": null
+						        }
+						      },
+						      {
+						        "id": 32,
+						        "day": 1,
+						        "sequence": 2,
+						        "distanceKm": 20.5,
+						        "transportation": [
+						          {
+						            "mode": "TRANSIT",
+						            "timeMin": 40
+						          }
+						        ],
+						        "memo": null,
+						        "travelerTips": [
+						          "조개 라면이 일품인데, 맑은 국물의 시오 라면을 추천해요."
+						        ],
+						        "startTime": null,
+						        "estimatedDuration": 60,
+						        "budget": null,
+						        "place": {
+						          "googlePlaceId": "ChIJSRvys-eLGGARzwqQ4I3g03o",
+						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNF9s7SrRb9RkBOX36EguX1Vhv6_zDSjR-GasZ-WGShIRrdIG4i-mdnprOlyDy35BeNlT_GzX-TKatc0R2Ws7KBB-KS1LZgm9-avSNEvhc-yIwNvzDtBZOe1tnNlm0MpDQOD66GLCBWuGXIzdZ5sfsHm=s4800-w2590-h3238",
+						          "latitude": 35.6690038,
+						          "longitude": 139.7643604,
+						          "name": "무기토 올리브 긴자점",
+						          "regularOpeningHours": "AM 11:00 ~ PM 9:30",
+						          "googleMapsUri": "https://maps.google.com/?cid=8850664592675703503&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						          "category": "RESTAURANT",
+						          "nearbyPlaces": [
+						            {
+						              "googlePlaceId": "ChIJF0WZ2-uLGGAR9kfXM51Wfxk",
+						              "name": "이치란 신바시점",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqFCjm4P0NdhPtNjPcwdcDN6p0G4gaRfqLwYKe-B7nx_sSPO2wTebq5LL042vbPAofsc01VBxHhu512m0TUxlO37sFgfpsLVt5Q=s4800-w3024-h4032",
+						              "category": "RESTAURANT",
+						              "rating": 4.2,
+						              "latitude": 35.6675081,
+						              "longitude": 139.7560198
+						            },
+						            {
+						              "googlePlaceId": "ChIJjykJZCCLGGARMx5vYqRsWYI",
+						              "name": "카가리 긴자본점",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqGUiIAunadLapF_GJvbT2aFVi2WmciQhyXUeIQbRsEvJAlPYJQ7H9FajkaqQoo1ygiRFodXQc8AOnycm8mgEDatwtWbI-garDs=s4800-w3872-h2576",
+						              "category": "RESTAURANT",
+						              "rating": 4.2,
+						              "latitude": 35.6712019,
+						              "longitude": 139.76133149999998
+						            },
+						            {
+						              "googlePlaceId": "ChIJ1WzWeC-LGGARKltXcP7uLqg",
+						              "name": "츠지타 긴자",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqHWUKPQJMyWTGEeR0FY1bnqFeP9sb1_WCQvWqORCpkoP_aijT94WO-HhpDbd9d2OCsCusmqnQ3XOhu_3U6jyLRi0hIC2-xYJ8g=s4800-w816-h544",
+						              "category": "RESTAURANT",
+						              "rating": 4.7,
+						              "latitude": 35.671432599999996,
+						              "longitude": 139.7673806
+						            }
+						          ]
+						        }
+						      },
+						      {
+						        "id": 33,
+						        "day": 1,
+						        "sequence": 3,
+						        "distanceKm": 0.5,
 						        "transportation": [
 						          {
 						            "mode": "WALKING",
-						            "timeMin": 15
+						            "timeMin": 7
 						          }
 						        ],
-						        "memo": "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
+						        "memo": null,
 						        "travelerTips": [
-						          "전망대는 오전 일찍 가면 대기 시간이 짧아요.",
-						          "야경 감상을 원하면 일몰 30분 전에 도착하세요."
+						          "초코빵과 독일 소시지 빵이 유명해요. 일본 베이커리는 수준이 아주 높아요."
 						        ],
-						        "planB": [],
-						        "startTime": "08:30:00",
-						        "estimatedDuration": 60,
-						        "budget": 50000,
+						        "startTime": null,
+						        "estimatedDuration": 40,
+						        "budget": null,
 						        "place": {
-						          "googlePlaceId": "ChIJSc8jdZORQTURu6BMwxrKbGg",
-						          "thumbnail": "https://example.com/thumbnail/tokyo.jpg",
-						          "latitude": 35.6585805,
-						          "longitude": 139.7454329,
-						          "name": "Tokyo Tower",
-						          "regularOpeningHours": "09:00~23:00",
-						          "googleMapsUri": "https://maps.google.com/?cid=10281119591005088802",
-						          "category": "ATTRACTION"
+						          "googlePlaceId": "ChIJE8S0lOSLGGAR84AdzQ71F3I",
+						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNH7mZlDB_cQwVJQRufuZi0eGxYEAAAEyGAzjRP_4L4RF1i1KDtENfIPHP8X9AubRN_B3NpJd1cUB6QdY0VRiKbae3rdFvtl3tHZmlS52ru8_x6MDTEO2q-H7OHfxh47ozoFJDovj6jp5q4mpw=s4800-w4032-h3024",
+						          "latitude": 35.6755334,
+						          "longitude": 139.76659519999998,
+						          "name": "센트레 더 베이커리",
+						          "regularOpeningHours": "AM 9:00 ~ PM 6:00",
+						          "googleMapsUri": "https://maps.google.com/?cid=8221309088707739891&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						          "category": "CAFE",
+						          "nearbyPlaces": [
+						            {
+						              "googlePlaceId": "ChIJ_9oVOZ-LGGARTMN4dW-AI-4",
+						              "name": "팡 메종 긴자점",
+						              "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNFNUyXta3Jv8a9o-xTj7-MHnyVRFWTwf0YjtqQqAOMaJmGxVJHvQdWtN06Ek-OKjn0ohUtHd3zIFQXQGbQ9R1QpplXLCb6VKOTYDrH9-0etzkRUC_JtT1Ep9_1YedT8L8Vsfx26OQAdhsr4-7b0afLb=s4800-w2992-h2992",
+						              "category": "CAFE",
+						              "rating": 4.4,
+						              "latitude": 35.6715607,
+						              "longitude": 139.7705344
+						            },
+						            {
+						              "googlePlaceId": "ChIJaz0IaOSLGGARec_RLv1YlbI",
+						              "name": "키르훼봉 그랑 메종 긴자점",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqF39rgWT9kPXihB5bUi4wacQJquGn2Q5aJEEYv96y_acTM38OlFGi9IhEoUhvMj6-Igf4C-LiJW8u-bdw4o78Wg18_3sKK3p3Q=s4800-w542-h305",
+						              "category": "RESTAURANT",
+						              "rating": 4.2,
+						              "latitude": 35.6740612,
+						              "longitude": 139.767203
+						            },
+						            {
+						              "googlePlaceId": "ChIJ6T8nDfqLGGAR2NB5iV6rCgw",
+						              "name": "에쉬레 메종 뒤 부르",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqGRyksA-A_rQUb2En26j5R_gLnv3xUWdWTuR1OKLbYXfom9qyIOz4-LllGy7Pb0tKrrAQ62-JAMxG2F5-yaEexCtdHbsd0e96I=s4800-w1500-h1000",
+						              "category": "RESTAURANT",
+						              "rating": 4,
+						              "latitude": 35.6785703,
+						              "longitude": 139.7625325
+						            }
+						          ]
 						        }
 						      }
 						    ]

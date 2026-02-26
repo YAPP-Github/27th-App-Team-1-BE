@@ -324,186 +324,251 @@ public interface TravelTemplateApi {
 						  "data": {
 						    "itineraries": [
 						      {
-						        "id": 1,
+						        "id": 31,
 						        "day": 1,
 						        "sequence": 1,
 						        "distanceKm": 0,
 						        "transportation": [],
-						        "travelerTip": "호텔 조식이 훌륭하니 꼭 챙겨 드세요.",
+						        "memo": null,
 						        "travelerTips": [
-						          "호텔 조식이 훌륭하니 꼭 챙겨 드세요.",
-						          "커넥팅 룸이 있어 가족이나 단체 여행객에게 편리해요."
+						          "김포공항에서 일본 항공 비즈니스석을 이용하면 쾌적하게 여행을 시작할 수 있어요."
 						        ],
-						        "planB": [
-						          {
-						            "googlePlaceId": "ChIJtY2ydasHbUcRsP1rMIlBx1s",
-						            "name": "Hotel Sacher Wien",
-						            "thumbnail": "https://lh3.googleusercontent.com/places/example-sacher.jpg",
-						            "category": "ACCOMMODATION"
-						          }
-						        ],
-						        "estimatedDuration": 0,
+						        "startTime": null,
+						        "estimatedDuration": 120,
+						        "budget": null,
 						        "place": {
-						          "googlePlaceId": "ChIJlVeR-3YHbUcRL4Fe775_f3U",
-						          "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqExB2iP_wSPBl9-XfjUl56j9L41kbmm6nv9shbfG6S9watM62yWifv-z7aEWdl_JLIa9xLUQgf9Q3VAljTtLh6lEiXK-5FuyAE=s4800-w1000-h563",
-						          "latitude": 48.2017525,
-						          "longitude": 16.3792027,
-						          "name": "인터콘티넨탈 빈",
+						          "googlePlaceId": "ChIJF6qs-dCcfDURVMw5Ij-Qd6w",
+						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNHi7y_J3VIsTJZIOTITwK2s7SBN6ZJYwG0WowjcU9Jvz7WOwL1kBSAl-PTwGZHGSHlUxwZIDmXpjt3C-wKKEb5KXv3EmErU3dwuYa9YVqSaUxCHRxTLaXe6ycZDALgqs03P8rJsXtXY86H7iA=s4800-w4032-h3024",
+						          "latitude": 37.5655383,
+						          "longitude": 126.8013282,
+						          "name": "김포국제공항",
 						          "regularOpeningHours": null,
-						          "googleMapsUri": "https://maps.google.com/?cid=8466626282516283695&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-						          "category": "ACCOMMODATION"
+						          "googleMapsUri": "https://maps.google.com/?cid=12427560297583725652&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						          "category": "AIRPORT",
+						          "nearbyPlaces": null
 						        }
 						      },
 						      {
-						        "id": 2,
+						        "id": 32,
 						        "day": 1,
 						        "sequence": 2,
+						        "distanceKm": 20.5,
+						        "transportation": [
+						          {
+						            "mode": "TRANSIT",
+						            "timeMin": 40
+						          }
+						        ],
+						        "memo": null,
+						        "travelerTips": [
+						          "조개 라면이 일품인데, 맑은 국물의 시오 라면을 추천해요."
+						        ],
+						        "startTime": null,
+						        "estimatedDuration": 60,
+						        "budget": null,
+						        "place": {
+						          "googlePlaceId": "ChIJSRvys-eLGGARzwqQ4I3g03o",
+						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNF9s7SrRb9RkBOX36EguX1Vhv6_zDSjR-GasZ-WGShIRrdIG4i-mdnprOlyDy35BeNlT_GzX-TKatc0R2Ws7KBB-KS1LZgm9-avSNEvhc-yIwNvzDtBZOe1tnNlm0MpDQOD66GLCBWuGXIzdZ5sfsHm=s4800-w2590-h3238",
+						          "latitude": 35.6690038,
+						          "longitude": 139.7643604,
+						          "name": "무기토 올리브 긴자점",
+						          "regularOpeningHours": "AM 11:00 ~ PM 9:30",
+						          "googleMapsUri": "https://maps.google.com/?cid=8850664592675703503&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						          "category": "RESTAURANT",
+						          "nearbyPlaces": [
+						            {
+						              "googlePlaceId": "ChIJF0WZ2-uLGGAR9kfXM51Wfxk",
+						              "name": "이치란 신바시점",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqFCjm4P0NdhPtNjPcwdcDN6p0G4gaRfqLwYKe-B7nx_sSPO2wTebq5LL042vbPAofsc01VBxHhu512m0TUxlO37sFgfpsLVt5Q=s4800-w3024-h4032",
+						              "category": "RESTAURANT",
+						              "rating": 4.2,
+						              "latitude": 35.6675081,
+						              "longitude": 139.7560198
+						            },
+						            {
+						              "googlePlaceId": "ChIJjykJZCCLGGARMx5vYqRsWYI",
+						              "name": "카가리 긴자본점",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqGUiIAunadLapF_GJvbT2aFVi2WmciQhyXUeIQbRsEvJAlPYJQ7H9FajkaqQoo1ygiRFodXQc8AOnycm8mgEDatwtWbI-garDs=s4800-w3872-h2576",
+						              "category": "RESTAURANT",
+						              "rating": 4.2,
+						              "latitude": 35.6712019,
+						              "longitude": 139.76133149999998
+						            },
+						            {
+						              "googlePlaceId": "ChIJ1WzWeC-LGGARKltXcP7uLqg",
+						              "name": "츠지타 긴자",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqHWUKPQJMyWTGEeR0FY1bnqFeP9sb1_WCQvWqORCpkoP_aijT94WO-HhpDbd9d2OCsCusmqnQ3XOhu_3U6jyLRi0hIC2-xYJ8g=s4800-w816-h544",
+						              "category": "RESTAURANT",
+						              "rating": 4.7,
+						              "latitude": 35.671432599999996,
+						              "longitude": 139.7673806
+						            }
+						          ]
+						        }
+						      },
+						      {
+						        "id": 33,
+						        "day": 1,
+						        "sequence": 3,
+						        "distanceKm": 0.5,
+						        "transportation": [
+						          {
+						            "mode": "WALKING",
+						            "timeMin": 7
+						          }
+						        ],
+						        "memo": null,
+						        "travelerTips": [
+						          "초코빵과 독일 소시지 빵이 유명해요. 일본 베이커리는 수준이 아주 높아요."
+						        ],
+						        "startTime": null,
+						        "estimatedDuration": 40,
+						        "budget": null,
+						        "place": {
+						          "googlePlaceId": "ChIJE8S0lOSLGGAR84AdzQ71F3I",
+						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNH7mZlDB_cQwVJQRufuZi0eGxYEAAAEyGAzjRP_4L4RF1i1KDtENfIPHP8X9AubRN_B3NpJd1cUB6QdY0VRiKbae3rdFvtl3tHZmlS52ru8_x6MDTEO2q-H7OHfxh47ozoFJDovj6jp5q4mpw=s4800-w4032-h3024",
+						          "latitude": 35.6755334,
+						          "longitude": 139.76659519999998,
+						          "name": "센트레 더 베이커리",
+						          "regularOpeningHours": "AM 9:00 ~ PM 6:00",
+						          "googleMapsUri": "https://maps.google.com/?cid=8221309088707739891&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						          "category": "CAFE",
+						          "nearbyPlaces": [
+						            {
+						              "googlePlaceId": "ChIJ_9oVOZ-LGGARTMN4dW-AI-4",
+						              "name": "팡 메종 긴자점",
+						              "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNFNUyXta3Jv8a9o-xTj7-MHnyVRFWTwf0YjtqQqAOMaJmGxVJHvQdWtN06Ek-OKjn0ohUtHd3zIFQXQGbQ9R1QpplXLCb6VKOTYDrH9-0etzkRUC_JtT1Ep9_1YedT8L8Vsfx26OQAdhsr4-7b0afLb=s4800-w2992-h2992",
+						              "category": "CAFE",
+						              "rating": 4.4,
+						              "latitude": 35.6715607,
+						              "longitude": 139.7705344
+						            },
+						            {
+						              "googlePlaceId": "ChIJaz0IaOSLGGARec_RLv1YlbI",
+						              "name": "키르훼봉 그랑 메종 긴자점",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqF39rgWT9kPXihB5bUi4wacQJquGn2Q5aJEEYv96y_acTM38OlFGi9IhEoUhvMj6-Igf4C-LiJW8u-bdw4o78Wg18_3sKK3p3Q=s4800-w542-h305",
+						              "category": "RESTAURANT",
+						              "rating": 4.2,
+						              "latitude": 35.6740612,
+						              "longitude": 139.767203
+						            },
+						            {
+						              "googlePlaceId": "ChIJ6T8nDfqLGGAR2NB5iV6rCgw",
+						              "name": "에쉬레 메종 뒤 부르",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqGRyksA-A_rQUb2En26j5R_gLnv3xUWdWTuR1OKLbYXfom9qyIOz4-LllGy7Pb0tKrrAQ62-JAMxG2F5-yaEexCtdHbsd0e96I=s4800-w1500-h1000",
+						              "category": "RESTAURANT",
+						              "rating": 4,
+						              "latitude": 35.6785703,
+						              "longitude": 139.7625325
+						            }
+						          ]
+						        }
+						      },
+						      {
+						        "id": 34,
+						        "day": 1,
+						        "sequence": 4,
 						        "distanceKm": 1.2,
 						        "transportation": [
 						          {
-						            "mode": "WALKING",
+						            "mode": "TRANSIT",
 						            "timeMin": 15
 						          }
 						        ],
-						        "travelerTip": "성당 내부는 무료 입장이 가능해요.",
+						        "memo": null,
 						        "travelerTips": [
-						          "성당 내부는 무료 입장이 가능해요.",
-						          "북탑 전망대에 올라가면 모자이크 지붕을 가까이서 볼 수 있어요.",
-						          "미사 시간에는 조용히 관람해야 해요."
+						          "가성비 좋은 4성급 호텔이에요. 짐을 옮겨주시면 소액의 팁을 드리는 것이 예의예요."
 						        ],
-						        "planB": [
-						          {
-						            "googlePlaceId": "ChIJkbeSa18HbUcRxc0jf7E1bNA",
-						            "name": "Karlskirche",
-						            "thumbnail": "https://lh3.googleusercontent.com/places/example-karlskirche.jpg",
-						            "category": "TOURIST_ATTRACTION"
-						          }
-						        ],
+						        "startTime": null,
 						        "estimatedDuration": 60,
+						        "budget": null,
 						        "place": {
-						          "googlePlaceId": "ChIJz-w_Ip8HbUcRWTHc-vNXlxc",
-						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNE69Dgq3auRVX7tt9GQuMltF-NqNXHhY_NZcNDq8bUpiU858i94ZqtsYWVuRnzzRcFhGhZ_mx-xqFzU8KY8UPpEC9b2F_hwZWVNp4HKxjB4M20YMLbr68BwKIL44Pv24CdbrTsL-y2b4R2UaiuwfRC7RQ=s4800-w4800-h3600",
-						          "latitude": 48.208411399999996,
-						          "longitude": 16.3734707,
-						          "name": "슈테판 대성당",
+						          "googlePlaceId": "ChIJD7G_2_2LGGARcK8ZATyh2U8",
+						          "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqEPt4G0XsQOpCH7L-vDIUysKg6X6Vo2HQVrY12Y4AOVcuIbsBlan1YxbJYgpXxoBK3kcEc9GdSNybNoH2fzwLU6AdNM6Rjz6rM=s4800-w2848-h1602",
+						          "latitude": 35.6830406,
+						          "longitude": 139.77112119999998,
+						          "name": "호텔 류메이칸 도쿄",
 						          "regularOpeningHours": null,
-						          "googleMapsUri": "https://maps.google.com/?cid=1699924089753055577&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-						          "category": "ATTRACTION"
+						          "googleMapsUri": "https://maps.google.com/?cid=5753807278031089520&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						          "category": "ACCOMMODATION",
+						          "nearbyPlaces": [
+						            {
+						              "googlePlaceId": "ChIJq0s44BuMGGARvBtm78mmRRg",
+						              "name": "팰리스 호텔 도쿄",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqFrKSTdIFcQgPC-19sG_cKgck63Uroj4v9dYkkrSubKkAvb5V2ksihoBYp3xM1mKtxHoViOH8bn3G0xjxX8opCP-Mwh2HoqepM=s4800-w4800-h3199",
+						              "category": "ACCOMMODATION",
+						              "rating": 4.5,
+						              "latitude": 35.6845024,
+						              "longitude": 139.76122949999998
+						            },
+						            {
+						              "googlePlaceId": "ChIJ281VfFWJGGARYaR_hmZuo0I",
+						              "name": "만다린 오리엔탈 도쿄",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqFI8ark9NPvar40UOBMs5e7lTlTqOAEzeZkqTlFOHoFbhwP4YVbuVBt5F5hjtmOCQ1Xpro6p8adVS2u84_KiabDK-sWRTHAgs0=s4800-w3840-h2160",
+						              "category": "ACCOMMODATION",
+						              "rating": 4.5,
+						              "latitude": 35.6870475,
+						              "longitude": 139.7730634
+						            },
+						            {
+						              "googlePlaceId": "ChIJlaVM3eOLGGARxiqelk1qzC8",
+						              "name": "KOKO HOTEL Ginza 1-chome",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqHnf2CnSLmb5rQ9iuWtdbznN7356i1DtRhYiNU5q1FBbmw3tp-P3Via-xZrAIfXDDjw40OoNG8OAKNm_qjM0tVnJbUwv4-h308=s4800-w4582-h3055",
+						              "category": "ACCOMMODATION",
+						              "rating": 3.8,
+						              "latitude": 35.6741957,
+						              "longitude": 139.76927139999998
+						            }
+						          ]
 						        }
 						      },
 						      {
-						        "id": 3,
-						        "day": 1,
-						        "sequence": 3,
-						        "distanceKm": 0.1,
-						        "transportation": [
-						          {
-						            "mode": "WALKING",
-						            "timeMin": 3
-						          }
-						        ],
-						        "travelerTip": "오스트리아 국민 웨하스 마너를 종류별로 살 수 있어요.",
-						        "travelerTips": [
-						          "오스트리아 국민 웨하스 마너를 종류별로 살 수 있어요.",
-						          "귀여운 마너 모자는 기념품으로 딱이에요."
-						        ],
-						        "planB": [
-						          {
-						            "googlePlaceId": "ChIJE5HQ648HbUcR3tcEG7W3bAo",
-						            "name": "Gerstner K. u. K. Hofzuckerbäcker",
-						            "thumbnail": "https://lh3.googleusercontent.com/places/example-gerstner.jpg",
-						            "category": "RESTAURANT"
-						          }
-						        ],
-						        "estimatedDuration": 30,
-						        "place": {
-						          "googlePlaceId": "ChIJAzabap8HbUcRWK_H_Ri2b6A",
-						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNGicaGdXly1Yp4VKC4fE32hMstjrPo1X3d96Sdf0-hxN_rN1njcB_rm-r-36yMkXBLn84XhSAmobaG16BGFiYC8233PqYeokbcLV7CSzfvdGtXIxNmZLlW_BR5TCCwEkEaaobAy5SI_K3FI=s4800-w3024-h4032",
-						          "latitude": 48.209141699999996,
-						          "longitude": 16.373043199999998,
-						          "name": "Manner",
-						          "regularOpeningHours": "AM 10:00 ~ PM 9:00",
-						          "googleMapsUri": "https://maps.google.com/?cid=11560658986936545112&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-						          "category": "RESTAURANT"
-						        }
-						      },
-						      {
-						        "id": 4,
-						        "day": 1,
-						        "sequence": 4,
-						        "distanceKm": 0.3,
-						        "transportation": [
-						          {
-						            "mode": "WALKING",
-						            "timeMin": 5
-						          }
-						        ],
-						        "travelerTip": "예약 없이는 입장이 거의 불가능하니 꼭 미리 예약하세요.",
-						        "travelerTips": [
-						          "예약 없이는 입장이 거의 불가능하니 꼭 미리 예약하세요.",
-						          "예약 실패 시 근처 다른 슈니첼 가게들도 맛이 훌륭해요.",
-						          "굴라쉬 소스에 케첩을 섞으면 돈가스 소스 맛이 나요."
-						        ],
-						        "planB": [
-						          {
-						            "googlePlaceId": "ChIJbU-Egp8HbUcRp7vCmHLUqXw",
-						            "name": "Lugeck",
-						            "thumbnail": "https://lh3.googleusercontent.com/places/example-lugeck.jpg",
-						            "category": "RESTAURANT"
-						          },
-						          {
-						            "googlePlaceId": "ChIJVTtr7EcHbUcRkFjSjWR2h9Y",
-						            "name": "Plachutta Wollzeile",
-						            "thumbnail": "https://lh3.googleusercontent.com/places/example-plachutta.jpg",
-						            "category": "RESTAURANT"
-						          }
-						        ],
-						        "estimatedDuration": 40,
-						        "place": {
-						          "googlePlaceId": "ChIJbU-Egp8HbUcRDZ_dZN6qW34",
-						          "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqFWrnIjZ1wpFGc1nvnojmra68Q_MC1UVQFOD1MDoWbQ2SbX8sMOO8sPHYMccJcJwMRMkr4lr745gqqq3QofxkiDCEl3P7NVUFU=s4800-w2048-h1365",
-						          "latitude": 48.209311899999996,
-						          "longitude": 16.375577,
-						          "name": "Figlmüller – Restaurant Bäckerstraße",
-						          "regularOpeningHours": "AM 11:30 ~ PM 11:30",
-						          "googleMapsUri": "https://maps.google.com/?cid=9105058943811297037&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-						          "category": "RESTAURANT"
-						        }
-						      },
-						      {
-						        "id": 5,
+						        "id": 35,
 						        "day": 1,
 						        "sequence": 5,
-						        "distanceKm": 2.5,
+						        "distanceKm": 2.4,
 						        "transportation": [
 						          {
-						            "mode": "TAXI",
-						            "timeMin": 15
+						            "mode": "WALKING",
+						            "timeMin": 30
 						          }
 						        ],
-						        "travelerTip": "영화 '비포 선라이즈'에 나온 대관람차(Riesenrad)가 유명해요.",
+						        "memo": null,
 						        "travelerTips": [
-						          "영화 '비포 선라이즈'에 나온 대관람차(Riesenrad)가 유명해요.",
-						          "입장료는 무료이고 놀이기구별로 요금을 내요."
+						          "캥거루 고기 스테이크라는 이색 메뉴를 시도해보세요. 생각보다 훨씬 맛있어요."
 						        ],
-						        "planB": [
-						          {
-						            "googlePlaceId": "ChIJi2KXYH8HbUcRqPzCEHvJTQI",
-						            "name": "Stadtpark",
-						            "thumbnail": "https://lh3.googleusercontent.com/places/example-stadtpark.jpg",
-						            "category": "TOURIST_ATTRACTION"
-						          }
-						        ],
+						        "startTime": null,
 						        "estimatedDuration": 90,
+						        "budget": null,
 						        "place": {
-						          "googlePlaceId": "ChIJY6GrTT8HbUcR9LGo6Zxp5_w",
-						          "thumbnail": "https://lh3.googleusercontent.com/place-photos/AL8-SNEbzcEL2rREKF70ikd60JnNbB2lYRRF5mWvnYWgtck4zTlcDT5JYoGGxgumMlwzwnRMFRV0xnW_MfkGnqEMshP_RZkmezLiufsUTD3NkHRKD4Rr6MlGq0UCXdURCmbi1oyrykV3dR59_RRPNw=s4800-w1500-h1000",
-						          "latitude": 48.2154648,
-						          "longitude": 16.4001739,
-						          "name": "프라터",
-						          "regularOpeningHours": null,
-						          "googleMapsUri": "https://maps.google.com/?cid=18223650539833962996&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-						          "category": "RESTAURANT"
+						          "googlePlaceId": "ChIJY1hD3rGNGGARLF5vOikFOlw",
+						          "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqEE6ZnZW9oedkqF4SpGQtZr74E_lxVYooo8EVmth7AAKbLzLzFioQJ5fjq9S6OwxC0LnHEjEsO_SPzbJCFA54NPu696slwacQM=s4800-w664-h491",
+						          "latitude": 35.6794052,
+						          "longitude": 139.7372696,
+						          "name": "벤자민 스테이크하우스 도쿄",
+						          "regularOpeningHours": "AM 11:30 ~ PM 3:00, PM 5:00~11:00",
+						          "googleMapsUri": "https://maps.google.com/?cid=6645629874770763308&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+						          "category": "RESTAURANT",
+						          "nearbyPlaces": [
+						            {
+						              "googlePlaceId": "ChIJAVoEeHmMGGARvoInBliuVns",
+						              "name": "Anchor Point",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqFJts3Nv15NRLNlJbk2Eav2GA3mCd3AYCe6ObGlWz88G1mj_hncmxIC469ek3BhOK32iRlGRO3D9buWZOis_qqxg4bn2NU44g=s4800-w2000-h1331",
+						              "category": "RESTAURANT",
+						              "rating": 4.2,
+						              "latitude": 35.679478599999996,
+						              "longitude": 139.7397061
+						            },
+						            {
+						              "googlePlaceId": "ChIJz8hGbH-MGGARBYaegg4n-9U",
+						              "name": "고베 비프 카이세키 511",
+						              "thumbnail": "https://lh3.googleusercontent.com/places/ANXAkqEZscjLl1VLqK_tYzjN4u1r3uSNGM6ZIl4vVgFAg9irvO8cDZBmP0HUQj-Lrsj83yHXZWUwedC5EbdGdg18MJkmA2uFFA6PXI4=s4800-w4800-h3200",
+						              "category": "RESTAURANT",
+						              "rating": 4.5,
+						              "latitude": 35.6746902,
+						              "longitude": 139.73529249999999
+						            }
+						          ]
 						        }
 						      }
 						    ]

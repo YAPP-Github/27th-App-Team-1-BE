@@ -52,6 +52,7 @@ public record TravelTemplateItineraryResponse(
         String travelerTip,
         @Schema(description = "여행자 팁 목록", example = "[\"저녁 시간대 방문 추천\", \"현지인 맛집\"]", nullable = true)
         List<String> travelerTips,
+        @Deprecated
         @Schema(description = "대체 장소 목록 (Plan B)", nullable = true)
         List<ItineraryPlanBInfo> planB,
         @Schema(description = "예상 소요 시간 (분)", example = "60", requiredMode = Schema.RequiredMode.REQUIRED)

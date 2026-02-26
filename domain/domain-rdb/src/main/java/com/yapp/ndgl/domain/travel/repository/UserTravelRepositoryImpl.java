@@ -44,7 +44,7 @@ public class UserTravelRepositoryImpl implements UserTravelRepositoryCustom {
 			.leftJoin(travelTemplate).on(travelTemplate.id.eq(userTravel.templateId))
 			.where(
 				userTravel.userId.eq(userId),
-				userTravel.startDate.gt(today)
+				userTravel.startDate.goe(today)
 			)
 			.orderBy(userTravel.startDate.asc(), userTravel.id.asc())
 			.offset(pageable.getOffset())
