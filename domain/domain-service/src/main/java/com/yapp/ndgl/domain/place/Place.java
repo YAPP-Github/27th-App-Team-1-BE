@@ -30,6 +30,7 @@ public class Place {
 	private final String priceStartUnits;
 	private final String priceEndUnits;
 	private final PlaceCategory category;
+	private final String primaryType;
 	private final String nearbyPlacesJson;
 	private final LocalDateTime createdAt;
 	private final LocalDateTime updatedAt;
@@ -52,7 +53,8 @@ public class Place {
 		final String priceCurrencyCode,
 		final String priceStartUnits,
 		final String priceEndUnits,
-		final PlaceCategory category
+		final PlaceCategory category,
+		final String primaryType
 	) {
 		return Place.builder()
 			.googlePlaceId(googlePlaceId)
@@ -73,6 +75,7 @@ public class Place {
 			.priceStartUnits(priceStartUnits)
 			.priceEndUnits(priceEndUnits)
 			.category(category)
+			.primaryType(primaryType)
 			.build();
 	}
 }

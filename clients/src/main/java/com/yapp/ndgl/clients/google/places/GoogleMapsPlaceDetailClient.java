@@ -145,8 +145,6 @@ public class GoogleMapsPlaceDetailClient {
 				throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
 			}
 
-			log.info("Google Maps Text Search 결과 = {}", response.places().get(0).displayName());
-
 			return response;
 
 		} catch (ResourceAccessException e) {
@@ -158,7 +156,7 @@ public class GoogleMapsPlaceDetailClient {
 		}
 	}
 
-	public GooglePlaceNearbySearchResponse searchNearbyPlaces(final double latitude, final double longitude) {
+	public GooglePlaceNearbySearchResponse searchNearbyPlaces(final double latitude, final double longitude, final String primaryType) {
 		try {
 			log.info("Google Maps NearbySearch API 호출: latitude={}, longitude={}", latitude, longitude);
 
@@ -172,7 +170,7 @@ public class GoogleMapsPlaceDetailClient {
 				.header(GOOGLE_MAPS_KEY_HEADER, apiKey)
 				.header(FIELD_MASK_HEADER, NEARBY_SEARCH_FIELD_MASK)
 				.contentType(MediaType.APPLICATION_JSON)
-				.body(PlaceNearbySearchRequest.of(latitude, longitude))
+				.body(PlaceNearbySearchRequest.of(latitude, longitude, primaryType))
 				.retrieve()
 				.onStatus(HttpStatusCode::isError, (req, res) -> {
 					log.error("Google Maps NearbySearch API 응답 오류 (status={})", res.getStatusCode());

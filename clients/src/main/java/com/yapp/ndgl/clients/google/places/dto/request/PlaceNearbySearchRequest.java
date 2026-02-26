@@ -2,8 +2,10 @@ package com.yapp.ndgl.clients.google.places.dto.request;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record PlaceNearbySearchRequest(
 	@JsonProperty("includedTypes") List<String> includedTypes,
 	@JsonProperty("maxResultCount") int maxResultCount,
@@ -13,9 +15,12 @@ public record PlaceNearbySearchRequest(
 	private static final int DEFAULT_MAX_RESULT_COUNT = 3;
 	private static final double DEFAULT_RADIUS = 1000;
 
-	public static PlaceNearbySearchRequest of(final double latitude, final double longitude) {
+	public static PlaceNearbySearchRequest of(final double latitude, final double longitude, final String primaryType) {
+		List<String> includedTypes = (primaryType != null && !primaryType.isBlank())
+			? List.of(primaryType)
+			: null;
 		return new PlaceNearbySearchRequest(
-			null,
+			includedTypes,
 			DEFAULT_MAX_RESULT_COUNT,
 			LocationRestriction.ofCircle(latitude, longitude)
 		);

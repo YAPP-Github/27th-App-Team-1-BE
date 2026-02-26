@@ -3,6 +3,7 @@ package com.yapp.ndgl.domain.place.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,7 +93,11 @@ public class PlaceDomainService {
 	@Transactional
 	public void saveIfNotExists(final Place place) {
 		if (!placeRepository.existsByGooglePlaceId(place.getGooglePlaceId())) {
-			placeRepository.save(PlaceMapper.toEntity(place));
+			try {
+				placeRepository.save(PlaceMapper.toEntity(place));
+			} catch (DataIntegrityViolationException e) {
+				log.debug("[PlaceDomainService] 동시 저장으로 인한 중복 무시. googlePlaceId={}", place.getGooglePlaceId());
+			}
 		}
 	}
 

@@ -1,9 +1,11 @@
 package com.yapp.ndgl.application.domains.place.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,8 @@ public class PlaceNearbyService {
 	private static final Set<PlaceCategory> NEARBY_EXCLUDED_CATEGORIES =
 		EnumSet.of(PlaceCategory.AIRPORT, PlaceCategory.TRANSPORT);
 
+	private final Set<String> inProgress = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
 	private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
 	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
 	private final PlaceDomainService placeDomainService;
@@ -43,6 +47,11 @@ public class PlaceNearbyService {
 	 */
 	@Async("nearbyAsyncExecutor")
 	public void saveNearbyPlacesIfNotExists(final String googlePlaceId) {
+		if (!inProgress.add(googlePlaceId)) {
+			log.debug("이미 처리 중인 인근 장소 요청. googlePlaceId={}", googlePlaceId);
+			return;
+		}
+
 		log.info("인근 장소 저장 시작. googlePlaceId={}", googlePlaceId);
 
 		try {
@@ -59,7 +68,7 @@ public class PlaceNearbyService {
 			}
 
 			GooglePlaceNearbySearchResponse nearbyResponse = googleMapsPlaceDetailClient.searchNearbyPlaces(
-				place.getLatitude(), place.getLongitude());
+				place.getLatitude(), place.getLongitude(), place.getPrimaryType());
 
 			if (nearbyResponse == null || nearbyResponse.places() == null || nearbyResponse.places().isEmpty()) {
 				log.info("인근 장소 조회 결과가 없습니다. googlePlaceId={}", googlePlaceId);
@@ -90,6 +99,8 @@ public class PlaceNearbyService {
 
 		} catch (Exception e) {
 			log.error("인근 장소 비동기 저장 중 오류 발생. googlePlaceId={}. 인근 장소는 나중에 별도 조회 가능.", googlePlaceId, e);
+		} finally {
+			inProgress.remove(googlePlaceId);
 		}
 	}
 
@@ -153,7 +164,8 @@ public class PlaceNearbyService {
 				priceCurrencyCode,
 				priceStartUnits,
 				priceEndUnits,
-				category
+				category,
+				result.primaryType()
 			);
 		} catch (Exception e) {
 			log.error("인근 장소 변환 실패. googlePlaceId={}", result.id(), e);
