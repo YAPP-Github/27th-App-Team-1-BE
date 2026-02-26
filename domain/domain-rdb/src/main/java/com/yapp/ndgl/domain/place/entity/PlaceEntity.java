@@ -78,6 +78,13 @@ public class PlaceEntity extends BaseEntity {
 	@Column(length = 50)
 	private PlaceCategory category;
 
+	@Column(length = 100)
+	private String primaryType;
+
+	@Lob
+	@Column(columnDefinition = "JSON")
+	private String nearbyPlacesJson;
+
 	@Builder
 	public PlaceEntity(
 		final String googlePlaceId,
@@ -97,7 +104,9 @@ public class PlaceEntity extends BaseEntity {
 		final String priceCurrencyCode,
 		final String priceStartUnits,
 		final String priceEndUnits,
-		final PlaceCategory category
+		final PlaceCategory category,
+		final String primaryType,
+		final String nearbyPlacesJson
 	) {
 		this.googlePlaceId = googlePlaceId;
 		this.formattedAddress = formattedAddress;
@@ -117,5 +126,7 @@ public class PlaceEntity extends BaseEntity {
 		this.priceStartUnits = priceStartUnits;
 		this.priceEndUnits = priceEndUnits;
 		this.category = category;
+		this.primaryType = primaryType;
+		this.nearbyPlacesJson = nearbyPlacesJson;
 	}
 }

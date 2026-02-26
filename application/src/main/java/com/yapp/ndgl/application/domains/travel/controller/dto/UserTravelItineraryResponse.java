@@ -21,6 +21,7 @@ public record UserTravelItineraryResponse(
 		final List<UserTravelPlace> userTravelPlaces,
 		final Map<String, TravelTemplatePlace> templatePlaceMap,
 		final Map<Long, Place> placeMap,
+		final Map<String, Place> nearbyPlaceMap,
 		final ObjectMapper objectMapper
 	) {
 		List<ItineraryPlaceResponse> itineraries = userTravelPlaces.stream()
@@ -28,6 +29,7 @@ public record UserTravelItineraryResponse(
 				userTravelPlace,
 				templatePlaceMap.get(buildTemplatePlaceKey(userTravelPlace.getDay(), userTravelPlace.getSequence())),
 				placeMap,
+				nearbyPlaceMap,
 				objectMapper
 			))
 			.toList();
@@ -68,12 +70,13 @@ public record UserTravelItineraryResponse(
 			final UserTravelPlace userTravelPlace,
 			final TravelTemplatePlace templatePlace,
 			final Map<Long, Place> placeMap,
+			final Map<String, Place> nearbyPlaceMap,
 			final ObjectMapper objectMapper
 		) {
 			Place place = placeMap.get(userTravelPlace.getPlaceId());
 			TravelTemplateItineraryResponse.ItineraryPlaceResponse templateItinerary = templatePlace == null
 				? null
-				: TravelTemplateItineraryResponse.ItineraryPlaceResponse.of(templatePlace, placeMap, objectMapper);
+				: TravelTemplateItineraryResponse.ItineraryPlaceResponse.of(templatePlace, placeMap, Map.of(), objectMapper);
 
 			Double distanceKm = userTravelPlace.getDistanceKm();
 			List<ItineraryTransportationInfo> transportation =
@@ -106,7 +109,7 @@ public record UserTravelItineraryResponse(
 					? userTravelPlace.getEstimatedDuration()
 					: templateItinerary == null ? null : templateItinerary.estimatedDuration(),
 				userTravelPlace.getBudget(),
-				place == null ? null : PlaceInfo.from(place, objectMapper)
+				place == null ? null : PlaceInfo.from(place, nearbyPlaceMap, objectMapper)
 			);
 		}
 

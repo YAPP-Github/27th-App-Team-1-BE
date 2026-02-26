@@ -3,6 +3,7 @@ package com.yapp.ndgl.application.domains.travel.facade;
 import java.util.Map;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
+import com.yapp.ndgl.application.domains.place.service.PlaceNearbyService;
 import com.yapp.ndgl.application.domains.place.service.PlacePhotoService;
 import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
@@ -28,6 +29,7 @@ public class TravelTemplateFacade {
     private final TravelTemplateService travelTemplateService;
     private final TravelTemplateSaveService travelTemplateSaveService;
     private final PlacePhotoService placePhotoService;
+    private final PlaceNearbyService placeNearbyService;
 
     public Long saveTravelTemplate(final SaveTravelTemplateRequest request) {
         log.info("여행 템플릿을 저장합니다. type = {}", request.travelProgramType());
@@ -43,11 +45,14 @@ public class TravelTemplateFacade {
         // Phase 2: DB 저장 (트랜잭션)
         Long templateId = travelTemplateSaveService.persistTravelTemplate(request, resolvedPlaces, youTubeVideoInfo);
 
-        // Phase 3: 장소 사진 비동기 저장 (트랜잭션 커밋 이후 실행)
+        // Phase 3: 장소 사진 및 인근 장소 비동기 저장 (트랜잭션 커밋 이후 실행)
         resolvedPlaces.values().stream()
             .map(Place::getGooglePlaceId)
             .distinct()
-            .forEach(placePhotoService::savePhotosIfNotExists);
+            .forEach(googlePlaceId -> {
+                placePhotoService.savePhotosIfNotExists(googlePlaceId);
+                placeNearbyService.saveNearbyPlacesIfNotExists(googlePlaceId);
+            });
 
         return templateId;
     }

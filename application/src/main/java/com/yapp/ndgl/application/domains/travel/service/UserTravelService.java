@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -201,6 +203,7 @@ public class UserTravelService {
 			createdUserTravelPlace,
 			null,
 			Map.of(place.getId(), place),
+			Map.of(),
 			objectMapper
 		);
 	}
@@ -354,10 +357,29 @@ public class UserTravelService {
 		placeIds.addAll(extractPlanBPlaceIds(templatePlaces));
 		List<Long> distinctPlaceIds = placeIds.stream().distinct().toList();
 
-		Map<Long, Place> placeMap = placeDomainService.findByIds(distinctPlaceIds).stream()
+		List<Place> placeList = placeDomainService.findByIds(distinctPlaceIds);
+		Map<Long, Place> placeMap = placeList.stream()
 			.collect(Collectors.toMap(Place::getId, place -> place));
 
-		return UserTravelItineraryResponse.of(userTravelPlaces, templatePlaceMap, placeMap, objectMapper);
+		List<String> nearbyGooglePlaceIds = placeList.stream()
+			.filter(p -> StringUtils.hasText(p.getNearbyPlacesJson()))
+			.flatMap(p -> {
+				try {
+					List<String> ids = objectMapper.readValue(p.getNearbyPlacesJson(),
+						new TypeReference<List<String>>() {});
+					return ids.stream();
+				} catch (Exception e) {
+					return Stream.empty();
+				}
+			})
+			.distinct()
+			.collect(Collectors.toList());
+
+		Map<String, Place> nearbyPlaceMap = placeDomainService.findByGooglePlaceIds(nearbyGooglePlaceIds)
+			.stream()
+			.collect(Collectors.toMap(Place::getGooglePlaceId, place -> place));
+
+		return UserTravelItineraryResponse.of(userTravelPlaces, templatePlaceMap, placeMap, nearbyPlaceMap, objectMapper);
 	}
 
 	private String buildTemplatePlaceKey(final Integer day, final Integer sequence) {

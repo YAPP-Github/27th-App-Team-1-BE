@@ -1,7 +1,11 @@
 package com.yapp.ndgl.application.domains.place.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
@@ -36,9 +40,10 @@ public class PlaceDetailService {
 		log.info("[GetPlaceDetailFromDb] DB에서 장소 조회 시작. googlePlaceId:{}", googlePlaceId);
 
 		Place place = placeDomainService.readPlaceDetailByGooglePLaceId(googlePlaceId);
+		List<Place> nearbyPlaces = loadNearbyPlaces(place);
 
 		log.info("[GetPlaceDetailFromDb] DB 조회 성공. googlePlaceId:{}, id:{}", googlePlaceId, place.getId());
-		return PlaceDetailResponse.toResponse(place, objectMapper);
+		return PlaceDetailResponse.toResponse(place, nearbyPlaces, objectMapper);
 	}
 
 	/**
@@ -69,7 +74,20 @@ public class PlaceDetailService {
 		// 3. DB 저장 후 반환
 		Place savedPlace = placeDomainService.save(toPlace(response, thumbnail));
 		log.info("[SearchAndSavePlace] DB 저장 완료. googlePlaceId:{}, id:{}", response.id(), savedPlace.getId());
-		return PlaceDetailResponse.toResponse(savedPlace, objectMapper);
+		return PlaceDetailResponse.toResponse(savedPlace, List.of(), objectMapper);
+	}
+
+	private List<Place> loadNearbyPlaces(final Place place) {
+		if (!StringUtils.hasText(place.getNearbyPlacesJson())) {
+			return List.of();
+		}
+		try {
+			List<String> nearbyIds = objectMapper.readValue(place.getNearbyPlacesJson(), new TypeReference<>() {});
+			return placeDomainService.findByGooglePlaceIds(nearbyIds);
+		} catch (Exception e) {
+			log.warn("nearbyPlacesJson 파싱 실패. googlePlaceId={}", place.getGooglePlaceId(), e);
+			return List.of();
+		}
 	}
 
 	private Place toPlace(final GooglePlaceDetailsResponse response, final String thumbnail) {
@@ -127,7 +145,8 @@ public class PlaceDetailService {
 				priceCurrencyCode,
 				priceStartUnits,
 				priceEndUnits,
-				category
+				category,
+				response.primaryType()
 			);
 		} catch (Exception e) {
 			log.error("Place 변환 실패: googlePlaceId={}", response.id(), e);

@@ -24,10 +24,11 @@ public record TravelTemplateItineraryResponse(
     public static TravelTemplateItineraryResponse of(
         final List<TravelTemplatePlace> travelTemplatePlaces,
         final Map<Long, Place> placeMap,
+        final Map<String, Place> nearbyPlaceMap,
         final ObjectMapper objectMapper
     ) {
         List<ItineraryPlaceResponse> places = travelTemplatePlaces.stream()
-            .map(travelTemplatePlace -> ItineraryPlaceResponse.of(travelTemplatePlace, placeMap, objectMapper))
+            .map(travelTemplatePlace -> ItineraryPlaceResponse.of(travelTemplatePlace, placeMap, nearbyPlaceMap, objectMapper))
             .toList();
 
         return new TravelTemplateItineraryResponse(places);
@@ -61,6 +62,7 @@ public record TravelTemplateItineraryResponse(
         public static ItineraryPlaceResponse of(
             final TravelTemplatePlace travelTemplatePlace,
             final Map<Long, Place> placeMap,
+            final Map<String, Place> nearbyPlaceMap,
             final ObjectMapper objectMapper
         ) {
             Place place = placeMap.get(travelTemplatePlace.getPlaceId());
@@ -144,7 +146,7 @@ public record TravelTemplateItineraryResponse(
                 travelerTips,
                 planB,
                 travelTemplatePlace.getEstimatedDuration(),
-                place == null ? null : PlaceInfo.from(place, objectMapper)
+                place == null ? null : PlaceInfo.from(place, nearbyPlaceMap, objectMapper)
             );
         }
     }
