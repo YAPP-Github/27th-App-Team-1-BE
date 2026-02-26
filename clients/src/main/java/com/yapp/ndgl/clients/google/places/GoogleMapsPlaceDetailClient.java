@@ -145,8 +145,6 @@ public class GoogleMapsPlaceDetailClient {
 				throw new GlobalException(GoogleMapsErrorCode.API_CALL_FAILED);
 			}
 
-			log.info("Google Maps Text Search 결과 = {}", response.places().get(0).displayName());
-
 			return response;
 
 		} catch (ResourceAccessException e) {
