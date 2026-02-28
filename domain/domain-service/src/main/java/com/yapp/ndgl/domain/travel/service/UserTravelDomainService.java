@@ -50,7 +50,7 @@ public class UserTravelDomainService {
 		final int nights,
 		final int days,
 		final String thumbnail) {
-		validateNoOverlappingTravel(user.getId(), startDate, endDate);
+		// validateNoOverlappingTravel(user.getId(), startDate, endDate);
 
 		UserTravel userTravel = UserTravel.create(
 			user.getId(),
