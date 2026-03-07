@@ -58,7 +58,7 @@ public class PlaceNearbyService {
 			Place place = placeDomainService.readPlaceDetailByGooglePLaceId(googlePlaceId);
 
 			if (NEARBY_EXCLUDED_CATEGORIES.contains(place.getCategory())) {
-				log.debug("인근 장소 조회 제외 카테고리입니다. googlePlaceId={}, category={}", googlePlaceId, place.getCategory());
+				log.debug("공항 및 교통지는 장소 추천을 지원하지 않습니다. googlePlaceId={}, category={}", googlePlaceId, place.getCategory());
 				return;
 			}
 

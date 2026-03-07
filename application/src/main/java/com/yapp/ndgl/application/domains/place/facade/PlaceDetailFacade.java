@@ -47,8 +47,10 @@ public class PlaceDetailFacade {
 
 		PlaceDetailResponse placeDetailResponse = placeDetailService.savePlace(googlePlaceDetailsResponse);
 
-		// 2. 사진 및 인근 장소 비동기 저장
-		// placePhotoService.savePhotosIfNotExists(googlePlaceId);
+		// 2. 장소 사진 비동기 조회 및 저장
+		placePhotoService.savePhotosIfNotExists(googlePlaceId);
+
+		// 3. 주변 좡소 정보 비동기 조회 및 저장
 		placeNearbyService.saveNearbyPlacesIfNotExists(googlePlaceId);
 
 		log.info("장소 검색 및 저장 완료. googlePlaceId={}", googlePlaceId);
