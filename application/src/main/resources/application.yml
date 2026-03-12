@@ -1,6 +1,9 @@
 spring:
   application:
     name: NDGL
+  threads:
+    virtual:
+      enabled: true
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -32,6 +35,15 @@ jwt:
 
 server:
   port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, metrics
+  metrics:
+    enable:
+      jvm: true
 
 google:
   maps:
