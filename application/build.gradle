@@ -37,6 +37,10 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+    // Actuator + Prometheus
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
     // Logging (JSON)
     implementation 'net.logstash.logback:logstash-logback-encoder:8.1'
 
