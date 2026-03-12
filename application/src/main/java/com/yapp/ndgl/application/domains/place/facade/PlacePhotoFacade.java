@@ -2,7 +2,7 @@ package com.yapp.ndgl.application.domains.place.facade;
 
 import com.yapp.ndgl.application.common.annotation.Facade;
 import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
-import com.yapp.ndgl.application.domains.place.service.PlacePhotoService;
+import com.yapp.ndgl.application.domains.place.service.PlacePhotoServiceV2;
 
 import lombok.RequiredArgsConstructor;
 
@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PlacePhotoFacade {
 
-	private final PlacePhotoService placePhotoService;
+	private final PlacePhotoServiceV2 placePhotoServiceV2;
 
 	public PlacePhotoResponse readPlacePhotos(final String googlePlaceId) {
-		return placePhotoService.readPlacePhotoUris(googlePlaceId);
+		return placePhotoServiceV2.readPlacePhotoUris(googlePlaceId);
 	}
 }

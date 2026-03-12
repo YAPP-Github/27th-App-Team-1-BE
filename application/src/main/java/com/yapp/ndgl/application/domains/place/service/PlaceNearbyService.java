@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -45,7 +44,6 @@ public class PlaceNearbyService {
 	 *
 	 * @param googlePlaceId 기준 장소 ID
 	 */
-	@Async("nearbyAsyncExecutor")
 	public void saveNearbyPlacesIfNotExists(final String googlePlaceId) {
 		if (!inProgress.add(googlePlaceId)) {
 			log.debug("이미 처리 중인 인근 장소 요청. googlePlaceId={}", googlePlaceId);
