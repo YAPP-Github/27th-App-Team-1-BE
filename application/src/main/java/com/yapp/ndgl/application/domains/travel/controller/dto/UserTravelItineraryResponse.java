@@ -4,9 +4,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 import com.yapp.ndgl.domain.travel.UserTravelPlace;
@@ -21,16 +18,14 @@ public record UserTravelItineraryResponse(
 		final List<UserTravelPlace> userTravelPlaces,
 		final Map<String, TravelTemplatePlace> templatePlaceMap,
 		final Map<Long, Place> placeMap,
-		final Map<String, Place> nearbyPlaceMap,
-		final ObjectMapper objectMapper
+		final Map<String, Place> nearbyPlaceMap
 	) {
 		List<ItineraryPlaceResponse> itineraries = userTravelPlaces.stream()
 			.map(userTravelPlace -> ItineraryPlaceResponse.of(
 				userTravelPlace,
 				templatePlaceMap.get(buildTemplatePlaceKey(userTravelPlace.getDay(), userTravelPlace.getSequence())),
 				placeMap,
-				nearbyPlaceMap,
-				objectMapper
+				nearbyPlaceMap
 			))
 			.toList();
 		return new UserTravelItineraryResponse(itineraries);
@@ -70,17 +65,20 @@ public record UserTravelItineraryResponse(
 			final UserTravelPlace userTravelPlace,
 			final TravelTemplatePlace templatePlace,
 			final Map<Long, Place> placeMap,
-			final Map<String, Place> nearbyPlaceMap,
-			final ObjectMapper objectMapper
+			final Map<String, Place> nearbyPlaceMap
 		) {
 			Place place = placeMap.get(userTravelPlace.getPlaceId());
 			TravelTemplateItineraryResponse.ItineraryPlaceResponse templateItinerary = templatePlace == null
 				? null
-				: TravelTemplateItineraryResponse.ItineraryPlaceResponse.of(templatePlace, placeMap, Map.of(), objectMapper);
+				: TravelTemplateItineraryResponse.ItineraryPlaceResponse.of(templatePlace, placeMap, Map.of());
 
 			Double distanceKm = userTravelPlace.getDistanceKm();
-			List<ItineraryTransportationInfo> transportation =
-				parseTransportation(userTravelPlace.getTransportationJson(), objectMapper);
+			List<ItineraryTransportationInfo> transportation = null;
+			if (userTravelPlace.getTransportation() != null) {
+				transportation = userTravelPlace.getTransportation().stream()
+					.map(t -> new ItineraryTransportationInfo(t.mode(), t.timeMin()))
+					.toList();
+			}
 			List<ItineraryPlanBInfo> planB = null;
 			String memo = userTravelPlace.getMemo();
 			List<String> travelerTips = templateItinerary == null ? List.of() : templateItinerary.travelerTips();
@@ -109,39 +107,8 @@ public record UserTravelItineraryResponse(
 					? userTravelPlace.getEstimatedDuration()
 					: templateItinerary == null ? null : templateItinerary.estimatedDuration(),
 				userTravelPlace.getBudget(),
-				place == null ? null : PlaceInfo.from(place, nearbyPlaceMap, objectMapper)
+				place == null ? null : PlaceInfo.from(place, nearbyPlaceMap)
 			);
-		}
-
-		private static List<ItineraryTransportationInfo> parseTransportation(
-			final String transportationJson,
-			final ObjectMapper objectMapper
-		) {
-			if (transportationJson == null) {
-				return null;
-			}
-
-			try {
-				List<Map<String, Object>> transportList = objectMapper.readValue(
-					transportationJson,
-					new TypeReference<List<Map<String, Object>>>() {
-					}
-				);
-				return transportList.stream()
-					.map(transport -> {
-						String modeStr = (String)transport.get("mode");
-						TransportationMode mode = modeStr != null ? TransportationMode.valueOf(modeStr) : null;
-						Object timeMinRaw = transport.get("time_min");
-						if (timeMinRaw == null) {
-							timeMinRaw = transport.get("timeMin");
-						}
-						Integer timeMin = timeMinRaw != null ? ((Number)timeMinRaw).intValue() : null;
-						return new ItineraryTransportationInfo(mode, timeMin);
-					})
-					.toList();
-			} catch (Exception e) {
-				return null;
-			}
 		}
 	}
 }

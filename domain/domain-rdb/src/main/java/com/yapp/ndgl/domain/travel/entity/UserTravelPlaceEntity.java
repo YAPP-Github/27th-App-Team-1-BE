@@ -1,19 +1,23 @@
 package com.yapp.ndgl.domain.travel.entity;
 
 import java.time.LocalTime;
+import java.util.List;
 
+import com.yapp.ndgl.common.type.Transportation;
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(
@@ -51,9 +55,9 @@ public class UserTravelPlaceEntity extends BaseEntity {
     @Column(name = "distance_km")
     private Double distanceKm;
 
-    @Lob
-    @Column(name = "transportation_json", columnDefinition = "JSON")
-    private String transportationJson;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "transportation_json", columnDefinition = "json")
+    private List<Transportation> transportation;
 
     @Column(name = "start_time")
     private LocalTime startTime;
@@ -72,7 +76,7 @@ public class UserTravelPlaceEntity extends BaseEntity {
         final Integer sequence,
         final String memo,
         final Double distanceKm,
-        final String transportationJson,
+        final List<Transportation> transportation,
         final LocalTime startTime,
         final Integer estimatedDuration,
         final Integer budget
@@ -83,7 +87,7 @@ public class UserTravelPlaceEntity extends BaseEntity {
         this.sequence = sequence;
         this.memo = memo;
         this.distanceKm = distanceKm;
-        this.transportationJson = transportationJson;
+        this.transportation = transportation;
         this.startTime = startTime;
         this.estimatedDuration = estimatedDuration;
         this.budget = budget;

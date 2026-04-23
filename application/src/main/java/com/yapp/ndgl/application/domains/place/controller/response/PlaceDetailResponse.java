@@ -2,8 +2,6 @@ package com.yapp.ndgl.application.domains.place.controller.response;
 
 import java.util.List;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.common.utils.CurrencySymbolResolver;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.common.type.PlaceCategory;
@@ -103,50 +101,37 @@ public record PlaceDetailResponse(
 		}
 	}
 
-	public static PlaceDetailResponse toResponse(final Place place, final List<Place> nearbyPlaces, final ObjectMapper objectMapper) {
-		try {
-			Location location = Location.of(place.getLatitude(), place.getLongitude());
+	public static PlaceDetailResponse toResponse(final Place place, final List<Place> nearbyPlaces) {
+		Location location = Location.of(place.getLatitude(), place.getLongitude());
 
-			List<String> regularOpeningHours = null;
-			if (place.getRegularOpeningHours() != null) {
-				regularOpeningHours = objectMapper.readValue(
-					place.getRegularOpeningHours(),
-					new TypeReference<>() {
-					}
-				);
-			}
-
-			PriceRange priceRange = null;
-			if (place.getPriceCurrencyCode() != null) {
-				priceRange = new PriceRange(
-					Money.of(place.getPriceCurrencyCode(), place.getPriceStartUnits()),
-					Money.of(place.getPriceCurrencyCode(), place.getPriceEndUnits())
-				);
-			}
-
-			List<NearbyPlaceInfo> nearbyPlaceInfos = nearbyPlaces != null && !nearbyPlaces.isEmpty()
-				? nearbyPlaces.stream().map(NearbyPlaceInfo::from).toList()
-				: null;
-
-			return new PlaceDetailResponse(
-				place.getGooglePlaceId(),
-				place.getName(),
-				place.getThumbnail(),
-				place.getNationalPhoneNumber(),
-				place.getInternationalPhoneNumber(),
-				place.getFormattedAddress(),
-				location,
-				place.getUserRatingCount(),
-				place.getRating(),
-				regularOpeningHours,
-				place.getGoogleMapsUri(),
-				place.getWebsiteUri(),
-				place.getCategory(),
-				priceRange,
-				nearbyPlaceInfos
+		PriceRange priceRange = null;
+		if (place.getPriceCurrencyCode() != null) {
+			priceRange = new PriceRange(
+				Money.of(place.getPriceCurrencyCode(), place.getPriceStartUnits()),
+				Money.of(place.getPriceCurrencyCode(), place.getPriceEndUnits())
 			);
-		} catch (Exception e) {
-			throw new RuntimeException("PlaceDetailResponse 변환 실패: googlePlaceId=" + place.getGooglePlaceId(), e);
 		}
+
+		List<NearbyPlaceInfo> nearbyPlaceInfos = nearbyPlaces != null && !nearbyPlaces.isEmpty()
+			? nearbyPlaces.stream().map(NearbyPlaceInfo::from).toList()
+			: null;
+
+		return new PlaceDetailResponse(
+			place.getGooglePlaceId(),
+			place.getName(),
+			place.getThumbnail(),
+			place.getNationalPhoneNumber(),
+			place.getInternationalPhoneNumber(),
+			place.getFormattedAddress(),
+			location,
+			place.getUserRatingCount(),
+			place.getRating(),
+			place.getRegularOpeningHours(),
+			place.getGoogleMapsUri(),
+			place.getWebsiteUri(),
+			place.getCategory(),
+			priceRange,
+			nearbyPlaceInfos
+		);
 	}
 }

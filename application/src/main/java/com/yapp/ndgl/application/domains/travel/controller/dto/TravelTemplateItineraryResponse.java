@@ -7,11 +7,10 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.common.exception.CommonErrorCode;
 import com.yapp.ndgl.common.exception.GlobalException;
-import com.yapp.ndgl.common.type.TransportationMode;
+import com.yapp.ndgl.common.type.PlanBInfo;
+import com.yapp.ndgl.common.type.Transportation;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.travel.TravelTemplatePlace;
 
@@ -24,11 +23,10 @@ public record TravelTemplateItineraryResponse(
     public static TravelTemplateItineraryResponse of(
         final List<TravelTemplatePlace> travelTemplatePlaces,
         final Map<Long, Place> placeMap,
-        final Map<String, Place> nearbyPlaceMap,
-        final ObjectMapper objectMapper
+        final Map<String, Place> nearbyPlaceMap
     ) {
         List<ItineraryPlaceResponse> places = travelTemplatePlaces.stream()
-            .map(travelTemplatePlace -> ItineraryPlaceResponse.of(travelTemplatePlace, placeMap, nearbyPlaceMap, objectMapper))
+            .map(travelTemplatePlace -> ItineraryPlaceResponse.of(travelTemplatePlace, placeMap, nearbyPlaceMap))
             .toList();
 
         return new TravelTemplateItineraryResponse(places);
@@ -63,62 +61,28 @@ public record TravelTemplateItineraryResponse(
         public static ItineraryPlaceResponse of(
             final TravelTemplatePlace travelTemplatePlace,
             final Map<Long, Place> placeMap,
-            final Map<String, Place> nearbyPlaceMap,
-            final ObjectMapper objectMapper
+            final Map<String, Place> nearbyPlaceMap
         ) {
             Place place = placeMap.get(travelTemplatePlace.getPlaceId());
 
-            // travelerTipsJson 파싱
-            String travelerTip = null;
-            List<String> travelerTips = null;
-            if (travelTemplatePlace.getTravelerTipsJson() != null) {
-                try {
-                    List<String> tips = objectMapper.readValue(
-                        travelTemplatePlace.getTravelerTipsJson(),
-                        new TypeReference<List<String>>() {}
-                    );
-                    travelerTips = tips;
-                    travelerTip = tips.isEmpty() ? null : tips.get(0);
-                } catch (Exception e) {
-                    // JSON 파싱 실패 시 null
-                }
-            }
+            List<String> travelerTips = travelTemplatePlace.getTravelerTips();
+            String travelerTip = (travelerTips != null && !travelerTips.isEmpty()) ? travelerTips.get(0) : null;
 
-            // transportationJson 파싱
             List<ItineraryTransportationInfo> transportation = null;
-            if (travelTemplatePlace.getTransportationJson() != null) {
-                try {
-                    List<Map<String, Object>> transportList = objectMapper.readValue(
-                        travelTemplatePlace.getTransportationJson(),
-                        new TypeReference<List<Map<String, Object>>>() {}
-                    );
-                    transportation = transportList.stream()
-                        .map(t -> {
-                            String modeStr = (String) t.get("mode");
-                            TransportationMode mode = modeStr != null ? TransportationMode.valueOf(modeStr) : null;
-                            Integer timeMin = t.get("time_min") != null ? ((Number) t.get("time_min")).intValue() : null;
-                            return new ItineraryTransportationInfo(mode, timeMin);
-                        })
-                        .toList();
-                } catch (Exception e) {
-                    // JSON 파싱 실패 시 null
-                }
+            if (travelTemplatePlace.getTransportation() != null) {
+                transportation = travelTemplatePlace.getTransportation().stream()
+                    .map(t -> new ItineraryTransportationInfo(t.mode(), t.timeMin()))
+                    .toList();
             }
 
-            // planBJson 파싱 - placeId로 Place 조회하여 필드 보강
             List<ItineraryPlanBInfo> planB = null;
-            if (travelTemplatePlace.getPlanBJson() != null) {
+            if (travelTemplatePlace.getPlanB() != null) {
                 try {
-                    List<Map<String, Object>> planBList = objectMapper.readValue(
-                        travelTemplatePlace.getPlanBJson(),
-                        new TypeReference<List<Map<String, Object>>>() {}
-                    );
-                    List<ItineraryPlanBInfo> parsed = planBList.stream()
+                    List<ItineraryPlanBInfo> parsed = travelTemplatePlace.getPlanB().stream()
                         .map(p -> {
-                            Long placeId = p.get("placeId") != null ? ((Number) p.get("placeId")).longValue() : null;
-                            Place planBPlace = placeId != null ? placeMap.get(placeId) : null;
+                            Place planBPlace = p.placeId() != null ? placeMap.get(p.placeId()) : null;
                             if (planBPlace == null) {
-                                log.warn("PlanB 장소 조회 실패. placeId={}, templatePlaceId={}", placeId, travelTemplatePlace.getId());
+                                log.warn("PlanB 장소 조회 실패. placeId={}, templatePlaceId={}", p.placeId(), travelTemplatePlace.getId());
                                 return null;
                             }
                             return new ItineraryPlanBInfo(
@@ -147,7 +111,7 @@ public record TravelTemplateItineraryResponse(
                 travelerTips,
                 planB,
                 travelTemplatePlace.getEstimatedDuration(),
-                place == null ? null : PlaceInfo.from(place, nearbyPlaceMap, objectMapper)
+                place == null ? null : PlaceInfo.from(place, nearbyPlaceMap)
             );
         }
     }

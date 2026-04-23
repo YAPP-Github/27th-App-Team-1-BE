@@ -8,11 +8,10 @@ import java.util.stream.Collectors;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.place.controller.response.PlacePhotoResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
+import com.yapp.ndgl.common.type.PhotoMeta;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.PlacePhoto;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
@@ -29,7 +28,6 @@ public class PlacePhotoService {
 	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
 	private final PlacePhotoDomainService placePhotoDomainService;
 	private final PlaceDomainService placeDomainService;
-	private final ObjectMapper objectMapper;
 
 	/**
 	 * googlePlaceId에 해당하는 장소의 사진들을 비동기로 DB에 저장한다.
@@ -47,31 +45,19 @@ public class PlacePhotoService {
 		log.info("사진 저장 시작. googlePlaceId={}", googlePlaceId);
 
 		try {
-			// 1. Place 조회하여 photosJson 파싱
 			Place place = placeDomainService.readPlaceDetailByGooglePLaceId(googlePlaceId);
-			if (place.getPhotosJson() == null || place.getPhotosJson().isEmpty()) {
-				return;
-			}
-
-			List<PhotoMeta> photoMetas = objectMapper.readValue(
-				place.getPhotosJson(),
-				new TypeReference<>() {}
-			);
-
+			List<PhotoMeta> photoMetas = place.getPhotos();
 			if (photoMetas == null || photoMetas.isEmpty()) {
 				return;
 			}
 
-			// 2. DB에서 기존 photo 조회
 			List<PlacePhoto> existingPhotos = placePhotoDomainService.findByGooglePlaceId(googlePlaceId);
 			Map<String, PlacePhoto> existingPhotoMap = existingPhotos.stream()
 				.collect(Collectors.toMap(PlacePhoto::getPhotoName, p -> p));
 
-			// 3. photoMetas를 순회하면서 없는 것만 API 호출
 			List<PlacePhoto> newPhotos = new ArrayList<>();
 			for (PhotoMeta photoMeta : photoMetas) {
 				if (!existingPhotoMap.containsKey(photoMeta.name())) {
-					// Google API 호출
 					String uri = fetchPhotoUri(photoMeta);
 					PlacePhoto placePhoto = PlacePhoto.create(
 						googlePlaceId,
@@ -84,7 +70,6 @@ public class PlacePhotoService {
 				}
 			}
 
-			// 4. 새로운 photo만 저장
 			if (!newPhotos.isEmpty()) {
 				placePhotoDomainService.saveAllIfNotExists(newPhotos);
 				log.info("{}개의 새로운 사진 저장 완료. googlePlaceId={}", newPhotos.size(), googlePlaceId);
@@ -92,8 +77,6 @@ public class PlacePhotoService {
 
 			log.info("사진 저장 완료. googlePlaceId={}", googlePlaceId);
 		} catch (Exception e) {
-			// 비동기 처리이므로 예외를 던지지 않고 로그만 남김
-			// 사진 저장 실패가 메인 응답에 영향을 주지 않도록 함
 			log.error("사진 비동기 저장 중 오류 발생. googlePlaceId={}. 사진은 나중에 별도 조회 가능.",
 				googlePlaceId, e);
 		}
@@ -101,14 +84,13 @@ public class PlacePhotoService {
 
 	/**
 	 * googlePlaceId에 해당하는 장소의 사진 URI 목록을 조회한다.
-	 * DB에 저장된 사진을 반환하되, photosJson에는 존재하지만 DB에는 없는 미저장 사진이 있으면
+	 * DB에 저장된 사진을 반환하되, photos에는 존재하지만 DB에는 없는 미저장 사진이 있으면
 	 * Google API를 호출하여 조회 후 반환 및 DB에 저장한다.
 	 *
 	 * @param googlePlaceId 장소 ID
 	 * @return 사진 URI 목록
 	 */
 	public PlacePhotoResponse readPlacePhotoUris(final String googlePlaceId) {
-		// Place 조회 - 존재하지 않는 googlePlaceId인 경우 예외 전파
 		Place place = placeDomainService.readPlaceDetailByGooglePLaceId(googlePlaceId);
 
 		List<PlacePhoto> existingPhotos = placePhotoDomainService.findByGooglePlaceId(googlePlaceId);
@@ -125,25 +107,12 @@ public class PlacePhotoService {
 	}
 
 	/**
-	 * photosJson에는 존재하지만 DB에는 없는 미저장 사진을 Google API로 조회 후 저장한다.
-	 *
-	 * @param googlePlaceId 장소 ID
-	 * @param place 장소 엔티티
-	 * @param existingPhotos DB에 이미 저장된 사진 목록
-	 * @return 새로 조회 및 저장된 사진 목록
+	 * photos에는 존재하지만 DB에는 없는 미저장 사진을 Google API로 조회 후 저장한다.
 	 */
 	private List<PlacePhoto> fetchAndSaveMissingPhotos(final String googlePlaceId, final Place place,
 		final List<PlacePhoto> existingPhotos) {
 		try {
-			if (place.getPhotosJson() == null || place.getPhotosJson().isEmpty()) {
-				return List.of();
-			}
-
-			List<PhotoMeta> photoMetas = objectMapper.readValue(
-				place.getPhotosJson(),
-				new TypeReference<>() {}
-			);
-
+			List<PhotoMeta> photoMetas = place.getPhotos();
 			if (photoMetas == null || photoMetas.isEmpty()) {
 				return List.of();
 			}
@@ -187,15 +156,5 @@ public class PlacePhotoService {
 		);
 
 		return googleMapsPlacePhotoClient.getPhotoUri(request).uri();
-	}
-
-	/**
-	 * Photo 메타데이터 내부 DTO
-	 */
-	private record PhotoMeta(
-		String name,
-		Integer widthPx,
-		Integer heightPx
-	) {
 	}
 }

@@ -1,6 +1,9 @@
 package com.yapp.ndgl.domain.travel;
 
 import java.time.LocalTime;
+import java.util.List;
+
+import com.yapp.ndgl.common.type.Transportation;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +19,7 @@ public class UserTravelPlace {
     private Integer sequence;
     private String memo;
     private Double distanceKm;
-    private String transportationJson;
+    private List<Transportation> transportation;
     private LocalTime startTime;
     private Integer estimatedDuration;
     private Integer budget;
@@ -28,7 +31,7 @@ public class UserTravelPlace {
         final Integer sequence,
         final String memo,
         final Double distanceKm,
-        final String transportationJson,
+        final List<Transportation> transportation,
         final LocalTime startTime,
         final Integer estimatedDuration,
         final Integer budget
@@ -40,7 +43,7 @@ public class UserTravelPlace {
             .sequence(sequence)
             .memo(memo)
             .distanceKm(distanceKm)
-            .transportationJson(transportationJson)
+            .transportation(transportation)
             .startTime(startTime)
             .estimatedDuration(estimatedDuration)
             .budget(budget)

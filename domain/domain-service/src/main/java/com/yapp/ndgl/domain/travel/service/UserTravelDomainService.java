@@ -78,7 +78,7 @@ public class UserTravelDomainService {
 				templatePlace.getSequence(),
 				null, // TODO: UserTravel 정규화 시 travelerTipsJson에서 memo로 변환 필요
 				templatePlace.getDistanceKm(),
-				templatePlace.getTransportationJson(),
+				templatePlace.getTransportation(),
 				null,
 				templatePlace.getEstimatedDuration(),
 				null

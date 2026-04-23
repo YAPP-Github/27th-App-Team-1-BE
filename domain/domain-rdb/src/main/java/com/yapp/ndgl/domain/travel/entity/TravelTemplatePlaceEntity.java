@@ -1,15 +1,22 @@
 package com.yapp.ndgl.domain.travel.entity;
 
+import java.util.List;
+
+import com.yapp.ndgl.common.type.PlanBInfo;
+import com.yapp.ndgl.common.type.Transportation;
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(
@@ -40,17 +47,17 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
     @Column(name = "distance_km")
     private Double distanceKm;
 
-    @Lob
-    @Column(name = "transportation_json", columnDefinition = "JSON")
-    private String transportationJson;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "transportation_json", columnDefinition = "json")
+    private List<Transportation> transportation;
 
-    @Lob
-    @Column(name = "traveler_tips_json", columnDefinition = "JSON")
-    private String travelerTipsJson;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "traveler_tips_json", columnDefinition = "json")
+    private List<String> travelerTips;
 
-    @Lob
-    @Column(name = "plan_b_json", columnDefinition = "JSON")
-    private String planBJson;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "plan_b_json", columnDefinition = "json")
+    private List<PlanBInfo> planB;
 
     @Column(name = "estimated_duration")
     private Integer estimatedDuration;
@@ -62,9 +69,9 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
         final int sequence,
         final int day,
         final Double distanceKm,
-        final String transportationJson,
-        final String travelerTipsJson,
-        final String planBJson,
+        final List<Transportation> transportation,
+        final List<String> travelerTips,
+        final List<PlanBInfo> planB,
         final Integer estimatedDuration
     ) {
         this.travelTemplateId = travelTemplateId;
@@ -72,9 +79,9 @@ public class TravelTemplatePlaceEntity extends BaseEntity {
         this.sequence = sequence;
         this.day = day;
         this.distanceKm = distanceKm;
-        this.transportationJson = transportationJson;
-        this.travelerTipsJson = travelerTipsJson;
-        this.planBJson = planBJson;
+        this.transportation = transportation;
+        this.travelerTips = travelerTips;
+        this.planB = planB;
         this.estimatedDuration = estimatedDuration;
     }
 }

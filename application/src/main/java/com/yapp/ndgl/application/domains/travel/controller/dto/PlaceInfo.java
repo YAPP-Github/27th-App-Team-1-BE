@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.place.controller.response.NearbyPlaceInfo;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.common.type.PlaceCategory;
@@ -23,7 +21,7 @@ public record PlaceInfo(
     Double longitude,
     @Schema(description = "장소 이름", example = "도쿄타워", requiredMode = Schema.RequiredMode.REQUIRED)
     String name,
-    @Schema(description = "오늘의 영업시간 정보 (JSON 파싱 실패 시 null)", example = "09:00~23:00", nullable = true)
+    @Schema(description = "오늘의 영업시간 정보 (null인 경우 영업시간 정보 없음)", example = "09:00~23:00", nullable = true)
     String regularOpeningHours,
     @Schema(description = "Google Maps URI", example = "https://maps.google.com/?cid=14776686710302251978", requiredMode = Schema.RequiredMode.REQUIRED)
     String googleMapsUri,
@@ -34,13 +32,13 @@ public record PlaceInfo(
     List<NearbyPlaceInfo> nearbyPlaces
 ) {
 
-    public static PlaceInfo from(final Place place, final Map<String, Place> nearbyPlaceMap, final ObjectMapper objectMapper) {
+    public static PlaceInfo from(final Place place, final Map<String, Place> nearbyPlaceMap) {
         if (place == null) {
             return null;
         }
 
-        String todayOpeningHours = parseTodayOpeningHours(place.getRegularOpeningHours(), objectMapper);
-        List<NearbyPlaceInfo> nearbyPlaces = resolveNearbyPlaces(place.getNearbyPlacesJson(), nearbyPlaceMap, objectMapper);
+        String todayOpeningHours = parseTodayOpeningHours(place.getRegularOpeningHours());
+        List<NearbyPlaceInfo> nearbyPlaces = resolveNearbyPlaces(place.getNearbyPlaces(), nearbyPlaceMap);
 
         return new PlaceInfo(
             place.getGooglePlaceId(),
@@ -55,59 +53,37 @@ public record PlaceInfo(
         );
     }
 
-    private static String parseTodayOpeningHours(
-        final String regularOpeningHoursJson,
-        final ObjectMapper objectMapper
-    ) {
-        if (regularOpeningHoursJson == null || regularOpeningHoursJson.isEmpty()) {
+    private static String parseTodayOpeningHours(final List<String> weekdayDescriptions) {
+        if (weekdayDescriptions == null || weekdayDescriptions.isEmpty()) {
             return null;
         }
 
-        try {
-            List<String> weekdayDescriptions = objectMapper.readValue(
-                regularOpeningHoursJson,
-                new TypeReference<>() {}
-            );
-
-            if (weekdayDescriptions.isEmpty()) {
-                return null;
-            }
-
-            int todayIndex = LocalDate.now().getDayOfWeek().getValue() - 1;
-            if (todayIndex < 0 || todayIndex >= weekdayDescriptions.size()) {
-                return null;
-            }
-
-            String todayDescription = weekdayDescriptions.get(todayIndex);
-            int colonIndex = todayDescription.indexOf(':');
-            if (colonIndex < 0) {
-                return todayDescription;
-            }
-
-            String openingHours = todayDescription.substring(colonIndex + 1).trim();
-            return openingHours.isEmpty() ? null : openingHours;
-        } catch (Exception e) {
+        int todayIndex = LocalDate.now().getDayOfWeek().getValue() - 1;
+        if (todayIndex < 0 || todayIndex >= weekdayDescriptions.size()) {
             return null;
         }
+
+        String todayDescription = weekdayDescriptions.get(todayIndex);
+        int colonIndex = todayDescription.indexOf(':');
+        if (colonIndex < 0) {
+            return todayDescription;
+        }
+
+        String openingHours = todayDescription.substring(colonIndex + 1).trim();
+        return openingHours.isEmpty() ? null : openingHours;
     }
 
     private static List<NearbyPlaceInfo> resolveNearbyPlaces(
-        final String nearbyPlacesJson,
-        final Map<String, Place> nearbyPlaceMap,
-        final ObjectMapper objectMapper
+        final List<String> nearbyIds,
+        final Map<String, Place> nearbyPlaceMap
     ) {
-        if (nearbyPlacesJson == null || nearbyPlacesJson.isEmpty() || nearbyPlaceMap == null) {
+        if (nearbyIds == null || nearbyIds.isEmpty() || nearbyPlaceMap == null) {
             return null;
         }
-        try {
-            List<String> nearbyIds = objectMapper.readValue(nearbyPlacesJson, new TypeReference<>() {});
-            List<NearbyPlaceInfo> result = nearbyIds.stream()
-                .filter(nearbyPlaceMap::containsKey)
-                .map(id -> NearbyPlaceInfo.from(nearbyPlaceMap.get(id)))
-                .toList();
-            return result.isEmpty() ? null : result;
-        } catch (Exception e) {
-            return null;
-        }
+        List<NearbyPlaceInfo> result = nearbyIds.stream()
+            .filter(nearbyPlaceMap::containsKey)
+            .map(id -> NearbyPlaceInfo.from(nearbyPlaceMap.get(id)))
+            .toList();
+        return result.isEmpty() ? null : result;
     }
 }
