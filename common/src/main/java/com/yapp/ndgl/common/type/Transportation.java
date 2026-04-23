@@ -1,9 +1,9 @@
 package com.yapp.ndgl.common.type;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 public record Transportation(
 	TransportationMode mode,
-	@JsonProperty("time_min") Integer timeMin
+	@JsonAlias("time_min") Integer timeMin
 ) {
 }
