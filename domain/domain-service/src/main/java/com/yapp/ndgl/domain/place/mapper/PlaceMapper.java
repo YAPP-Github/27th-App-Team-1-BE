@@ -21,13 +21,13 @@ public class PlaceMapper {
 			.name(place.getName())
 			.thumbnail(place.getThumbnail())
 			.regularOpeningHours(place.getRegularOpeningHours())
-			.photosJson(place.getPhotosJson())
+			.photos(place.getPhotos())
 			.priceCurrencyCode(place.getPriceCurrencyCode())
 			.priceStartUnits(place.getPriceStartUnits())
 			.priceEndUnits(place.getPriceEndUnits())
 			.category(place.getCategory() != null ? place.getCategory() : PlaceCategory.ATTRACTION)
 			.primaryType(place.getPrimaryType())
-			.nearbyPlacesJson(place.getNearbyPlacesJson())
+			.nearbyPlaces(place.getNearbyPlaces())
 			.build();
 	}
 
@@ -47,13 +47,13 @@ public class PlaceMapper {
 			.name(entity.getName())
 			.thumbnail(entity.getThumbnail())
 			.regularOpeningHours(entity.getRegularOpeningHours())
-			.photosJson(entity.getPhotosJson())
+			.photos(entity.getPhotos())
 			.priceCurrencyCode(entity.getPriceCurrencyCode())
 			.priceStartUnits(entity.getPriceStartUnits())
 			.priceEndUnits(entity.getPriceEndUnits())
 			.category(entity.getCategory() != null ? entity.getCategory() : PlaceCategory.ATTRACTION)
 			.primaryType(entity.getPrimaryType())
-			.nearbyPlacesJson(entity.getNearbyPlacesJson())
+			.nearbyPlaces(entity.getNearbyPlaces())
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
 			.build();

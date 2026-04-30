@@ -1,7 +1,9 @@
 package com.yapp.ndgl.domain.place;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.yapp.ndgl.common.type.PhotoMeta;
 import com.yapp.ndgl.common.type.PlaceCategory;
 
 import lombok.Builder;
@@ -24,14 +26,14 @@ public class Place {
 	private final Integer userRatingCount;
 	private final String name;
 	private final String thumbnail;
-	private final String regularOpeningHours;
-	private final String photosJson;
+	private final List<String> regularOpeningHours;
+	private final List<PhotoMeta> photos;
 	private final String priceCurrencyCode;
 	private final String priceStartUnits;
 	private final String priceEndUnits;
 	private final PlaceCategory category;
 	private final String primaryType;
-	private final String nearbyPlacesJson;
+	private final List<String> nearbyPlaces;
 	private final LocalDateTime createdAt;
 	private final LocalDateTime updatedAt;
 
@@ -48,8 +50,8 @@ public class Place {
 		final Integer userRatingCount,
 		final String name,
 		final String thumbnail,
-		final String regularOpeningHours,
-		final String photosJson,
+		final List<String> regularOpeningHours,
+		final List<PhotoMeta> photos,
 		final String priceCurrencyCode,
 		final String priceStartUnits,
 		final String priceEndUnits,
@@ -70,7 +72,7 @@ public class Place {
 			.name(name)
 			.thumbnail(thumbnail)
 			.regularOpeningHours(regularOpeningHours)
-			.photosJson(photosJson)
+			.photos(photos)
 			.priceCurrencyCode(priceCurrencyCode)
 			.priceStartUnits(priceStartUnits)
 			.priceEndUnits(priceEndUnits)

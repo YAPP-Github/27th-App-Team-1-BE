@@ -1,5 +1,10 @@
 package com.yapp.ndgl.domain.travel;
 
+import java.util.List;
+
+import com.yapp.ndgl.common.type.PlanBInfo;
+import com.yapp.ndgl.common.type.Transportation;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,9 +18,9 @@ public class TravelTemplatePlace {
     private int sequence;
     private int day;
     private Double distanceKm;
-    private String transportationJson;
-    private String travelerTipsJson;
-    private String planBJson;
+    private List<Transportation> transportation;
+    private List<String> travelerTips;
+    private List<PlanBInfo> planB;
     private Integer estimatedDuration;
 
     public static TravelTemplatePlace create(
@@ -24,9 +29,9 @@ public class TravelTemplatePlace {
         final int sequence,
         final int day,
         final Double distanceKm,
-        final String transportationJson,
-        final String travelerTipsJson,
-        final String planBJson,
+        final List<Transportation> transportation,
+        final List<String> travelerTips,
+        final List<PlanBInfo> planB,
         final Integer estimatedDuration
     ) {
         return TravelTemplatePlace.builder()
@@ -35,9 +40,9 @@ public class TravelTemplatePlace {
             .sequence(sequence)
             .day(day)
             .distanceKm(distanceKm)
-            .transportationJson(transportationJson)
-            .travelerTipsJson(travelerTipsJson)
-            .planBJson(planBJson)
+            .transportation(transportation)
+            .travelerTips(travelerTips)
+            .planB(planB)
             .estimatedDuration(estimatedDuration)
             .build();
     }
@@ -49,9 +54,9 @@ public class TravelTemplatePlace {
         final int sequence,
         final int day,
         final Double distanceKm,
-        final String transportationJson,
-        final String travelerTipsJson,
-        final String planBJson,
+        final List<Transportation> transportation,
+        final List<String> travelerTips,
+        final List<PlanBInfo> planB,
         final Integer estimatedDuration
     ) {
         return TravelTemplatePlace.builder()
@@ -61,9 +66,9 @@ public class TravelTemplatePlace {
             .sequence(sequence)
             .day(day)
             .distanceKm(distanceKm)
-            .transportationJson(transportationJson)
-            .travelerTipsJson(travelerTipsJson)
-            .planBJson(planBJson)
+            .transportation(transportation)
+            .travelerTips(travelerTips)
+            .planB(planB)
             .estimatedDuration(estimatedDuration)
             .build();
     }

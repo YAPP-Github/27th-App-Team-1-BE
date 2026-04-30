@@ -5,16 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.place.mapper.GooglePlaceTypeMapper;
+import com.yapp.ndgl.common.type.PhotoMeta;
 import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
@@ -63,7 +60,6 @@ public class TravelTemplateService {
     private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
     private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
     private final YouTubeDataClient youTubeDataClient;
-    private final ObjectMapper objectMapper;
     private final ApplicationEventPublisher eventPublisher;
     private final UserDomainService userDomainService;
     private final UserTravelDomainService userTravelDomainService;
@@ -181,16 +177,16 @@ public class TravelTemplateService {
                 name = response.name().text();
             }
 
-            String regularOpeningHours = null;
+            List<String> regularOpeningHours = null;
             if (response.regularOpeningHours() != null) {
-                regularOpeningHours = objectMapper.writeValueAsString(
-                    response.regularOpeningHours().regularOpeningHours()
-                );
+                regularOpeningHours = response.regularOpeningHours().regularOpeningHours();
             }
 
-            String photosJson = null;
+            List<PhotoMeta> photos = null;
             if (response.photos() != null && !response.photos().isEmpty()) {
-                photosJson = objectMapper.writeValueAsString(response.photos());
+                photos = response.photos().stream()
+                    .map(p -> new PhotoMeta(p.name(), p.widthPx(), p.heightPx()))
+                    .toList();
             }
 
             Double latitude = response.location() != null ? response.location().latitude() : null;
@@ -225,7 +221,7 @@ public class TravelTemplateService {
                 name,
                 thumbnail,
                 regularOpeningHours,
-                photosJson,
+                photos,
                 priceCurrencyCode,
                 priceStartUnits,
                 priceEndUnits,
@@ -261,22 +257,13 @@ public class TravelTemplateService {
             .map(TravelTemplatePlace::getPlaceId)
             .collect(Collectors.toList());
 
-        // PlanB JSON에서 placeId 추출
+        // PlanB에서 placeId 추출
         for (TravelTemplatePlace ttp : travelTemplatePlaces) {
-            if (ttp.getPlanBJson() != null) {
-                try {
-                    List<Map<String, Object>> planBList = objectMapper.readValue(
-                        ttp.getPlanBJson(),
-                        new TypeReference<List<Map<String, Object>>>() {}
-                    );
-                    for (Map<String, Object> p : planBList) {
-                        if (p.get("placeId") != null) {
-                            placeIds.add(((Number) p.get("placeId")).longValue());
-                        }
-                    }
-                } catch (Exception e) {
-                    // JSON 파싱 실패 시 무시
-                }
+            if (ttp.getPlanB() != null) {
+                ttp.getPlanB().stream()
+                    .map(p -> p.placeId())
+                    .filter(id -> id != null)
+                    .forEach(placeIds::add);
             }
         }
 
@@ -288,16 +275,8 @@ public class TravelTemplateService {
 
         // 인근 장소 배치 로드
         List<String> nearbyGooglePlaceIds = placeList.stream()
-            .filter(p -> StringUtils.hasText(p.getNearbyPlacesJson()))
-            .flatMap(p -> {
-                try {
-                    List<String> ids = objectMapper.readValue(p.getNearbyPlacesJson(),
-                        new TypeReference<List<String>>() {});
-                    return ids.stream();
-                } catch (Exception e) {
-                    return Stream.empty();
-                }
-            })
+            .filter(p -> p.getNearbyPlaces() != null && !p.getNearbyPlaces().isEmpty())
+            .flatMap(p -> p.getNearbyPlaces().stream())
             .distinct()
             .collect(Collectors.toList());
 
@@ -305,7 +284,7 @@ public class TravelTemplateService {
             .stream()
             .collect(Collectors.toMap(Place::getGooglePlaceId, place -> place));
 
-        return TravelTemplateItineraryResponse.of(travelTemplatePlaces, placeMap, nearbyPlaceMap, objectMapper);
+        return TravelTemplateItineraryResponse.of(travelTemplatePlaces, placeMap, nearbyPlaceMap);
     }
 
     @Transactional(readOnly = true)

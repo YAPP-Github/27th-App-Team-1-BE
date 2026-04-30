@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.service.dto.YouTubeVideoInfo;
 import com.yapp.ndgl.common.exception.GlobalException;
-import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
+import com.yapp.ndgl.common.type.PlanBInfo;
+import com.yapp.ndgl.common.type.Transportation;
+import com.yapp.ndgl.common.type.TransportationMode;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelProgram;
@@ -39,7 +39,6 @@ public class TravelTemplateSaveService {
 	private final TravelProgramDomainService travelProgramDomainService;
 	private final TravelTemplateDomainService travelTemplateDomainService;
 	private final TravelTemplatePlaceDomainService travelTemplatePlaceDomainService;
-	private final ObjectMapper objectMapper;
 
 	/**
 	 * Phase 2: 수집된 장소 데이터와 YouTube 정보를 기반으로 DB에 저장한다. (트랜잭션)
@@ -144,7 +143,8 @@ public class TravelTemplateSaveService {
 					continue;
 				}
 
-				String planBJson = buildPlanBJson(activity.planB(), savedPlaces);
+				List<Transportation> transportation = toTransportationList(activity.transportation());
+				List<PlanBInfo> planB = buildPlanBInfos(activity.planB(), savedPlaces);
 
 				TravelTemplatePlace templatePlace = TravelTemplatePlace.create(
 					savedTemplate.getId(),
@@ -152,9 +152,9 @@ public class TravelTemplateSaveService {
 					activity.sequence(),
 					itinerary.day(),
 					activity.distanceKm(),
-					serializeToJson(activity.transportation()),
-					serializeToJson(activity.travelerTips()),
-					planBJson,
+					transportation,
+					activity.travelerTips(),
+					planB,
 					activity.estimatedTime()
 				);
 				templatePlaces.add(templatePlace);
@@ -167,31 +167,27 @@ public class TravelTemplateSaveService {
 		return savedTemplate.getId();
 	}
 
-	private String buildPlanBJson(final List<SaveTravelTemplateRequest.PlanBRequest> planBList,
-		final Map<String, Place> savedPlaces) {
+	private List<Transportation> toTransportationList(
+		final List<SaveTravelTemplateRequest.TransportationRequest> requests
+	) {
+		if (requests == null || requests.isEmpty()) {
+			return null;
+		}
+		return requests.stream()
+			.map(t -> new Transportation(TransportationMode.valueOf(t.mode()), t.timeMin()))
+			.toList();
+	}
+
+	private List<PlanBInfo> buildPlanBInfos(
+		final List<SaveTravelTemplateRequest.PlanBRequest> planBList,
+		final Map<String, Place> savedPlaces
+	) {
 		if (planBList == null || planBList.isEmpty()) {
 			return null;
 		}
-
-		List<PlanBInfo> planBInfos = planBList.stream()
+		return planBList.stream()
 			.filter(planB -> savedPlaces.get(planB.name()) != null)
 			.map(planB -> new PlanBInfo(savedPlaces.get(planB.name()).getId(), planB.name()))
 			.toList();
-
-		return serializeToJson(planBInfos);
 	}
-
-	private String serializeToJson(final Object value) {
-		if (value == null) {
-			return null;
-		}
-		try {
-			return objectMapper.writeValueAsString(value);
-		} catch (JsonProcessingException e) {
-			log.error("JSON 직렬화 실패", e);
-			throw new GlobalException(GoogleMapsErrorCode.RESPONSE_PARSE_FAILED);
-		}
-	}
-
-	private record PlanBInfo(Long placeId, String name) {}
 }

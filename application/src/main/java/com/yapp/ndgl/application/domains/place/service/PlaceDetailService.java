@@ -3,10 +3,7 @@ package com.yapp.ndgl.application.domains.place.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.place.controller.response.PlaceDetailResponse;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
@@ -16,6 +13,7 @@ import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceDetailsRespon
 import com.yapp.ndgl.application.domains.place.mapper.GooglePlaceTypeMapper;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
+import com.yapp.ndgl.common.type.PhotoMeta;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
@@ -31,7 +29,6 @@ public class PlaceDetailService {
 	private final PlaceDomainService placeDomainService;
 	private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
 	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
-	private final ObjectMapper objectMapper;
 
 	/**
 	 * DB에서 장소 정보 조회 (조회만 수행, 부수효과 없음)
@@ -43,7 +40,7 @@ public class PlaceDetailService {
 		List<Place> nearbyPlaces = loadNearbyPlaces(place);
 
 		log.info("[GetPlaceDetailFromDb] DB 조회 성공. googlePlaceId:{}, id:{}", googlePlaceId, place.getId());
-		return PlaceDetailResponse.toResponse(place, nearbyPlaces, objectMapper);
+		return PlaceDetailResponse.toResponse(place, nearbyPlaces);
 	}
 
 	/**
@@ -74,20 +71,14 @@ public class PlaceDetailService {
 		// 3. DB 저장 후 반환
 		Place savedPlace = placeDomainService.save(toPlace(response, thumbnail));
 		log.info("[SearchAndSavePlace] DB 저장 완료. googlePlaceId:{}, id:{}", response.id(), savedPlace.getId());
-		return PlaceDetailResponse.toResponse(savedPlace, List.of(), objectMapper);
+		return PlaceDetailResponse.toResponse(savedPlace, List.of());
 	}
 
 	private List<Place> loadNearbyPlaces(final Place place) {
-		if (!StringUtils.hasText(place.getNearbyPlacesJson())) {
+		if (place.getNearbyPlaces() == null || place.getNearbyPlaces().isEmpty()) {
 			return List.of();
 		}
-		try {
-			List<String> nearbyIds = objectMapper.readValue(place.getNearbyPlacesJson(), new TypeReference<>() {});
-			return placeDomainService.findByGooglePlaceIds(nearbyIds);
-		} catch (Exception e) {
-			log.warn("nearbyPlacesJson 파싱 실패. googlePlaceId={}", place.getGooglePlaceId(), e);
-			return List.of();
-		}
+		return placeDomainService.findByGooglePlaceIds(place.getNearbyPlaces());
 	}
 
 	private Place toPlace(final GooglePlaceDetailsResponse response, final String thumbnail) {
@@ -97,16 +88,16 @@ public class PlaceDetailService {
 				name = response.name().text();
 			}
 
-			String regularOpeningHours = null;
+			List<String> regularOpeningHours = null;
 			if (response.regularOpeningHours() != null) {
-				regularOpeningHours = objectMapper.writeValueAsString(
-					response.regularOpeningHours().regularOpeningHours()
-				);
+				regularOpeningHours = response.regularOpeningHours().regularOpeningHours();
 			}
 
-			String photosJson = null;
+			List<PhotoMeta> photos = null;
 			if (response.photos() != null && !response.photos().isEmpty()) {
-				photosJson = objectMapper.writeValueAsString(response.photos());
+				photos = response.photos().stream()
+					.map(p -> new PhotoMeta(p.name(), p.widthPx(), p.heightPx()))
+					.toList();
 			}
 
 			Double latitude = response.location() != null ? response.location().latitude() : null;
@@ -141,7 +132,7 @@ public class PlaceDetailService {
 				name,
 				thumbnail,
 				regularOpeningHours,
-				photosJson,
+				photos,
 				priceCurrencyCode,
 				priceStartUnits,
 				priceEndUnits,

@@ -1,5 +1,8 @@
 package com.yapp.ndgl.domain.place.entity;
 
+import java.util.List;
+
+import com.yapp.ndgl.common.type.PhotoMeta;
 import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
 
@@ -13,6 +16,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "places")
@@ -57,13 +63,13 @@ public class PlaceEntity extends BaseEntity {
 	@Column(columnDefinition = "TEXT")
 	private String thumbnail;
 
-	@Lob
-	@Column(columnDefinition = "JSON")
-	private String regularOpeningHours;
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(name = "regular_opening_hours", columnDefinition = "json")
+	private List<String> regularOpeningHours;
 
-	@Lob
-	@Column(columnDefinition = "JSON")
-	private String photosJson;
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(name = "photos_json", columnDefinition = "json")
+	private List<PhotoMeta> photos;
 
 	@Column(length = 10)
 	private String priceCurrencyCode;
@@ -81,9 +87,9 @@ public class PlaceEntity extends BaseEntity {
 	@Column(length = 100)
 	private String primaryType;
 
-	@Lob
-	@Column(columnDefinition = "JSON")
-	private String nearbyPlacesJson;
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(name = "nearby_places_json", columnDefinition = "json")
+	private List<String> nearbyPlaces;
 
 	@Builder
 	public PlaceEntity(
@@ -99,14 +105,14 @@ public class PlaceEntity extends BaseEntity {
 		final Integer userRatingCount,
 		final String name,
 		final String thumbnail,
-		final String regularOpeningHours,
-		final String photosJson,
+		final List<String> regularOpeningHours,
+		final List<PhotoMeta> photos,
 		final String priceCurrencyCode,
 		final String priceStartUnits,
 		final String priceEndUnits,
 		final PlaceCategory category,
 		final String primaryType,
-		final String nearbyPlacesJson
+		final List<String> nearbyPlaces
 	) {
 		this.googlePlaceId = googlePlaceId;
 		this.formattedAddress = formattedAddress;
@@ -121,12 +127,12 @@ public class PlaceEntity extends BaseEntity {
 		this.name = name;
 		this.thumbnail = thumbnail;
 		this.regularOpeningHours = regularOpeningHours;
-		this.photosJson = photosJson;
+		this.photos = photos;
 		this.priceCurrencyCode = priceCurrencyCode;
 		this.priceStartUnits = priceStartUnits;
 		this.priceEndUnits = priceEndUnits;
 		this.category = category;
 		this.primaryType = primaryType;
-		this.nearbyPlacesJson = nearbyPlacesJson;
+		this.nearbyPlaces = nearbyPlaces;
 	}
 }

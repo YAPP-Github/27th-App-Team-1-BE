@@ -102,8 +102,8 @@ public class PlaceDomainService {
 	}
 
 	@Transactional
-	public void updateNearbyPlaces(final String googlePlaceId, final String nearbyPlacesJson) {
-		log.info("[PlaceDomainService] nearbyPlacesJson 업데이트. googlePlaceId={}", googlePlaceId);
-		placeRepository.updateNearbyPlacesJson(googlePlaceId, nearbyPlacesJson);
+	public void updateNearbyPlaces(final String googlePlaceId, final List<String> nearbyPlaces) {
+		log.info("[PlaceDomainService] nearbyPlaces 업데이트. googlePlaceId={}", googlePlaceId);
+		placeRepository.updateNearbyPlaces(googlePlaceId, nearbyPlaces);
 	}
 }

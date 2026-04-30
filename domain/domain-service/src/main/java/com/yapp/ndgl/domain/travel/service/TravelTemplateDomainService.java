@@ -53,9 +53,9 @@ public class TravelTemplateDomainService {
                 entity.getSequence(),
                 entity.getDay(),
                 entity.getDistanceKm(),
-                entity.getTransportationJson(),
-                entity.getTravelerTipsJson(),
-                entity.getPlanBJson(),
+                entity.getTransportation(),
+                entity.getTravelerTips(),
+                entity.getPlanB(),
                 entity.getEstimatedDuration()))
             .toList();
     }

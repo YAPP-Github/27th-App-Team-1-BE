@@ -19,7 +19,7 @@ public interface PlaceRepository extends JpaRepository<PlaceEntity, Long> {
 	List<PlaceEntity> findByGooglePlaceIdIn(List<String> googlePlaceIds);
 
 	@Modifying
-	@Query("UPDATE PlaceEntity p SET p.nearbyPlacesJson = :nearbyPlacesJson WHERE p.googlePlaceId = :googlePlaceId")
-	void updateNearbyPlacesJson(@Param("googlePlaceId") String googlePlaceId, @Param("nearbyPlacesJson") String nearbyPlacesJson);
+	@Query("UPDATE PlaceEntity p SET p.nearbyPlaces = :nearbyPlaces WHERE p.googlePlaceId = :googlePlaceId")
+	void updateNearbyPlaces(@Param("googlePlaceId") String googlePlaceId, @Param("nearbyPlaces") List<String> nearbyPlaces);
 
 }

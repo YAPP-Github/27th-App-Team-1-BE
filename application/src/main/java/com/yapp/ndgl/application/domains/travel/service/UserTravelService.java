@@ -9,20 +9,17 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.common.exception.CommonErrorCode;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserTravelPlaceRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.ItineraryTransportationInfo;
 import com.yapp.ndgl.application.domains.travel.controller.dto.ReplaceUserTravelItineraryRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelListResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UpcomingUserTravelResponse;
@@ -35,6 +32,7 @@ import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.PlaceErrorCode;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.common.response.SliceResponse;
+import com.yapp.ndgl.common.type.Transportation;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
 import com.yapp.ndgl.domain.travel.TravelTemplate;
@@ -59,7 +57,6 @@ public class UserTravelService {
 	private final TravelTemplateDomainService travelTemplateDomainService;
 	private final UserDomainService userDomainService;
 	private final PlaceDomainService placeDomainService;
-	private final ObjectMapper objectMapper;
 
 	@Transactional
 	public Long createUserTravel(final String uuid, final CreateUserTravelRequest request) {
@@ -145,7 +142,7 @@ public class UserTravelService {
 				itinerary.sequence(),
 				itinerary.memo(),
 				itinerary.distanceKm(),
-				serializeToJson(itinerary.transportation()),
+				toTransportationList(itinerary.transportation()),
 				itinerary.startTime(),
 				itinerary.estimatedDuration(),
 				itinerary.budget()
@@ -189,7 +186,7 @@ public class UserTravelService {
 				request.sequence(),
 				request.memo(),
 				request.distanceKm(),
-				serializeToJson(request.transportation()),
+				toTransportationList(request.transportation()),
 				request.startTime(),
 				request.estimatedDuration(),
 				request.budget()
@@ -203,8 +200,7 @@ public class UserTravelService {
 			createdUserTravelPlace,
 			null,
 			Map.of(place.getId(), place),
-			Map.of(),
-			objectMapper
+			Map.of()
 		);
 	}
 
@@ -303,7 +299,7 @@ public class UserTravelService {
 
 		Place place = upcomingPlace == null ? null : placeDomainService.findById(upcomingPlace.getPlaceId());
 
-		return UpcomingUserTravelResponse.of(upcomingTravel, upcomingPlace, place, objectMapper);
+		return UpcomingUserTravelResponse.of(upcomingTravel, upcomingPlace, place);
 	}
 
 	@Transactional(readOnly = true)
@@ -362,16 +358,8 @@ public class UserTravelService {
 			.collect(Collectors.toMap(Place::getId, place -> place));
 
 		List<String> nearbyGooglePlaceIds = placeList.stream()
-			.filter(p -> StringUtils.hasText(p.getNearbyPlacesJson()))
-			.flatMap(p -> {
-				try {
-					List<String> ids = objectMapper.readValue(p.getNearbyPlacesJson(),
-						new TypeReference<List<String>>() {});
-					return ids.stream();
-				} catch (Exception e) {
-					return Stream.empty();
-				}
-			})
+			.filter(p -> p.getNearbyPlaces() != null && !p.getNearbyPlaces().isEmpty())
+			.flatMap(p -> p.getNearbyPlaces().stream())
 			.distinct()
 			.collect(Collectors.toList());
 
@@ -379,7 +367,7 @@ public class UserTravelService {
 			.stream()
 			.collect(Collectors.toMap(Place::getGooglePlaceId, place -> place));
 
-		return UserTravelItineraryResponse.of(userTravelPlaces, templatePlaceMap, placeMap, nearbyPlaceMap, objectMapper);
+		return UserTravelItineraryResponse.of(userTravelPlaces, templatePlaceMap, placeMap, nearbyPlaceMap);
 	}
 
 	private String buildTemplatePlaceKey(final Integer day, final Integer sequence) {
@@ -387,39 +375,20 @@ public class UserTravelService {
 	}
 
 	private List<Long> extractPlanBPlaceIds(final List<TravelTemplatePlace> templatePlaces) {
-		List<Long> planBPlaceIds = new ArrayList<>();
-		for (TravelTemplatePlace templatePlace : templatePlaces) {
-			if (templatePlace.getPlanBJson() == null) {
-				continue;
-			}
-
-			try {
-				List<Map<String, Object>> planBList = objectMapper.readValue(
-					templatePlace.getPlanBJson(),
-					new TypeReference<List<Map<String, Object>>>() {
-					}
-				);
-				for (Map<String, Object> planB : planBList) {
-					if (planB.get("placeId") != null) {
-						planBPlaceIds.add(((Number)planB.get("placeId")).longValue());
-					}
-				}
-			} catch (Exception e) {
-				log.warn("PlanB JSON 파싱 실패. templatePlaceId={}", templatePlace.getId(), e);
-			}
-		}
-		return planBPlaceIds;
+		return templatePlaces.stream()
+			.filter(tp -> tp.getPlanB() != null)
+			.flatMap(tp -> tp.getPlanB().stream())
+			.map(p -> p.placeId())
+			.filter(Objects::nonNull)
+			.toList();
 	}
 
-	private String serializeToJson(final Object value) {
-		if (value == null) {
+	private List<Transportation> toTransportationList(final List<ItineraryTransportationInfo> infos) {
+		if (infos == null || infos.isEmpty()) {
 			return null;
 		}
-		try {
-			return objectMapper.writeValueAsString(value);
-		} catch (JsonProcessingException e) {
-			log.error("replaceUserTravelItinerary transportation 직렬화 실패", e);
-			throw new GlobalException(CommonErrorCode.INTERNAL_SERVER_ERROR);
-		}
+		return infos.stream()
+			.map(t -> new Transportation(t.mode(), t.timeMin()))
+			.toList();
 	}
 }

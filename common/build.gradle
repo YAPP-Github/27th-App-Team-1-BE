@@ -17,4 +17,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // Jackson annotations (@JsonProperty 등)
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+
 }

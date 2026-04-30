@@ -8,14 +8,13 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.place.mapper.GooglePlaceTypeMapper;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlacePhotoRequest;
 import com.yapp.ndgl.clients.google.places.dto.response.GooglePlaceNearbySearchResponse;
+import com.yapp.ndgl.common.type.PhotoMeta;
 import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
@@ -36,11 +35,10 @@ public class PlaceNearbyService {
 	private final GoogleMapsPlaceDetailClient googleMapsPlaceDetailClient;
 	private final GoogleMapsPlacePhotoClient googleMapsPlacePhotoClient;
 	private final PlaceDomainService placeDomainService;
-	private final ObjectMapper objectMapper;
 
 	/**
 	 * 인근 장소를 조회하여 각각 Place 엔티티로 저장하고,
-	 * 원래 장소의 nearby_places_json에 googlePlaceId 목록을 저장한다.
+	 * 원래 장소의 nearby_places에 googlePlaceId 목록을 저장한다.
 	 *
 	 * @param googlePlaceId 기준 장소 ID
 	 */
@@ -60,7 +58,7 @@ public class PlaceNearbyService {
 				return;
 			}
 
-			if (StringUtils.hasText(place.getNearbyPlacesJson())) {
+			if (place.getNearbyPlaces() != null && !place.getNearbyPlaces().isEmpty()) {
 				log.debug("이미 인근 장소 정보가 존재합니다. googlePlaceId={}", googlePlaceId);
 				return;
 			}
@@ -90,8 +88,7 @@ public class PlaceNearbyService {
 			}
 
 			if (!nearbyGooglePlaceIds.isEmpty()) {
-				String nearbyPlacesJson = objectMapper.writeValueAsString(nearbyGooglePlaceIds);
-				placeDomainService.updateNearbyPlaces(googlePlaceId, nearbyPlacesJson);
+				placeDomainService.updateNearbyPlaces(googlePlaceId, nearbyGooglePlaceIds);
 				log.info("인근 장소 저장 완료. googlePlaceId={}, count={}", googlePlaceId, nearbyGooglePlaceIds.size());
 			}
 
@@ -106,16 +103,17 @@ public class PlaceNearbyService {
 		try {
 			String name = result.displayName() != null ? result.displayName().text() : null;
 
-			String regularOpeningHours = null;
+			List<String> regularOpeningHours = null;
 			if (result.regularOpeningHours() != null && result.regularOpeningHours().weekdayDescriptions() != null) {
-				regularOpeningHours = objectMapper.writeValueAsString(
-					result.regularOpeningHours().weekdayDescriptions());
+				regularOpeningHours = result.regularOpeningHours().weekdayDescriptions();
 			}
 
-			String photosJson = null;
+			List<PhotoMeta> photos = null;
 			String thumbnail = null;
 			if (result.photos() != null && !result.photos().isEmpty()) {
-				photosJson = objectMapper.writeValueAsString(result.photos());
+				photos = result.photos().stream()
+					.map(p -> new PhotoMeta(p.name(), p.widthPx(), p.heightPx()))
+					.toList();
 				GooglePlaceNearbySearchResponse.PhotoMeta firstPhoto = result.photos().get(0);
 				try {
 					thumbnail = googleMapsPlacePhotoClient.getPhotoUri(
@@ -158,7 +156,7 @@ public class PlaceNearbyService {
 				name,
 				thumbnail,
 				regularOpeningHours,
-				photosJson,
+				photos,
 				priceCurrencyCode,
 				priceStartUnits,
 				priceEndUnits,

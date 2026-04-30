@@ -3,7 +3,6 @@ package com.yapp.ndgl.application.domains.travel.controller.dto;
 import java.time.LocalDate;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.travel.UserTravel;
 
@@ -37,8 +36,7 @@ public record UpcomingUserTravelResponse(
     public static UpcomingUserTravelResponse of(
         final UserTravel upcomingTravel,
         final com.yapp.ndgl.domain.travel.UserTravelPlace upcomingPlace,
-        final Place place,
-        final ObjectMapper objectMapper
+        final Place place
     ) {
         if (upcomingTravel == null) {
             return null;
@@ -55,7 +53,7 @@ public record UpcomingUserTravelResponse(
             upcomingTravel.getNights(),
             upcomingTravel.getDays(),
             upcomingTravel.getThumbnail(),
-            UserTravelPlace.of(upcomingPlace, place, objectMapper)
+            UserTravelPlace.of(upcomingPlace, place)
         );
     }
 
@@ -72,8 +70,7 @@ public record UpcomingUserTravelResponse(
 
         public static UserTravelPlace of(
             final com.yapp.ndgl.domain.travel.UserTravelPlace upcomingPlace,
-            final Place place,
-            final ObjectMapper objectMapper
+            final Place place
         ) {
             if (upcomingPlace == null) {
                 return null;
@@ -82,7 +79,7 @@ public record UpcomingUserTravelResponse(
             return new UserTravelPlace(
                 upcomingPlace.getId(),
                 upcomingPlace.getEstimatedDuration(),
-                PlaceInfo.from(place, Map.of(), objectMapper)
+                PlaceInfo.from(place, Map.of())
             );
         }
 
