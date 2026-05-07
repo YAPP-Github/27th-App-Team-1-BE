@@ -38,7 +38,7 @@ public class YouTubeDataClient {
 	 * 지원 형식: watch?v=, youtu.be/, embed/, shorts/
 	 */
 	private static final Pattern VIDEO_ID_PATTERN = Pattern.compile(
-		"(?:youtube\\.com/(?:watch\\?v=|embed/|shorts/)|youtu\\.be/)([A-Za-z0-9_-]{11})"
+		"(?:youtube\\.com/(?:watch\\?v=|embed/|shorts/)|youtu\\.be/)([A-Za-z0-9_-]{10,30})"
 	);
 
 	private final RestClient youTubeDataRestClient;

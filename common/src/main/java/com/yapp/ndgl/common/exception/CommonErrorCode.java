@@ -36,6 +36,8 @@ public enum CommonErrorCode implements BaseErrorCode {
 	 * COMM-03-xxx
 	 * RESOURCE_CONFLICT
 	 */
+	DATA_INTEGRITY_VIOLATION(StatusCode.CONFLICT, DomainCode.COMM,
+		CategoryCode.RESOURCE_CONFLICT, "001", "중복된 요청입니다. 요청 가능 여부를 다시 확인해주세요."),
 
 	/**
 	 * COMM-04-xxx

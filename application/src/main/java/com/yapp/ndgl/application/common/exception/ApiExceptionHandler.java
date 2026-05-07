@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -149,6 +150,25 @@ public class ApiExceptionHandler {
 		return ResponseEntity
 			.status(HttpStatus.UNPROCESSABLE_ENTITY)
 			.body(ErrorResponse.error(errorCode, errors));
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<ErrorResponse<?>> handleDataIntegrityViolationException(
+		final DataIntegrityViolationException e) {
+		Throwable cause = e.getCause();
+		if (cause != null && cause.getClass().getName()
+			.equals("org.hibernate.exception.ConstraintViolationException")) {
+			BaseErrorCode errorCode = CommonErrorCode.DATA_INTEGRITY_VIOLATION;
+			logByErrorCode(errorCode, "유니크 제약 조건 위반 (race condition)", e, null);
+			return ResponseEntity
+				.status(HttpStatus.CONFLICT)
+				.body(ErrorResponse.error(errorCode));
+		}
+		BaseErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
+		logByErrorCode(errorCode, "예상치 못한 데이터 무결성 위반", e, null);
+		return ResponseEntity
+			.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			.body(ErrorResponse.error(errorCode));
 	}
 
 	@ExceptionHandler(Exception.class)
