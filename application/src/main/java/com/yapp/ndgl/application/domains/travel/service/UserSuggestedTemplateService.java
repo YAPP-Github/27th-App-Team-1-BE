@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.UserSuggestedTemplateResponse;
 import com.yapp.ndgl.clients.google.youtube.YouTubeDataClient;
+import com.yapp.ndgl.common.exception.GlobalException;
+import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.domain.travel.UserSuggestedTemplate;
 import com.yapp.ndgl.domain.travel.service.UserSuggestedTemplateDomainService;
 
@@ -25,10 +27,13 @@ public class UserSuggestedTemplateService {
     ) {
         log.info("사용자 제안 여행 템플릿을 등록합니다. suggesterUuid = {}", uuid);
 
-        // 영상 URL 형식 검증 + videoId 추출 (Gemini 분석은 별도 스코프)
         String videoId = youTubeDataClient.extractVideoId(request.videoLink());
 
-        UserSuggestedTemplate userSuggestedTemplate = userSuggestedTemplateDomainService.create(
+        if (userSuggestedTemplateDomainService.existsByVideoId(videoId)) {
+            throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_SUGGESTED_TEMPLATE);
+        }
+
+        UserSuggestedTemplate saved = userSuggestedTemplateDomainService.create(
             UserSuggestedTemplate.of(
                 videoId,
                 request.videoLink(),
@@ -39,6 +44,8 @@ public class UserSuggestedTemplateService {
             )
         );
 
-        return UserSuggestedTemplateResponse.from(userSuggestedTemplate);
+        userSuggestedTemplateDomainService.addSubscriber(saved.getId(), uuid);
+
+        return UserSuggestedTemplateResponse.from(saved);
     }
 }
