@@ -14,6 +14,8 @@ public enum TravelErrorCode implements BaseErrorCode {
         CategoryCode.RESOURCE_NOT_FOUND, "001", "여행 템플릿을 찾을 수 없습니다"),
     NOT_FOUND_USER_TRAVEL(StatusCode.NOT_FOUND, DomainCode.TRAVEL,
         CategoryCode.RESOURCE_NOT_FOUND, "002", "내 여행 정보를 찾을 수 없습니다"),
+    NOT_FOUND_SUGGESTED_TEMPLATE(StatusCode.NOT_FOUND, DomainCode.TRAVEL,
+        CategoryCode.RESOURCE_NOT_FOUND, "003", "요청된 여행 템플릿을 찾을 수 없습니다"),
 
     /**
      * TRAVEL-03-xxx
@@ -27,6 +29,8 @@ public enum TravelErrorCode implements BaseErrorCode {
         CategoryCode.RESOURCE_CONFLICT, "003", "다른 사용자가 이미 요청한 영상입니다."),
     ALREADY_REQUESTED_SUGGESTED_TEMPLATE(StatusCode.CONFLICT, DomainCode.TRAVEL,
         CategoryCode.RESOURCE_CONFLICT, "004", "이미 요청한 영상입니다"),
+    ALREADY_SUBSCRIBED_SUGGESTED_TEMPLATE(StatusCode.CONFLICT, DomainCode.TRAVEL,
+        CategoryCode.RESOURCE_CONFLICT, "005", "이미 알림 신청한 영상입니다"),
 
     /**
      * TRAVEL-04-xxx
@@ -37,7 +41,9 @@ public enum TravelErrorCode implements BaseErrorCode {
     INVALID_ITINERARY_REQUEST(StatusCode.BAD_REQUEST, DomainCode.TRAVEL,
         CategoryCode.BUSINESS_RULE_VIOLATION, "002", "여행 일정 요청 값이 올바르지 않습니다"),
     ALREADY_EXISTS_USER_TRAVEL_SCHEDULE(StatusCode.BAD_REQUEST, DomainCode.TRAVEL,
-        CategoryCode.BUSINESS_RULE_VIOLATION, "003", "이미 해당 기간에 내 여행 일정이 존재합니다");
+        CategoryCode.BUSINESS_RULE_VIOLATION, "003", "이미 해당 기간에 내 여행 일정이 존재합니다"),
+    NOT_SUBSCRIBABLE_SUGGESTED_TEMPLATE(StatusCode.BAD_REQUEST, DomainCode.TRAVEL,
+        CategoryCode.BUSINESS_RULE_VIOLATION, "004", "이미 처리된 영상은 구독할 수 없습니다");
 
     private final StatusCode statusCode;
     private final DomainCode domainCode;

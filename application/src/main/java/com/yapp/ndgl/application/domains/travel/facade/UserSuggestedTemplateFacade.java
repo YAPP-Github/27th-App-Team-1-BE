@@ -18,4 +18,8 @@ public class UserSuggestedTemplateFacade {
     ) {
         userSuggestedTemplateService.createUserSuggestedTemplate(uuid, request);
     }
+
+    public void subscribe(final Long templateId, final String uuid) {
+        userSuggestedTemplateService.subscribe(templateId, uuid);
+    }
 }

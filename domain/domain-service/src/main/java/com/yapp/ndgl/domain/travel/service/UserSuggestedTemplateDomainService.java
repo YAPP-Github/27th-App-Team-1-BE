@@ -5,6 +5,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yapp.ndgl.common.exception.GlobalException;
+import com.yapp.ndgl.common.exception.TravelErrorCode;
+import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.domain.travel.UserSuggestedTemplate;
 import com.yapp.ndgl.domain.travel.UserSuggestedTemplateSubscriber;
 import com.yapp.ndgl.domain.travel.entity.UserSuggestedTemplateEntity;
@@ -35,7 +38,7 @@ public class UserSuggestedTemplateDomainService {
 
         addSubscriber(templateSubscriber);
 
-        return UserSuggestedTemplateMapper.toDomain(templateEntity);
+        return UserSuggestedTemplateMapper.toDomain(savedTemplateEntity);
     }
 
     private UserSuggestedTemplateSubscriber addSubscriber(
@@ -46,6 +49,20 @@ public class UserSuggestedTemplateDomainService {
             suggestedTemplateSubscriber);
         UserSuggestedTemplateSubscriberEntity save = userSuggestedTemplateSubscriberRepository.save(entity);
         return UserSuggestedTemplateSubscriberMapper.toDomain(save);
+    }
+
+    @Transactional
+    public void subscribe(final Long templateId, final String subscriberUuid) {
+        UserSuggestedTemplateEntity template = userSuggestedTemplateRepository.findById(templateId)
+            .orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_SUGGESTED_TEMPLATE));
+
+        if (template.getStatus() != SuggestionStatus.PENDING) {
+            throw new GlobalException(TravelErrorCode.NOT_SUBSCRIBABLE_SUGGESTED_TEMPLATE);
+        }
+        if (userSuggestedTemplateSubscriberRepository.existsByTemplateIdAndSubscriberUuid(templateId, subscriberUuid)) {
+            throw new GlobalException(TravelErrorCode.ALREADY_SUBSCRIBED_SUGGESTED_TEMPLATE);
+        }
+        addSubscriber(UserSuggestedTemplateSubscriber.of(templateId, subscriberUuid));
     }
 
     @Transactional(readOnly = true)

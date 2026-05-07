@@ -28,7 +28,6 @@ public class UserSuggestedTemplateService {
 
         String videoId = youTubeDataClient.extractVideoId(request.videoLink());
 
-
         userSuggestedTemplateDomainService.findByVideoId(videoId)
             .ifPresent(t -> {
                 if (t.getSuggesterUuid().equals(uuid)) {
@@ -49,5 +48,10 @@ public class UserSuggestedTemplateService {
         );
 
         log.info("새로운 여행 영상을 요청하였습니다. userId = {}, templateId = {}, video = {}", uuid, template.getId(), videoId);
+    }
+
+    public void subscribe(final Long templateId, final String uuid) {
+        log.info("사용자 제안 여행 템플릿 구독을 신청합니다. templateId = {}, subscriberUuid = {}", templateId, uuid);
+        userSuggestedTemplateDomainService.subscribe(templateId, uuid);
     }
 }

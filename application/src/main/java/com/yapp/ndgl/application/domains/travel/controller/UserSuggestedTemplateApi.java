@@ -1,6 +1,7 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
@@ -135,5 +136,105 @@ public interface UserSuggestedTemplateApi {
     ResponseEntity<SuccessResponse<?>> createUserSuggestedTemplate(
         @CurrentUuid String uuid,
         @RequestBody @Valid final CreateUserSuggestedTemplateRequest request
+    );
+
+    @Operation(
+        summary = "게시 알림 구독",
+        description = """
+            다른 사용자가 이미 요청한 영상(TRAVEL-03-003)에 대해 게시 알림을 신청합니다.
+            영상이 ACCEPTED 처리되면 구독자 전체에게 FCM 알림이 발송됩니다.
+            PENDING 상태인 영상에만 구독 신청이 가능합니다. ACCEPTED/DENIED 상태이면 400을 반환합니다.
+            """,
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "구독 성공",
+            content = @Content(
+                examples = @ExampleObject(
+                    name = "SUCCESS",
+                    value = """
+                        {
+                          "code": "2000",
+                          "message": "요청에 성공하였습니다.",
+                          "data": {}
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "UNAUTHORIZED",
+                    value = """
+                        {
+                          "code": "COMM-03-001",
+                          "message": "인증이 필요합니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "PENDING 상태가 아닌 영상 (ACCEPTED 또는 DENIED)",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "NOT_SUBSCRIBABLE_SUGGESTED_TEMPLATE",
+                    value = """
+                        {
+                          "code": "TRAVEL-04-004",
+                          "message": "이미 처리된 영상은 구독할 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "존재하지 않는 제안 템플릿",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "NOT_FOUND_SUGGESTED_TEMPLATE",
+                    value = """
+                        {
+                          "code": "TRAVEL-02-003",
+                          "message": "요청된 여행 템플릿을 찾을 수 없습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "409",
+            description = "이미 구독 중",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "ALREADY_SUBSCRIBED_SUGGESTED_TEMPLATE",
+                    value = """
+                        {
+                          "code": "TRAVEL-03-005",
+                          "message": "이미 알림 신청한 영상입니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        )
+    })
+    ResponseEntity<SuccessResponse<?>> subscribe(
+        @PathVariable("id") Long templateId,
+        @CurrentUuid String uuid
     );
 }
