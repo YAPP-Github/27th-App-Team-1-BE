@@ -20,10 +20,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/suggested-templates")
 @RestController
-public class UserSuggestedTemplateController {
+public class UserSuggestedTemplateController implements UserSuggestedTemplateApi {
 
     private final UserSuggestedTemplateFacade userSuggestedTemplateFacade;
 
+    @Override
     @PostMapping
     public ResponseEntity<SuccessResponse<UserSuggestedTemplateResponse>> createUserSuggestedTemplate(
         @CurrentUuid String uuid,
