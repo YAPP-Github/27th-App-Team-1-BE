@@ -155,8 +155,9 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<ErrorResponse<?>> handleDataIntegrityViolationException(
 		final DataIntegrityViolationException e) {
-		String rootCauseMessage = e.getMostSpecificCause().getMessage();
-		if (rootCauseMessage != null && rootCauseMessage.toLowerCase().contains("duplicate")) {
+		Throwable cause = e.getCause();
+		if (cause != null && cause.getClass().getName()
+			.equals("org.hibernate.exception.ConstraintViolationException")) {
 			BaseErrorCode errorCode = CommonErrorCode.DATA_INTEGRITY_VIOLATION;
 			logByErrorCode(errorCode, "유니크 제약 조건 위반 (race condition)", e, null);
 			return ResponseEntity
