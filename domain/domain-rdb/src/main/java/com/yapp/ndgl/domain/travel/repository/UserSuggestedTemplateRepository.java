@@ -1,5 +1,7 @@
 package com.yapp.ndgl.domain.travel.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.yapp.ndgl.domain.travel.entity.UserSuggestedTemplateEntity;
@@ -7,5 +9,5 @@ import com.yapp.ndgl.domain.travel.entity.UserSuggestedTemplateEntity;
 public interface UserSuggestedTemplateRepository
     extends JpaRepository<UserSuggestedTemplateEntity, Long> {
 
-    boolean existsByVideoId(String videoId);
+    Optional<UserSuggestedTemplateEntity> findByVideoId(String videoId);
 }

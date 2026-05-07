@@ -3,7 +3,6 @@ package com.yapp.ndgl.application.domains.travel.service;
 import org.springframework.stereotype.Service;
 
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
-import com.yapp.ndgl.application.domains.travel.controller.dto.UserSuggestedTemplateResponse;
 import com.yapp.ndgl.clients.google.youtube.YouTubeDataClient;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
@@ -21,7 +20,7 @@ public class UserSuggestedTemplateService {
     private final UserSuggestedTemplateDomainService userSuggestedTemplateDomainService;
     private final YouTubeDataClient youTubeDataClient;
 
-    public UserSuggestedTemplateResponse createUserSuggestedTemplate(
+    public void createUserSuggestedTemplate(
         final String uuid,
         final CreateUserSuggestedTemplateRequest request
     ) {
@@ -29,11 +28,16 @@ public class UserSuggestedTemplateService {
 
         String videoId = youTubeDataClient.extractVideoId(request.videoLink());
 
-        if (userSuggestedTemplateDomainService.existsByVideoId(videoId)) {
-            throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_SUGGESTED_TEMPLATE);
-        }
 
-        UserSuggestedTemplate saved = userSuggestedTemplateDomainService.create(
+        userSuggestedTemplateDomainService.findByVideoId(videoId)
+            .ifPresent(t -> {
+                if (t.getSuggesterUuid().equals(uuid)) {
+                    throw new GlobalException(TravelErrorCode.ALREADY_REQUESTED_SUGGESTED_TEMPLATE);
+                }
+                throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_SUGGESTED_TEMPLATE);
+            });
+
+        UserSuggestedTemplate template = userSuggestedTemplateDomainService.create(
             UserSuggestedTemplate.of(
                 videoId,
                 request.videoLink(),
@@ -44,8 +48,6 @@ public class UserSuggestedTemplateService {
             )
         );
 
-        userSuggestedTemplateDomainService.addSubscriber(saved.getId(), uuid);
-
-        return UserSuggestedTemplateResponse.from(saved);
+        log.info("새로운 여행 영상을 요청하였습니다. userId = {}, templateId = {}, video = {}", uuid, template.getId(), videoId);
     }
 }

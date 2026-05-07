@@ -1,5 +1,7 @@
 package com.yapp.ndgl.domain.travel.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,27 +25,32 @@ public class UserSuggestedTemplateDomainService {
 
     @Transactional
     public UserSuggestedTemplate create(final UserSuggestedTemplate userSuggestedTemplate) {
-        UserSuggestedTemplateEntity entity = UserSuggestedTemplateMapper.toEntity(userSuggestedTemplate);
-        UserSuggestedTemplateEntity saved = userSuggestedTemplateRepository.save(entity);
-        return UserSuggestedTemplateMapper.toDomain(saved);
+        UserSuggestedTemplateEntity templateEntity = UserSuggestedTemplateMapper.toEntity(userSuggestedTemplate);
+        UserSuggestedTemplateEntity savedTemplateEntity = userSuggestedTemplateRepository.save(templateEntity);
+
+        UserSuggestedTemplateSubscriber templateSubscriber = UserSuggestedTemplateSubscriber.of(
+            savedTemplateEntity.getId(),
+            templateEntity.getSuggesterUuid()
+        );
+
+        addSubscriber(templateSubscriber);
+
+        return UserSuggestedTemplateMapper.toDomain(templateEntity);
     }
 
-    @Transactional
-    public UserSuggestedTemplateSubscriber addSubscriber(
-        final Long templateId,
-        final String subscriberUuid
+    private UserSuggestedTemplateSubscriber addSubscriber(
+       final UserSuggestedTemplateSubscriber suggestedTemplateSubscriber
     ) {
-        UserSuggestedTemplateSubscriberEntity entity =
-            UserSuggestedTemplateSubscriberMapper.toEntity(
-                UserSuggestedTemplateSubscriber.of(templateId, subscriberUuid)
-            );
-        UserSuggestedTemplateSubscriberEntity saved =
-            userSuggestedTemplateSubscriberRepository.save(entity);
-        return UserSuggestedTemplateSubscriberMapper.toDomain(saved);
+
+        UserSuggestedTemplateSubscriberEntity entity = UserSuggestedTemplateSubscriberMapper.toEntity(
+            suggestedTemplateSubscriber);
+        UserSuggestedTemplateSubscriberEntity save = userSuggestedTemplateSubscriberRepository.save(entity);
+        return UserSuggestedTemplateSubscriberMapper.toDomain(save);
     }
 
     @Transactional(readOnly = true)
-    public boolean existsByVideoId(final String videoId) {
-        return userSuggestedTemplateRepository.existsByVideoId(videoId);
+    public Optional<UserSuggestedTemplate> findByVideoId(final String videoId) {
+        return userSuggestedTemplateRepository.findByVideoId(videoId)
+            .map(UserSuggestedTemplateMapper::toDomain);
     }
 }

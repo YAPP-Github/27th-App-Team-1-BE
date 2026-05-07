@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
-import com.yapp.ndgl.application.domains.travel.controller.dto.UserSuggestedTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.facade.UserSuggestedTemplateFacade;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
@@ -26,11 +25,11 @@ public class UserSuggestedTemplateController implements UserSuggestedTemplateApi
 
     @Override
     @PostMapping
-    public ResponseEntity<SuccessResponse<UserSuggestedTemplateResponse>> createUserSuggestedTemplate(
+    public ResponseEntity<SuccessResponse<?>> createUserSuggestedTemplate(
         @CurrentUuid String uuid,
         @Valid @RequestBody final CreateUserSuggestedTemplateRequest request
     ) {
-        UserSuggestedTemplateResponse response = userSuggestedTemplateFacade.createUserSuggestedTemplate(uuid, request);
-        return ResponseEntity.ok(SuccessResponse.success(response));
+        userSuggestedTemplateFacade.createUserSuggestedTemplate(uuid, request);
+        return ResponseEntity.ok(SuccessResponse.noContent());
     }
 }
