@@ -21,6 +21,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserSuggestedTemplateEntity extends BaseEntity {
 
+    @Column(name = "video_id", nullable = false, unique = true, length = 50)
+    private String videoId;
+
     @Column(name = "video_link", nullable = false, length = 500)
     private String videoLink;
 
@@ -45,6 +48,7 @@ public class UserSuggestedTemplateEntity extends BaseEntity {
 
     @Builder
     public UserSuggestedTemplateEntity(
+        final String videoId,
         final String videoLink,
         final String recommendReason,
         final String suggesterUuid,
@@ -52,6 +56,7 @@ public class UserSuggestedTemplateEntity extends BaseEntity {
         final DomesticRegion region,
         final SuggestionStatus status
     ) {
+        this.videoId = videoId;
         this.videoLink = videoLink;
         this.recommendReason = recommendReason;
         this.suggesterUuid = suggesterUuid;

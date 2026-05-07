@@ -25,11 +25,12 @@ public class UserSuggestedTemplateService {
     ) {
         log.info("사용자 제안 여행 템플릿을 등록합니다. suggesterUuid = {}", uuid);
 
-        // 영상 URL 형식만 검증 (Gemini 분석은 별도 스코프)
-        youTubeDataClient.extractVideoId(request.videoLink());
+        // 영상 URL 형식 검증 + videoId 추출 (Gemini 분석은 별도 스코프)
+        String videoId = youTubeDataClient.extractVideoId(request.videoLink());
 
         UserSuggestedTemplate userSuggestedTemplate = userSuggestedTemplateDomainService.create(
             UserSuggestedTemplate.of(
+                videoId,
                 request.videoLink(),
                 request.recommendReason(),
                 uuid,

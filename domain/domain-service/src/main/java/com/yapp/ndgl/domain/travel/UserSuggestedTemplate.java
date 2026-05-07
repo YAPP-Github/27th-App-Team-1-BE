@@ -12,6 +12,7 @@ import lombok.Getter;
 public class UserSuggestedTemplate {
 
     private Long id;
+    private String videoId;
     private String videoLink;
     private String recommendReason;
     private String suggesterUuid;
@@ -20,6 +21,7 @@ public class UserSuggestedTemplate {
     private SuggestionStatus status;
 
     public static UserSuggestedTemplate of(
+        final String videoId,
         final String videoLink,
         final String recommendReason,
         final String suggesterUuid,
@@ -27,6 +29,7 @@ public class UserSuggestedTemplate {
         final DomesticRegion region
     ) {
         return UserSuggestedTemplate.builder()
+            .videoId(videoId)
             .videoLink(videoLink)
             .recommendReason(recommendReason)
             .suggesterUuid(suggesterUuid)

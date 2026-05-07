@@ -11,6 +11,7 @@ public class UserSuggestedTemplateMapper {
         }
         return UserSuggestedTemplate.builder()
             .id(entity.getId())
+            .videoId(entity.getVideoId())
             .videoLink(entity.getVideoLink())
             .recommendReason(entity.getRecommendReason())
             .suggesterUuid(entity.getSuggesterUuid())
@@ -22,6 +23,7 @@ public class UserSuggestedTemplateMapper {
 
     public static UserSuggestedTemplateEntity toEntity(final UserSuggestedTemplate domain) {
         return UserSuggestedTemplateEntity.builder()
+            .videoId(domain.getVideoId())
             .videoLink(domain.getVideoLink())
             .recommendReason(domain.getRecommendReason())
             .suggesterUuid(domain.getSuggesterUuid())
