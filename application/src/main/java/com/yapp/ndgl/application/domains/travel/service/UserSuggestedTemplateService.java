@@ -1,13 +1,14 @@
 package com.yapp.ndgl.application.domains.travel.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
-import com.yapp.ndgl.clients.google.youtube.YouTubeDataClient;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
 import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.domain.travel.UserSuggestedTemplate;
+import com.yapp.ndgl.application.common.annotation.DistributedLock;
 import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 import com.yapp.ndgl.domain.travel.service.UserSuggestedTemplateDomainService;
 
@@ -21,14 +22,14 @@ public class UserSuggestedTemplateService {
 
     private final UserSuggestedTemplateDomainService userSuggestedTemplateDomainService;
     private final TravelTemplateDomainService travelTemplateDomainService;
-    private final YouTubeDataClient youTubeDataClient;
 
+    @DistributedLock(key = "'suggested_template:' + #videoId")
+    @Transactional
     public void createUserSuggestedTemplate(
         final String uuid,
+        final String videoId,
         final CreateUserSuggestedTemplateRequest request
     ) {
-        String videoId = youTubeDataClient.extractVideoId(request.videoLink());
-
         if (travelTemplateDomainService.existsByVideoId(videoId)) {
             throw new GlobalException(TravelErrorCode.ALREADY_REGISTERED_TRAVEL_TEMPLATE);
         }
