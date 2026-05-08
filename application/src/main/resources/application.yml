@@ -4,16 +4,31 @@ spring:
   threads:
     virtual:
       enabled: true
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
-  thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
-    cache: false
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/ndgl}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  lock-datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/ndgl}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: lock-pool
+      maximum-pool-size: 5 # 락은 짧으니 적게
+      minimum-idle: 1
+      connection-timeout: 3000 # 3초 (락 timeout과 맞춤)
+      idle-timeout: 300000 # 5분
+      max-lifetime: 1800000 # 30분
 
   jpa:
     hibernate:
@@ -22,6 +37,11 @@ spring:
     properties:
       hibernate:
         format_sql: false
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
 
 springdoc:
   swagger-ui:
@@ -52,4 +72,8 @@ google:
     api-key: ${YOUTUBE_DATA_API_KEY:default_youtube_api_key}
 
 admin:
-  access-token: ${ADMIN_ACCESS_TOKEN}
+  access-token: ${ADMIN_ACCESS_TOKEN:default_admin_access_token}
+
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG

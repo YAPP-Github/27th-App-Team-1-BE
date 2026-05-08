@@ -13,12 +13,13 @@ import com.yapp.ndgl.lock.DistributedLockRepository;
 import com.yapp.ndgl.lock.LockOptions;
 import com.yapp.ndgl.lock.NamedLockOptions;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class NamedLockRepository implements DistributedLockRepository {
 
     private final DataSource dataSource;
+
+    public NamedLockRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public void withLock(final LockOptions options, final Runnable task) {
