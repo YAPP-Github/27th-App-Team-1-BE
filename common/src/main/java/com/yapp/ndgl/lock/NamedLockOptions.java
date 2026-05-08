@@ -1,6 +1,15 @@
-package com.yapp.ndgl.domain.common.lock;
+package com.yapp.ndgl.lock;
 
-import com.yapp.ndgl.lock.LockOptions;
+import lombok.AccessLevel;
+import lombok.Builder;
 
+@Builder(access = AccessLevel.PRIVATE)
 public record NamedLockOptions(String key, int timeoutSeconds) implements LockOptions {
+
+	public static NamedLockOptions of(final String key, final int timeoutSeconds) {
+		return NamedLockOptions.builder()
+			.key(key)
+			.timeoutSeconds(timeoutSeconds)
+			.build();
+	}
 }

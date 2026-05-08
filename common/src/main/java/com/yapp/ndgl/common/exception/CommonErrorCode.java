@@ -72,7 +72,9 @@ public enum CommonErrorCode implements BaseErrorCode {
 	 * INTERNAL_SYSTEM
 	 */
 	INTERNAL_SERVER_ERROR(StatusCode.INTERNAL_SERVER_ERROR, DomainCode.COMM,
-		CategoryCode.INTERNAL_SYSTEM, "001", "서버 내부 오류가 발생했습니다")
+		CategoryCode.INTERNAL_SYSTEM, "001", "서버 내부 오류가 발생했습니다"),
+	LOCK_ACQUISITION_TIMEOUT(StatusCode.SERVICE_UNAVAILABLE, DomainCode.COMM,
+		CategoryCode.INTERNAL_SYSTEM, "002", "현재 요청을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.")
 
 	;
 

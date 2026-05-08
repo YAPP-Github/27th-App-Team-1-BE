@@ -28,6 +28,7 @@ public enum StatusCode {
 	 * 5xx - Server Error
 	 */
 	INTERNAL_SERVER_ERROR(500), // 서버 내부 오류
+	SERVICE_UNAVAILABLE(503), // 일시적으로 요청 처리 불가, 재시도 권장
 	GATEWAY_TIMEOUT(504); // 외부 서비스 응답 시간 초과 (외부 API, DB, 마이크로서비스 등)
 
 	private final int code;

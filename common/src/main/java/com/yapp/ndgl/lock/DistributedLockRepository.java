@@ -1,6 +1,8 @@
-package com.yapp.ndgl.repository;
+package com.yapp.ndgl.lock;
 
 public interface DistributedLockRepository {
 
-    void withNamedLock(final String lockKey, final int timeoutSeconds, final Runnable task);
+    void withLock(LockOptions options, Runnable task);
+
+    LockOptions createOptions(String key, int timeoutSeconds);
 }
