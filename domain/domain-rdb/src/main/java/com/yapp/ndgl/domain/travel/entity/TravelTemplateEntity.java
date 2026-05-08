@@ -46,6 +46,9 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(name = "link", length = 500, unique = true)
     private String link;
 
+    @Column(name = "video_id", length = 50)
+    private String videoId;
+
     @Column(nullable = false, name = "view_count")
     @ColumnDefault("0")
     private long viewCount = 0L;
@@ -78,6 +81,7 @@ public class TravelTemplateEntity extends BaseEntity {
         final String continent,
         final String thumbnail,
         final String link,
+        final String videoId,
         final Long viewCount,
         final Integer budgetPerPerson,
         final String summary,
@@ -94,6 +98,7 @@ public class TravelTemplateEntity extends BaseEntity {
         this.continent = continent;
         this.thumbnail = thumbnail;
         this.link = link;
+        this.videoId = videoId;
         this.viewCount = viewCount == null ? 0L : viewCount;
         this.budgetPerPerson = budgetPerPerson;
         this.summary = summary;

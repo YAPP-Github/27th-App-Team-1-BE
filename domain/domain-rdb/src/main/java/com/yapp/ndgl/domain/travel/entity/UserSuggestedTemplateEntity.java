@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserSuggestedTemplateEntity extends BaseEntity {
 
-    @Column(name = "video_id", nullable = false, unique = true, length = 50)
+    @Column(name = "video_id", nullable = false, length = 50)
     private String videoId;
 
     @Column(name = "video_link", nullable = false, length = 500)

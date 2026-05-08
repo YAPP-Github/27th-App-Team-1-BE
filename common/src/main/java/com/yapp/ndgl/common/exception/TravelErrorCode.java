@@ -31,6 +31,8 @@ public enum TravelErrorCode implements BaseErrorCode {
         CategoryCode.RESOURCE_CONFLICT, "004", "이미 요청한 영상입니다"),
     ALREADY_SUBSCRIBED_SUGGESTED_TEMPLATE(StatusCode.CONFLICT, DomainCode.TRAVEL,
         CategoryCode.RESOURCE_CONFLICT, "005", "이미 알림 신청한 영상입니다"),
+    ALREADY_REGISTERED_TRAVEL_TEMPLATE(StatusCode.CONFLICT, DomainCode.TRAVEL,
+        CategoryCode.RESOURCE_CONFLICT, "006", "이미 등록된 영상입니다"),
 
     /**
      * TRAVEL-04-xxx
