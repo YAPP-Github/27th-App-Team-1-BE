@@ -2,7 +2,7 @@ package com.yapp.ndgl.application.domains.place.controller.response;
 
 import java.util.List;
 
-import com.yapp.ndgl.application.common.utils.CurrencySymbolResolver;
+import com.yapp.ndgl.application.utils.CurrencySymbolResolver;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.common.type.PlaceCategory;
 
