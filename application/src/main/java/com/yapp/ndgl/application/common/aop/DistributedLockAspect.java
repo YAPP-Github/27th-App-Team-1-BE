@@ -6,13 +6,17 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.DefaultParameterNameDiscoverer;
+import org.springframework.core.Ordered;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.Order;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.yapp.ndgl.application.common.annotation.DistributedLock;
+import com.yapp.ndgl.common.exception.CommonErrorCode;
+import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.lock.DistributedLockRepository;
 import com.yapp.ndgl.lock.LockOptions;
 
@@ -22,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Aspect
 @Component
-@Order(1)
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RequiredArgsConstructor
 public class DistributedLockAspect {
 
@@ -34,22 +38,13 @@ public class DistributedLockAspect {
     @Around("@annotation(distributedLock)")
     public Object around(final ProceedingJoinPoint pjp, final DistributedLock distributedLock) throws Throwable {
         String key = resolveKey(distributedLock.key(), pjp);
-        log.info("key = {}", key);
+        if (!StringUtils.hasText(key)) {
+            log.error("분산락 키 표현식 평가 결과가 비어있습니다. expression={}", distributedLock.key());
+            throw new GlobalException(CommonErrorCode.INVALID_LOCK_OPTIONS);
+        }
+
         LockOptions options = lockRepository.createOptions(key, distributedLock.timeout());
-
-        Throwable[] thrown = {null};
-        Object[] result = {null};
-
-        lockRepository.withLock(options, () -> {
-            try {
-                result[0] = pjp.proceed();
-            } catch (Throwable t) {
-                thrown[0] = t;
-            }
-        });
-
-        if (thrown[0] != null) throw thrown[0];
-        return result[0];
+        return lockRepository.withLock(options, pjp::proceed);
     }
 
     private String resolveKey(final String keyExpression, final ProceedingJoinPoint pjp) {

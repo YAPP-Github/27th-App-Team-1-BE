@@ -155,6 +155,43 @@ public interface UserSuggestedTemplateApi {
                     )
                 }
             )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "분산락 처리 중 시스템 오류 (DB 인프라 장애 등). 운영자 확인이 필요합니다.",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "LOCK_EXECUTION_FAILED",
+                    value = """
+                        {
+                          "code": "COMM-08-004",
+                          "message": "분산락 처리 중 오류가 발생했습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "503",
+            description = """
+                분산락 획득 타임아웃. 동일 영상에 대한 동시 요청이 몰린 상태입니다.
+                지수 백오프로 잠시 후 재시도하세요.
+                """,
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "LOCK_ACQUISITION_TIMEOUT",
+                    value = """
+                        {
+                          "code": "COMM-08-002",
+                          "message": "현재 요청을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.",
+                          "errors": []
+                        }
+                        """
+                )
+            )
         )
     })
     ResponseEntity<SuccessResponse<?>> createUserSuggestedTemplate(
@@ -197,8 +234,8 @@ public interface UserSuggestedTemplateApi {
                     name = "UNAUTHORIZED",
                     value = """
                         {
-                          "code": "COMM-03-001",
-                          "message": "인증이 필요합니다",
+                          "code": "COMM-05-001",
+                          "message": "인증이 필요합니다. JWT 토큰을 확인해주세요.",
                           "errors": []
                         }
                         """

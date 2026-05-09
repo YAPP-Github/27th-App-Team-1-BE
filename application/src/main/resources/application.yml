@@ -18,7 +18,7 @@ spring:
       max-lifetime: 1800000
 
   lock-datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/ndgl}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/ndgl}?connectTimeout=3000&socketTimeout=10000
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -73,7 +73,3 @@ google:
 
 admin:
   access-token: ${ADMIN_ACCESS_TOKEN:default_admin_access_token}
-
-logging:
-  level:
-    com.zaxxer.hikari: DEBUG

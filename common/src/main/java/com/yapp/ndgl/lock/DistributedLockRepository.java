@@ -2,7 +2,7 @@ package com.yapp.ndgl.lock;
 
 public interface DistributedLockRepository {
 
-    void withLock(LockOptions options, Runnable task);
+    <T> T withLock(final LockOptions options, final LockTask<T> task) throws Throwable;
 
-    LockOptions createOptions(String key, int timeoutSeconds);
+    LockOptions createOptions(final String key, final int timeoutSeconds);
 }
