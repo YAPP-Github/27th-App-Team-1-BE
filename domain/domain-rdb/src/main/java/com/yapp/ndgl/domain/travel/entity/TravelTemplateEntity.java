@@ -43,7 +43,7 @@ public class TravelTemplateEntity extends BaseEntity {
     @Column(name = "thumbnail", length = 1000)
     private String thumbnail;
 
-    @Column(name = "link", length = 500, unique = true)
+    @Column(name = "link", length = 500)
     private String link;
 
     @Column(name = "video_id", length = 50)
