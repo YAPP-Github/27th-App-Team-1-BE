@@ -66,8 +66,8 @@ public class UserSuggestedTemplateDomainService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserSuggestedTemplate> findByVideoId(final String videoId) {
-        return userSuggestedTemplateRepository.findByVideoId(videoId)
+    public Optional<UserSuggestedTemplate> findByVideoIdAndStatus(final String videoId, final SuggestionStatus status) {
+        return userSuggestedTemplateRepository.findFirstByVideoIdAndStatus(videoId, status)
             .map(UserSuggestedTemplateMapper::toDomain);
     }
 }

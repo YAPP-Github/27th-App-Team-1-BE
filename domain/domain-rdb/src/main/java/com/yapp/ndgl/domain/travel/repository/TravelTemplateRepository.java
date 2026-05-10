@@ -20,4 +20,6 @@ public interface TravelTemplateRepository extends JpaRepository<TravelTemplateEn
 
     boolean existsByLink(String link);
 
+    boolean existsByVideoId(String videoId);
+
 }

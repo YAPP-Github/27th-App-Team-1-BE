@@ -1,4 +1,4 @@
-package com.yapp.ndgl.application.common.utils;
+package com.yapp.ndgl.application.utils;
 
 import java.util.Currency;
 import java.util.Locale;

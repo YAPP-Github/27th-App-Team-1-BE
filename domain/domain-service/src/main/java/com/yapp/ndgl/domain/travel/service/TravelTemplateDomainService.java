@@ -118,6 +118,11 @@ public class TravelTemplateDomainService {
     }
 
     @Transactional(readOnly = true)
+    public boolean existsByVideoId(final String videoId) {
+        return travelTemplateRepository.existsByVideoId(videoId);
+    }
+
+    @Transactional(readOnly = true)
     public void validateNotExistsByLink(final String link) {
         if (link != null && travelTemplateRepository.existsByLink(link)) {
             throw new GlobalException(TravelErrorCode.ALREADY_EXISTS_TRAVEL_TEMPLATE);

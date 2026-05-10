@@ -89,8 +89,8 @@ public interface UserSuggestedTemplateApi {
                     name = "UNAUTHORIZED",
                     value = """
                         {
-                          "code": "COMM-03-001",
-                          "message": "인증이 필요합니다",
+                          "code": "COMM-05-001",
+                          "message": "인증이 필요합니다. JWT 토큰을 확인해주세요.",
                           "errors": []
                         }
                         """
@@ -101,26 +101,50 @@ public interface UserSuggestedTemplateApi {
             responseCode = "409",
             description = """
                 중복 요청 (에러 코드에 따라 다음 처리를 분기하세요)
-                - TRAVEL-03-003: 다른 사용자가 이미 요청한 영상. 추후 구독 API(POST /api/v1/suggested-templates/{id}/subscribe)를 통해 게시 알림 신청 가능
-                - TRAVEL-03-004: 본인이 이미 요청한 영상. 추가 처리 불필요
+                - TRAVEL-03-006: TravelTemplate에 이미 게시된 영상. 추가 처리 불필요
+                - TRAVEL-03-002: 이미 승인 처리된 영상. 추가 처리 불필요
+                - TRAVEL-03-003: 다른 사용자가 PENDING 요청 중. 구독 API(POST /api/v1/suggested-templates/{id}/subscribe)를 통해 게시 알림 신청 가능
+                - TRAVEL-03-004: 본인이 이미 PENDING 요청 중. 추가 처리 불필요
                 """,
             content = @Content(
                 schema = @Schema(implementation = ErrorResponse.class),
                 examples = {
                     @ExampleObject(
+                        name = "ALREADY_REGISTERED_TRAVEL_TEMPLATE",
+                        summary = "TravelTemplate에 이미 게시된 영상",
+                        value = """
+                            {
+                              "code": "TRAVEL-03-006",
+                              "message": "이미 등록된 영상입니다",
+                              "errors": []
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "ALREADY_EXISTS_TRAVEL_TEMPLATE",
+                        summary = "이미 승인 처리된 영상",
+                        value = """
+                            {
+                              "code": "TRAVEL-03-002",
+                              "message": "이미 저장된 영상입니다",
+                              "errors": []
+                            }
+                            """
+                    ),
+                    @ExampleObject(
                         name = "ALREADY_EXISTS_SUGGESTED_TEMPLATE",
-                        summary = "다른 사용자가 이미 요청한 영상",
+                        summary = "다른 사용자가 PENDING 요청 중",
                         value = """
                             {
                               "code": "TRAVEL-03-003",
-                              "message": "다른 사용자가 이미 요청한 영상입니다",
+                              "message": "다른 사용자가 이미 요청한 영상입니다.",
                               "errors": []
                             }
                             """
                     ),
                     @ExampleObject(
                         name = "ALREADY_REQUESTED_SUGGESTED_TEMPLATE",
-                        summary = "본인이 이미 요청한 영상",
+                        summary = "본인이 이미 PENDING 요청 중",
                         value = """
                             {
                               "code": "TRAVEL-03-004",
@@ -130,6 +154,43 @@ public interface UserSuggestedTemplateApi {
                             """
                     )
                 }
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "분산락 처리 중 시스템 오류 (DB 인프라 장애 등). 운영자 확인이 필요합니다.",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "LOCK_EXECUTION_FAILED",
+                    value = """
+                        {
+                          "code": "COMM-08-004",
+                          "message": "분산락 처리 중 오류가 발생했습니다",
+                          "errors": []
+                        }
+                        """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "503",
+            description = """
+                분산락 획득 타임아웃. 동일 영상에 대한 동시 요청이 몰린 상태입니다.
+                지수 백오프로 잠시 후 재시도하세요.
+                """,
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "LOCK_ACQUISITION_TIMEOUT",
+                    value = """
+                        {
+                          "code": "COMM-08-002",
+                          "message": "현재 요청을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.",
+                          "errors": []
+                        }
+                        """
+                )
             )
         )
     })
@@ -173,8 +234,8 @@ public interface UserSuggestedTemplateApi {
                     name = "UNAUTHORIZED",
                     value = """
                         {
-                          "code": "COMM-03-001",
-                          "message": "인증이 필요합니다",
+                          "code": "COMM-05-001",
+                          "message": "인증이 필요합니다. JWT 토큰을 확인해주세요.",
                           "errors": []
                         }
                         """

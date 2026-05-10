@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yapp.ndgl.application.domains.place.mapper.GooglePlaceTypeMapper;
-import com.yapp.ndgl.common.type.PhotoMeta;
 import com.yapp.ndgl.application.domains.travel.controller.dto.SaveTravelTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateHighlightsResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateItineraryResponse;
@@ -20,6 +19,7 @@ import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateRec
 import com.yapp.ndgl.application.domains.travel.controller.dto.TravelTemplateSearchResponse;
 import com.yapp.ndgl.application.domains.travel.event.TravelTemplateViewCountEvent;
 import com.yapp.ndgl.application.domains.travel.service.dto.YouTubeVideoInfo;
+import com.yapp.ndgl.application.utils.YoutubeUrlParser;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlaceDetailClient;
 import com.yapp.ndgl.clients.google.places.GoogleMapsPlacePhotoClient;
 import com.yapp.ndgl.clients.google.places.dto.request.PlaceDetailsRequest;
@@ -33,6 +33,7 @@ import com.yapp.ndgl.clients.google.youtube.dto.response.YouTubeVideoResponse;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.GoogleMapsErrorCode;
 import com.yapp.ndgl.common.response.SliceResponse;
+import com.yapp.ndgl.common.type.PhotoMeta;
 import com.yapp.ndgl.common.type.PlaceCategory;
 import com.yapp.ndgl.domain.place.Place;
 import com.yapp.ndgl.domain.place.service.PlaceDomainService;
@@ -107,7 +108,7 @@ public class TravelTemplateService {
     public YouTubeVideoInfo resolveYouTubeInfo(final String link) {
         log.info("YouTube Data API를 호출하여 영상 정보를 수집합니다. link = {}", link);
 
-        String videoId = youTubeDataClient.extractVideoId(link);
+        String videoId = YoutubeUrlParser.extractVideoId(link);
 
         YouTubeVideoResponse videoResponse = youTubeDataClient.readVideoInfo(videoId);
         YouTubeVideoResponse.Item videoItem = videoResponse.items().get(0);
