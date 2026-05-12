@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
+import com.yapp.ndgl.clients.discord.DiscordChannel;
 import com.yapp.ndgl.clients.discord.DiscordNotification;
 import com.yapp.ndgl.clients.discord.DiscordPayloadConstraints;
 import com.yapp.ndgl.clients.discord.request.DiscordEmbed;
@@ -24,6 +25,11 @@ public final class UserSuggestedTemplateNotification implements DiscordNotificat
 
 	public static UserSuggestedTemplateNotification from(final UserSuggestedTemplateCreatedEvent event) {
 		return new UserSuggestedTemplateNotification(event);
+	}
+
+	@Override
+	public DiscordChannel channel() {
+		return DiscordChannel.USER_SUGGESTED_TEMPLATE;
 	}
 
 	@Override

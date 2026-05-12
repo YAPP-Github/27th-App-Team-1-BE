@@ -2,10 +2,8 @@ package com.yapp.ndgl.clients.discord;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
-import com.yapp.ndgl.clients.discord.config.DiscordWebhookProperties;
 import com.yapp.ndgl.clients.discord.request.DiscordWebhookRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -17,17 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 public class DiscordWebhookClient {
 
 	private final RestClient discordWebhookRestClient;
-	private final DiscordWebhookProperties properties;
 
-	public void send(final DiscordWebhookRequest request) {
-		if (!StringUtils.hasText(properties.webhookUrl())) {
-			log.warn("Discord webhook URL이 설정되지 않아 알림을 스킵합니다.");
-			return;
-		}
-
+	public void send(final String webhookUrl, final DiscordWebhookRequest request) {
 		try {
 			discordWebhookRestClient.post()
-				.uri(properties.webhookUrl())
+				.uri(webhookUrl)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(request)
 				.retrieve()

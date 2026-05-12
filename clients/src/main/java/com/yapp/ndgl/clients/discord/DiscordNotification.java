@@ -11,6 +11,11 @@ import com.yapp.ndgl.clients.discord.request.DiscordEmbed;
 public interface DiscordNotification {
 
 	/**
+	 * 알림을 전송할 Discord webhook 채널.
+	 */
+	DiscordChannel channel();
+
+	/**
 	 * 메시지 상단 본문(content). 없으면 {@code null}.
 	 */
 	String createContent();
