@@ -2,6 +2,9 @@ package com.yapp.ndgl.domain.travel.service;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +71,15 @@ public class UserSuggestedTemplateDomainService {
     @Transactional(readOnly = true)
     public Optional<UserSuggestedTemplate> findByVideoIdAndStatus(final String videoId, final SuggestionStatus status) {
         return userSuggestedTemplateRepository.findFirstByVideoIdAndStatus(videoId, status)
+            .map(UserSuggestedTemplateMapper::toDomain);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserSuggestedTemplate> findUserSuggestedTemplates(
+        final SuggestionStatus status, final int page, final int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userSuggestedTemplateRepository.findByStatus(status, pageable)
             .map(UserSuggestedTemplateMapper::toDomain);
     }
 }
