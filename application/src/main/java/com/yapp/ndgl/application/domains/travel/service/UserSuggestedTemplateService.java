@@ -25,7 +25,7 @@ public class UserSuggestedTemplateService {
 
     @DistributedLock(key = "'suggested_template:' + #videoId")
     @Transactional
-    public void createUserSuggestedTemplate(
+    public Long createUserSuggestedTemplate(
         final String uuid,
         final String videoId,
         final CreateUserSuggestedTemplateRequest request
@@ -57,6 +57,7 @@ public class UserSuggestedTemplateService {
         );
 
         log.info("새로운 여행 영상을 요청하였습니다. userId={}, templateId={}, videoId={}", uuid, template.getId(), videoId);
+        return template.getId();
     }
 
     public void subscribe(final Long templateId, final String uuid) {

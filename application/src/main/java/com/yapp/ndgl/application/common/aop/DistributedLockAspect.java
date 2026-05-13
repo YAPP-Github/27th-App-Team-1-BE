@@ -35,8 +35,11 @@ public class DistributedLockAspect {
 
     private final DistributedLockRepository lockRepository;
 
-    @Around("@annotation(distributedLock)")
-    public Object around(final ProceedingJoinPoint pjp, final DistributedLock distributedLock) throws Throwable {
+    @Around("@annotation(com.yapp.ndgl.application.common.annotation.DistributedLock)")
+    public Object around(final ProceedingJoinPoint pjp) throws Throwable {
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+        DistributedLock distributedLock = signature.getMethod().getAnnotation(DistributedLock.class);
+
         String key = resolveKey(distributedLock.key(), pjp);
         if (!StringUtils.hasText(key)) {
             log.error("분산락 키 표현식 평가 결과가 비어있습니다. expression={}", distributedLock.key());

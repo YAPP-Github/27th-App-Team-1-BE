@@ -71,5 +71,9 @@ google:
   youtube:
     api-key: ${YOUTUBE_DATA_API_KEY:default_youtube_api_key}
 
+discord:
+  webhooks:
+    user-suggested-template: ${DISCORD_WEBHOOK_USER_SUGGESTED_TEMPLATE:}
+
 admin:
   access-token: ${ADMIN_ACCESS_TOKEN:default_admin_access_token}

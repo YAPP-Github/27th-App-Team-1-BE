@@ -1,9 +1,10 @@
-package com.yapp.ndgl.application.domains.travel.event;
+package com.yapp.ndgl.application.domains.travel.event.listener;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import com.yapp.ndgl.application.domains.travel.event.TravelTemplateViewCountEvent;
 import com.yapp.ndgl.domain.travel.service.TravelTemplateDomainService;
 
 import lombok.RequiredArgsConstructor;

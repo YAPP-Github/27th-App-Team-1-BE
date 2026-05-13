@@ -73,8 +73,8 @@ public class NamedLockRepository implements DistributedLockRepository {
                     log.error("GET_LOCK 결과가 비어있습니다. key={}", key);
                     throw new GlobalException(CommonErrorCode.LOCK_ACQUISITION_TIMEOUT);
                 }
-                Integer acquired = (Integer) rs.getObject(1);
-                if (acquired == null || acquired != 1) {
+                Number acquired = (Number) rs.getObject(1);
+                if (acquired == null || acquired.intValue() != 1) {
                     log.warn("분산락 획득 실패. key={}, result={}", key, acquired);
                     throw new GlobalException(CommonErrorCode.LOCK_ACQUISITION_TIMEOUT);
                 }
@@ -91,8 +91,8 @@ public class NamedLockRepository implements DistributedLockRepository {
                     leaked = true;
                     log.error("RELEASE_LOCK 결과가 비어있습니다. key={}", key);
                 } else {
-                    Integer released = (Integer) rs.getObject(1);
-                    if (released == null || released != 1) {
+                    Number released = (Number) rs.getObject(1);
+                    if (released == null || released.intValue() != 1) {
                         leaked = true;
                         log.error("RELEASE_LOCK 실패. 락이 해제되지 않았습니다. key={}, result={}", key, released);
                     }
