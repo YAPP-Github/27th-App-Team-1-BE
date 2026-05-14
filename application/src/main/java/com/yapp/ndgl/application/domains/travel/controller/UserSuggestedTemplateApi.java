@@ -1,11 +1,11 @@
 package com.yapp.ndgl.application.domains.travel.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.SubscribeUserSuggestedTemplateRequest;
 import com.yapp.ndgl.common.response.ErrorResponse;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
@@ -202,8 +202,9 @@ public interface UserSuggestedTemplateApi {
         summary = "게시 알림 구독",
         description = """
             다른 사용자가 이미 요청한 영상(TRAVEL-03-003)에 대해 게시 알림을 신청합니다.
+            영상 링크로 요청하면 서버가 해당 영상의 PENDING 상태 제안 템플릿을 찾아 구독자로 등록합니다.
             영상이 ACCEPTED 처리되면 구독자 전체에게 FCM 알림이 발송됩니다.
-            PENDING 상태인 영상에만 구독 신청이 가능합니다. ACCEPTED/DENIED 상태이면 400을 반환합니다.
+            동일 영상에 PENDING 상태의 제안이 없으면(미등록 또는 이미 처리됨) 404를 반환합니다.
             """,
         security = @SecurityRequirement(name = "bearerAuth")
     )
@@ -294,7 +295,7 @@ public interface UserSuggestedTemplateApi {
         )
     })
     ResponseEntity<SuccessResponse<?>> subscribe(
-        @PathVariable("id") Long templateId,
-        @CurrentUuid String uuid
+        @CurrentUuid String uuid,
+        @RequestBody @Valid final SubscribeUserSuggestedTemplateRequest request
     );
 }

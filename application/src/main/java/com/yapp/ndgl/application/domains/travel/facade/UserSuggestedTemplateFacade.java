@@ -3,6 +3,7 @@ package com.yapp.ndgl.application.domains.travel.facade;
 import com.yapp.ndgl.application.common.annotation.Facade;
 import com.yapp.ndgl.application.domains.travel.controller.dto.AdminUserSuggestedTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.SubscribeUserSuggestedTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.event.publisher.UserSuggestedTemplateEventPublisher;
 import com.yapp.ndgl.application.domains.travel.service.UserSuggestedTemplateService;
 import com.yapp.ndgl.application.utils.YoutubeUrlParser;
@@ -30,8 +31,9 @@ public class UserSuggestedTemplateFacade {
         userSuggestedTemplateEventPublisher.publish(templateId, videoId, uuid, request);
     }
 
-    public void subscribe(final Long templateId, final String uuid) {
-        userSuggestedTemplateService.subscribe(templateId, uuid);
+    public void subscribe(final String uuid, final SubscribeUserSuggestedTemplateRequest request) {
+        String videoId = YoutubeUrlParser.extractVideoId(request.videoLink());
+        userSuggestedTemplateService.subscribe(videoId, uuid);
     }
 
     public PageResponse<AdminUserSuggestedTemplateResponse> readUserSuggestedTemplatesForAdmin(

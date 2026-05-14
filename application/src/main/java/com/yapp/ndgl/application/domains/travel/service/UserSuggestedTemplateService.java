@@ -62,9 +62,14 @@ public class UserSuggestedTemplateService {
         return template.getId();
     }
 
-    public void subscribe(final Long templateId, final String uuid) {
-        log.info("사용자 제안 여행 템플릿 구독을 신청합니다. templateId={}, subscriberUuid={}", templateId, uuid);
-        userSuggestedTemplateDomainService.subscribe(templateId, uuid);
+    public void subscribe(final String videoId, final String uuid) {
+        UserSuggestedTemplate template = userSuggestedTemplateDomainService
+            .findByVideoIdAndStatus(videoId, SuggestionStatus.PENDING)
+            .orElseThrow(() -> new GlobalException(TravelErrorCode.NOT_FOUND_SUGGESTED_TEMPLATE));
+
+        log.info("사용자 제안 여행 템플릿 구독을 신청합니다. videoId={}, templateId={}, subscriberUuid={}",
+            videoId, template.getId(), uuid);
+        userSuggestedTemplateDomainService.subscribe(template.getId(), uuid);
     }
 
     public PageResponse<AdminUserSuggestedTemplateResponse> readUserSuggestedTemplatesForAdmin(
