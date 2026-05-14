@@ -1,6 +1,10 @@
 package com.yapp.ndgl.domain.travel.entity;
 
-import com.yapp.ndgl.common.type.DomesticRegion;
+import java.util.List;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.common.type.TravelCategory;
 import com.yapp.ndgl.domain.common.entity.BaseEntity;
@@ -27,20 +31,16 @@ public class UserSuggestedTemplateEntity extends BaseEntity {
     @Column(name = "video_link", nullable = false, length = 500)
     private String videoLink;
 
-    @Column(name = "recommend_reason", nullable = false, length = 1000)
+    @Column(name = "recommend_reason", length = 1000)
     private String recommendReason;
 
     // NOTE: 사용자 시스템 정비 시 식별자 변경 가능성 있음 (UUID → User PK)
     @Column(name = "suggester_uuid", nullable = false, length = 64)
     private String suggesterUuid;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "category", length = 50)
-    private TravelCategory category;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "region", length = 50)
-    private DomesticRegion region;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "category", nullable = false, columnDefinition = "json")
+    private List<TravelCategory> category;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
@@ -52,8 +52,7 @@ public class UserSuggestedTemplateEntity extends BaseEntity {
         final String videoLink,
         final String recommendReason,
         final String suggesterUuid,
-        final TravelCategory category,
-        final DomesticRegion region,
+        final List<TravelCategory> category,
         final SuggestionStatus status
     ) {
         this.videoId = videoId;
@@ -61,7 +60,6 @@ public class UserSuggestedTemplateEntity extends BaseEntity {
         this.recommendReason = recommendReason;
         this.suggesterUuid = suggesterUuid;
         this.category = category;
-        this.region = region;
         this.status = status == null ? SuggestionStatus.PENDING : status;
     }
 }

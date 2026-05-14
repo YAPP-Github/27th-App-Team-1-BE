@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
     <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="ndgl"/>
-    <springProperty scope="context" name="LOG_PATH" source="LOG_PATH" defaultValue="logs"/>
+    <property name="LOG_PATH" value="${LOG_PATH:-logs}"/>
 
     <property name="CONSOLE_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n"/>

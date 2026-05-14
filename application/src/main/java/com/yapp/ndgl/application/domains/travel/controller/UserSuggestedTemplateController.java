@@ -2,7 +2,6 @@ package com.yapp.ndgl.application.domains.travel.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yapp.ndgl.application.domains.auth.annotation.CurrentUuid;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
+import com.yapp.ndgl.application.domains.travel.controller.dto.SubscribeUserSuggestedTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.facade.UserSuggestedTemplateFacade;
 import com.yapp.ndgl.common.response.SuccessResponse;
 
@@ -35,12 +35,12 @@ public class UserSuggestedTemplateController implements UserSuggestedTemplateApi
     }
 
     @Override
-    @PostMapping("/{id}/subscribe")
+    @PostMapping("/subscribe")
     public ResponseEntity<SuccessResponse<?>> subscribe(
-        @PathVariable("id") final Long templateId,
-        @CurrentUuid String uuid
+        @CurrentUuid String uuid,
+        @Valid @RequestBody final SubscribeUserSuggestedTemplateRequest request
     ) {
-        userSuggestedTemplateFacade.subscribe(templateId, uuid);
+        userSuggestedTemplateFacade.subscribe(uuid, request);
         return ResponseEntity.ok(SuccessResponse.noContent());
     }
 }

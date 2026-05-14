@@ -1,8 +1,8 @@
 package com.yapp.ndgl.domain.travel;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import com.yapp.ndgl.common.type.DomesticRegion;
 import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.common.type.TravelCategory;
 
@@ -18,8 +18,7 @@ public class UserSuggestedTemplate {
     private String videoLink;
     private String recommendReason;
     private String suggesterUuid;
-    private TravelCategory category;
-    private DomesticRegion region;
+    private List<TravelCategory> category;
     private SuggestionStatus status;
     private LocalDateTime createdAt;
 
@@ -28,8 +27,7 @@ public class UserSuggestedTemplate {
         final String videoLink,
         final String recommendReason,
         final String suggesterUuid,
-        final TravelCategory category,
-        final DomesticRegion region
+        final List<TravelCategory> category
     ) {
         return UserSuggestedTemplate.builder()
             .videoId(videoId)
@@ -37,7 +35,6 @@ public class UserSuggestedTemplate {
             .recommendReason(recommendReason)
             .suggesterUuid(suggesterUuid)
             .category(category)
-            .region(region)
             .status(SuggestionStatus.PENDING)
             .build();
     }
