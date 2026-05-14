@@ -1,10 +1,13 @@
 package com.yapp.ndgl.application.domains.travel.event.publisher;
 
+import java.util.List;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.event.UserSuggestedTemplateCreatedEvent;
+import com.yapp.ndgl.common.type.TravelCategory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,8 +23,9 @@ public class UserSuggestedTemplateEventPublisher {
 		final String uuid,
 		final CreateUserSuggestedTemplateRequest request
 	) {
-		String category = request.category() != null ? request.category().name() : null;
-		String region = request.region() != null ? request.region().name() : null;
+		List<String> category = request.category().stream()
+			.map(TravelCategory::name)
+			.toList();
 
 		UserSuggestedTemplateCreatedEvent event = new UserSuggestedTemplateCreatedEvent(
 			templateId,
@@ -29,7 +33,6 @@ public class UserSuggestedTemplateEventPublisher {
 			request.videoLink(),
 			uuid,
 			category,
-			region,
 			request.recommendReason()
 		);
 

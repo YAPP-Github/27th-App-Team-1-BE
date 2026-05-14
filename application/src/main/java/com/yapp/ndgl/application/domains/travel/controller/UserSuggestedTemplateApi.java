@@ -37,10 +37,9 @@ public interface UserSuggestedTemplateApi {
                 name = "요청 예시",
                 value = """
                     {
-                      "video_link": "https://youtu.be/abc12345678",
-                      "recommend_reason": "산정호수 일출이 정말 아름다워요. 새벽 5시에 가면 혼자 볼 수 있어요.",
-                      "category": "UNCATEGORIZED",
-                      "region": "UNDEFINED"
+                      "videoLink": "https://youtu.be/abc12345678",
+                      "recommendReason": "산정호수 일출이 정말 아름다워요. 새벽 5시에 가면 혼자 볼 수 있어요.",
+                      "category": ["FOOD", "CAFE"]
                     }
                     """
             )

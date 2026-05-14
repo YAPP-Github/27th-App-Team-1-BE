@@ -16,7 +16,6 @@ import com.yapp.ndgl.application.config.TestDatabaseConfig;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
 import com.yapp.ndgl.application.domains.travel.facade.UserSuggestedTemplateFacade;
 import com.yapp.ndgl.application.executor.ConcurrencyExecutor;
-import com.yapp.ndgl.common.type.DomesticRegion;
 import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.common.type.TravelCategory;
 import com.yapp.ndgl.domain.travel.entity.UserSuggestedTemplateEntity;
@@ -46,8 +45,7 @@ class UserSuggestedTemplateConcurrencyTest extends TestDatabaseConfig {
         CreateUserSuggestedTemplateRequest request = new CreateUserSuggestedTemplateRequest(
             TEST_VIDEO_LINK,
             "동시성 테스트 추천 이유",
-            TravelCategory.UNCATEGORIZED,
-            DomesticRegion.UNDEFINED
+            List.of(TravelCategory.FOOD)
         );
 
         AtomicInteger successCount = new AtomicInteger(0);

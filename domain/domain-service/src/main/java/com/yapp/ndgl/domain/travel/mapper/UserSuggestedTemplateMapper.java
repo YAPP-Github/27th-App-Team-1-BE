@@ -16,7 +16,6 @@ public class UserSuggestedTemplateMapper {
             .recommendReason(entity.getRecommendReason())
             .suggesterUuid(entity.getSuggesterUuid())
             .category(entity.getCategory())
-            .region(entity.getRegion())
             .status(entity.getStatus())
             .createdAt(entity.getCreatedAt())
             .build();
@@ -29,7 +28,6 @@ public class UserSuggestedTemplateMapper {
             .recommendReason(domain.getRecommendReason())
             .suggesterUuid(domain.getSuggesterUuid())
             .category(domain.getCategory())
-            .region(domain.getRegion())
             .status(domain.getStatus())
             .build();
     }

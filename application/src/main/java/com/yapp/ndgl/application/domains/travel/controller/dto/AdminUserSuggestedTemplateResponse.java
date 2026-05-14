@@ -1,8 +1,8 @@
 package com.yapp.ndgl.application.domains.travel.controller.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import com.yapp.ndgl.common.type.DomesticRegion;
 import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.common.type.TravelCategory;
 import com.yapp.ndgl.domain.travel.UserSuggestedTemplate;
@@ -13,8 +13,7 @@ public record AdminUserSuggestedTemplateResponse(
     String videoLink,
     String recommendReason,
     String suggesterUuid,
-    TravelCategory category,
-    DomesticRegion region,
+    List<TravelCategory> category,
     SuggestionStatus status,
     LocalDateTime createdAt
 ) {
@@ -27,7 +26,6 @@ public record AdminUserSuggestedTemplateResponse(
             domain.getRecommendReason(),
             domain.getSuggesterUuid(),
             domain.getCategory(),
-            domain.getRegion(),
             domain.getStatus(),
             domain.getCreatedAt()
         );

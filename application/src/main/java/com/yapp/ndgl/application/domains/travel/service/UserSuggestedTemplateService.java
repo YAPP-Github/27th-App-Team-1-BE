@@ -54,8 +54,7 @@ public class UserSuggestedTemplateService {
                 request.videoLink(),
                 request.recommendReason(),
                 uuid,
-                request.category(),
-                request.region()
+                request.category()
             )
         );
 
