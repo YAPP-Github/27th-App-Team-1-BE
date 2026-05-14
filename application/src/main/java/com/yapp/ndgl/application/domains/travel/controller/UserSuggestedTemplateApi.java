@@ -31,20 +31,6 @@ public interface UserSuggestedTemplateApi {
             """,
         security = @SecurityRequirement(name = "bearerAuth")
     )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        content = @Content(
-            examples = @ExampleObject(
-                name = "요청 예시",
-                value = """
-                    {
-                      "videoLink": "https://youtu.be/abc12345678",
-                      "recommendReason": "산정호수 일출이 정말 아름다워요. 새벽 5시에 가면 혼자 볼 수 있어요.",
-                      "category": ["FOOD", "CAFE"]
-                    }
-                    """
-            )
-        )
-    )
     @ApiResponses({
         @ApiResponse(
             responseCode = "200",
