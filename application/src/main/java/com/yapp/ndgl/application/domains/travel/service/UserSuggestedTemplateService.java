@@ -1,11 +1,14 @@
 package com.yapp.ndgl.application.domains.travel.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yapp.ndgl.application.domains.travel.controller.dto.AdminUserSuggestedTemplateResponse;
 import com.yapp.ndgl.application.domains.travel.controller.dto.CreateUserSuggestedTemplateRequest;
 import com.yapp.ndgl.common.exception.GlobalException;
 import com.yapp.ndgl.common.exception.TravelErrorCode;
+import com.yapp.ndgl.common.response.PageResponse;
 import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.domain.travel.UserSuggestedTemplate;
 import com.yapp.ndgl.application.common.annotation.DistributedLock;
@@ -63,5 +66,20 @@ public class UserSuggestedTemplateService {
     public void subscribe(final Long templateId, final String uuid) {
         log.info("사용자 제안 여행 템플릿 구독을 신청합니다. templateId={}, subscriberUuid={}", templateId, uuid);
         userSuggestedTemplateDomainService.subscribe(templateId, uuid);
+    }
+
+    public PageResponse<AdminUserSuggestedTemplateResponse> readUserSuggestedTemplatesForAdmin(
+        final SuggestionStatus status, final int page, final int size
+    ) {
+        Page<AdminUserSuggestedTemplateResponse> result = userSuggestedTemplateDomainService
+            .findUserSuggestedTemplates(status, page, size)
+            .map(AdminUserSuggestedTemplateResponse::toResponse);
+
+        return PageResponse.of(
+            result.getContent(),
+            result.getNumber(),
+            result.getSize(),
+            result.getTotalElements()
+        );
     }
 }

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 제안 영상 템플릿 - NDGL 관리자</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .header h1 { font-size: 24px; color: #333; }
+        .nav-links { display: flex; gap: 16px; align-items: center; }
+        .nav-link {
+            font-size: 14px;
+            color: #4a90d9;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .nav-link:hover { text-decoration: underline; }
+        .logout-link { font-size: 14px; color: #888; text-decoration: none; }
+        .logout-link:hover { color: #cf1322; }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        .card h2 { font-size: 16px; color: #333; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .filter-bar label { font-size: 13px; color: #555; }
+        .filter-bar select {
+            font-size: 13px;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+        }
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .template-card {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .template-thumbnail {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #e8edf2;
+            display: block;
+        }
+        .template-body { padding: 14px; flex: 1; }
+        .template-reason {
+            font-size: 14px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+        .template-meta {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .template-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 99px;
+            font-weight: 500;
+        }
+        .tag-category { background: #e8f4fd; color: #1a73e8; }
+        .tag-region { background: #fdf4ff; color: #9333ea; }
+        .badge-status {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 99px;
+            margin-left: 4px;
+        }
+        .badge-pending { background: #fffbe6; color: #d48806; }
+        .badge-accepted { background: #f0fdf4; color: #16a34a; }
+        .badge-denied { background: #fff2f0; color: #cf1322; }
+        .template-id { font-size: 11px; color: #bbb; margin-top: 8px; }
+        .card-footer {
+            padding: 10px 14px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-link {
+            font-size: 12px;
+            padding: 5px 12px;
+            background: #f5f7fb;
+            color: #1a73e8;
+            border: 1px solid #d4e3fc;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .btn-link:hover { background: #e8f0fe; }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .page-btn {
+            padding: 8px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .page-btn:hover { background: #f5f5f5; }
+        .page-btn.disabled { color: #ccc; cursor: default; pointer-events: none; }
+        .page-info { font-size: 14px; color: #888; }
+        .empty-state {
+            text-align: center;
+            padding: 60px 0;
+            color: #aaa;
+            font-size: 15px;
+        }
+        .error-banner {
+            background: #fff2f0;
+            color: #cf1322;
+            border: 1px solid #ffccc7;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>사용자 제안 영상 템플릿</h1>
+            <div class="nav-links">
+                <a href="/admin/travel-templates" class="nav-link">여행 템플릿 목록</a>
+                <form action="/admin/logout" method="POST" style="margin:0;">
+                    <button type="submit" class="logout-link" style="background:none; border:none; cursor:pointer; padding:0;">로그아웃</button>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${errorMessage}" class="error-banner" th:text="${errorMessage}"></div>
+
+        <div class="card">
+            <h2>신청된 영상 목록 <span th:if="${totalElements != null}" th:text="'(총 ' + ${totalElements} + '건)'"></span></h2>
+
+            <form method="GET" action="/admin/user-suggested-templates" class="filter-bar">
+                <label for="status-filter">상태 필터</label>
+                <select id="status-filter" name="status" onchange="this.form.submit()">
+                    <option value="" th:selected="${status == null}">전체</option>
+                    <option th:each="s : ${statuses}"
+                            th:value="${s.name()}"
+                            th:text="${s.label}"
+                            th:selected="${status != null and status.name() == s.name()}"></option>
+                </select>
+                <input type="hidden" name="size" th:value="${size}" />
+            </form>
+
+            <div th:if="${templates == null or #lists.isEmpty(templates)}" class="empty-state">
+                등록된 사용자 제안 템플릿이 없습니다.
+            </div>
+
+            <div class="template-grid" th:if="${templates != null and not #lists.isEmpty(templates)}">
+                <div th:each="t : ${templates}" class="template-card">
+                    <img th:src="'https://img.youtube.com/vi/' + ${t.videoId} + '/mqdefault.jpg'"
+                         class="template-thumbnail" alt="썸네일"
+                         onerror="this.style.display='none'">
+                    <div class="template-body">
+                        <div class="template-reason" th:text="${t.recommendReason}"></div>
+                        <div class="template-meta">
+                            <span th:text="${#temporals.format(t.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                            <span class="badge-status"
+                                  th:classappend="${t.status.name() == 'PENDING'} ? 'badge-pending' : (${t.status.name() == 'ACCEPTED'} ? 'badge-accepted' : 'badge-denied')"
+                                  th:text="${t.status.label}"></span>
+                        </div>
+                        <div class="template-meta">
+                            제안자:
+                            <span th:text="${#strings.length(t.suggesterUuid) > 8 ? #strings.substring(t.suggesterUuid, 0, 8) + '…' : t.suggesterUuid}"></span>
+                        </div>
+                        <div class="template-tags">
+                            <span class="tag tag-category"
+                                  th:if="${t.category != null}"
+                                  th:text="${t.category}"></span>
+                            <span class="tag tag-region"
+                                  th:if="${t.region != null}"
+                                  th:text="${t.region}"></span>
+                        </div>
+                        <div class="template-id" th:text="'ID: ' + ${t.id}"></div>
+                    </div>
+                    <div class="card-footer">
+                        <span></span>
+                        <a th:href="${t.videoLink}" target="_blank" rel="noopener" class="btn-link">원본 영상 보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination" th:if="${templates != null and not #lists.isEmpty(templates)}">
+            <a th:href="@{/admin/user-suggested-templates(status=${status != null ? status.name() : null}, page=${currentPage - 1}, size=${size})}"
+               class="page-btn"
+               th:classappend="${!hasPrevious} ? ' disabled'">&larr; 이전</a>
+            <span class="page-info" th:text="(${currentPage + 1}) + ' / ' + ${totalPages} + ' 페이지'"></span>
+            <a th:href="@{/admin/user-suggested-templates(status=${status != null ? status.name() : null}, page=${currentPage + 1}, size=${size})}"
+               class="page-btn"
+               th:classappend="${!hasNext} ? ' disabled'">다음 &rarr;</a>
+        </div>
+    </div>
+</body>
+</html>

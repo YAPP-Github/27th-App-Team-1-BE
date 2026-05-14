@@ -1,5 +1,7 @@
 package com.yapp.ndgl.domain.travel;
 
+import java.time.LocalDateTime;
+
 import com.yapp.ndgl.common.type.DomesticRegion;
 import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.common.type.TravelCategory;
@@ -19,6 +21,7 @@ public class UserSuggestedTemplate {
     private TravelCategory category;
     private DomesticRegion region;
     private SuggestionStatus status;
+    private LocalDateTime createdAt;
 
     public static UserSuggestedTemplate of(
         final String videoId,

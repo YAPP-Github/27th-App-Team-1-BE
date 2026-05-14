@@ -18,6 +18,7 @@ public class UserSuggestedTemplateMapper {
             .category(entity.getCategory())
             .region(entity.getRegion())
             .status(entity.getStatus())
+            .createdAt(entity.getCreatedAt())
             .build();
     }
 

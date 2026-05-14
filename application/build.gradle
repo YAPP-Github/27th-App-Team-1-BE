@@ -27,6 +27,9 @@ dependencies {
     // Transaction
     implementation 'org.springframework:spring-tx'
 
+    // Spring Data (Page, Pageable)
+    implementation 'org.springframework.data:spring-data-commons'
+
     // Thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 

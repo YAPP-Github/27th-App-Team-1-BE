@@ -54,3 +54,8 @@ CODEX.md
 
 ### ENV File ###
 .env
+
+docs
+
+### macOS ###
+.DS_Store

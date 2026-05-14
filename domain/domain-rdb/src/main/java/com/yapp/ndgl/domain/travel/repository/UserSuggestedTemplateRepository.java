@@ -8,7 +8,7 @@ import com.yapp.ndgl.common.type.SuggestionStatus;
 import com.yapp.ndgl.domain.travel.entity.UserSuggestedTemplateEntity;
 
 public interface UserSuggestedTemplateRepository
-    extends JpaRepository<UserSuggestedTemplateEntity, Long> {
+    extends JpaRepository<UserSuggestedTemplateEntity, Long>, UserSuggestedTemplateRepositoryCustom {
 
     Optional<UserSuggestedTemplateEntity> findFirstByVideoIdAndStatus(String videoId, SuggestionStatus status);
 }
