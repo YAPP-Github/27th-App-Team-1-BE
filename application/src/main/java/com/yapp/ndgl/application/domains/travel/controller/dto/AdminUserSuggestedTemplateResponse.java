@@ -13,7 +13,7 @@ public record AdminUserSuggestedTemplateResponse(
     String videoLink,
     String recommendReason,
     String suggesterUuid,
-    List<TravelCategory> category,
+    List<String> category,
     SuggestionStatus status,
     LocalDateTime createdAt
 ) {
@@ -25,7 +25,7 @@ public record AdminUserSuggestedTemplateResponse(
             domain.getVideoLink(),
             domain.getRecommendReason(),
             domain.getSuggesterUuid(),
-            domain.getCategory(),
+            domain.getCategory().stream().map(TravelCategory::getLabel).toList(),
             domain.getStatus(),
             domain.getCreatedAt()
         );
