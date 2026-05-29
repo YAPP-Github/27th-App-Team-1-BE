@@ -33,6 +33,9 @@ public class CurrentUuidArgumentResolver implements HandlerMethodArgumentResolve
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             throw new GlobalException(CommonErrorCode.UNAUTHORIZED);
         }
-        return (String) authentication.getPrincipal();
+        if (!(authentication.getPrincipal() instanceof String uuid)) {
+            throw new GlobalException(CommonErrorCode.UNAUTHORIZED);
+        }
+        return uuid;
     }
 }
