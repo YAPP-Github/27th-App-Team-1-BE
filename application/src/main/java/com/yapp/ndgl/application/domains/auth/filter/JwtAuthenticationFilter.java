@@ -6,6 +6,9 @@ import com.yapp.ndgl.common.exception.CommonErrorCode;
 import com.yapp.ndgl.common.response.ErrorResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +50,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 sendErrorResponse(response, CommonErrorCode.EXPIRED_TOKEN);
                 return;
-            } catch (Exception e) {
+            } catch (SignatureException e) {
+                sendErrorResponse(response, CommonErrorCode.INVALID_TOKEN_SIGNATURE);
+                return;
+            } catch (MalformedJwtException e) {
+                sendErrorResponse(response, CommonErrorCode.MALFORMED_TOKEN);
+                return;
+            } catch (UnsupportedJwtException e) {
+                sendErrorResponse(response, CommonErrorCode.UNSUPPORTED_TOKEN);
+                return;
+            } catch (IllegalArgumentException e) {
                 sendErrorResponse(response, CommonErrorCode.INVALID_TOKEN);
                 return;
             }
