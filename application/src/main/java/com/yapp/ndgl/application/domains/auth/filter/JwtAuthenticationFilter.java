@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ndgl.application.domains.auth.component.JwtTokenProvider;
 import com.yapp.ndgl.common.exception.CommonErrorCode;
 import com.yapp.ndgl.common.response.ErrorResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,18 +38,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
 
         if (StringUtils.hasText(token)) {
-            if (jwtTokenProvider.isExpired(token)) {
+            try {
+                Claims claims = jwtTokenProvider.parseClaims(token);
+                String uuid = claims.getSubject();
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(uuid, null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (ExpiredJwtException e) {
                 sendErrorResponse(response, CommonErrorCode.EXPIRED_TOKEN);
                 return;
-            }
-            if (!jwtTokenProvider.validateToken(token)) {
+            } catch (Exception e) {
                 sendErrorResponse(response, CommonErrorCode.INVALID_TOKEN);
                 return;
             }
-            String uuid = jwtTokenProvider.getUuidFromToken(token);
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(uuid, null, Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
