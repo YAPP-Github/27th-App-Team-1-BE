@@ -1,19 +1,23 @@
 package com.yapp.ndgl.application.common.logging;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @Component
@@ -38,12 +42,12 @@ public class MdcFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        FilterChain filterChain
+        final HttpServletRequest request,
+        final HttpServletResponse response,
+        final FilterChain filterChain
     ) throws ServletException, IOException {
         String requestId = resolveRequestId(request);
-        String userId = resolveUserId(request);
+        String userId = resolveUserId();
         String clientIp = resolveClientIp(request);
 
         MDC.put(REQUEST_ID_KEY, requestId);
@@ -71,12 +75,13 @@ public class MdcFilter extends OncePerRequestFilter {
         return UUID.randomUUID().toString();
     }
 
-    private String resolveUserId(HttpServletRequest request) {
-        Object attribute = request.getAttribute(USER_ID_ATTRIBUTE);
-        if (attribute instanceof String userId && StringUtils.hasText(userId)) {
-            return userId;
+    private String resolveUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "anonymous";
         }
-        return "anonymous";
+
+        return authentication.getPrincipal().toString();
     }
 
     private String resolveClientIp(HttpServletRequest request) {
