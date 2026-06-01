@@ -23,7 +23,7 @@ public class JwtTokenProvider {
         this.expiration = expiration;
     }
 
-    public String generateToken(String uuid) {
+    public String generateToken(final String uuid) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
@@ -35,25 +35,11 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getUuidFromToken(String token) {
-        Claims claims = Jwts.parser()
+    public Claims parseClaims(final String token) {
+        return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
-        return claims.getSubject();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }
